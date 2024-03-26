@@ -1,0 +1,15 @@
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\bin\Debug\net8.0\PhotonPiano.Models.deps.json
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\bin\Debug\net8.0\PhotonPiano.Models.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\bin\Debug\net8.0\PhotonPiano.Models.pdb
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.AssemblyInfoInputs.cache
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.AssemblyInfo.cs
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.sourcelink.json
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\refint\PhotonPiano.Models.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.pdb
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\ref\PhotonPiano.Models.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\bin\Debug\net8.0\PhotonPiano.Models.runtimeconfig.json
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.csproj.AssemblyReference.cache
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.Models\obj\Debug\net8.0\PhotonPiano.Models.genruntimeconfig.cache

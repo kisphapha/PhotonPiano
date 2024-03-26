@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "1r0TmN8bKmB1J2H05RfiQjsDNrUAhC/FccV2wWDCQOo=",
+  "Source": "PhotonPiano.API",
+  "BasePath": "_content/PhotonPiano.API",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
