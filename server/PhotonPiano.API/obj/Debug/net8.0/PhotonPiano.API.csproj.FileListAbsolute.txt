@@ -71,3 +71,6 @@ C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPia
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\runtimes\win\lib\net6.0\System.Windows.Extensions.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Models.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Models.pdb
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\AutoMapper.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Helper.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Helper.pdb

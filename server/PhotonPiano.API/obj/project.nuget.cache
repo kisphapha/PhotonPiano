@@ -1,9 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "cX7jZMfjZPVrGBAJX42lcQBh6B+tS0skEt3ud998QwbvtcskCb6XMTQsraikIWvA7qtLguEAe8bvV0vSJ77KXA==",
+  "dgSpecHash": "S6YkR6/Vv1bpli14YhFSooXNF3PkXcRgQ+lg3vnoHbevzIVhoCaP3ll3EI0FQSJstkZpOb0Zza4ysAleBRGB+w==",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\PhotonPiano.API.csproj",
   "expectedPackageFiles": [
+    "C:\\Users\\Administrator\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
