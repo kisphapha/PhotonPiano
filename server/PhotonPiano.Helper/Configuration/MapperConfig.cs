@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using PhotonPiano.Helper.Dtos.User;
-using PhotonPiano.Models;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.Helper.Configuration
 {

@@ -1,4 +1,8 @@
 
+using PhotonPiano.API.Extensions;
+using PhotonPiano.Helper.Configuration;
+using PhotonPiano.Models.Models;
+
 namespace PhotonPiano.API
 {
     public class Program
@@ -8,11 +12,21 @@ namespace PhotonPiano.API
             var builder = WebApplication.CreateBuilder(args);
 
             // Add services to the container.
+            builder.Services.AddDbContext<PhotonPianoContext>();
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
+
+            //Application services
+            builder.Services.AddRepositories()
+                            .AddGeneralServices();
+
+            //Third party services
+
+            builder.Services.AddAutoMapper(typeof(MapperConfig));
+
 
             var app = builder.Build();
 

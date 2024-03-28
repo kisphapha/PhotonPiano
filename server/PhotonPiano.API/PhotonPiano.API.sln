@@ -10,7 +10,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotonPiano.API", "PhotonPi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotonPiano.Models", "..\PhotonPiano.Models\PhotonPiano.Models.csproj", "{4BB235FA-ECB1-48D6-B95E-078C0A5367B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonPiano.Helper", "..\PhotonPiano.Helper\PhotonPiano.Helper.csproj", "{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotonPiano.Helper", "..\PhotonPiano.Helper\PhotonPiano.Helper.csproj", "{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PhotonPiano.BusinessLogic", "..\PhotonPiano.BusinessLogic\PhotonPiano.BusinessLogic.csproj", "{2F1627C4-6700-480A-AD7E-8D7FD27E7340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PhotonPiano.DataAccess", "..\PhotonPiano.DataAccess\PhotonPiano.DataAccess.csproj", "{CAACAE79-7A01-45CA-808A-004E4D979B70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -30,6 +34,14 @@ Global
 		{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1627C4-6700-480A-AD7E-8D7FD27E7340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1627C4-6700-480A-AD7E-8D7FD27E7340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1627C4-6700-480A-AD7E-8D7FD27E7340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1627C4-6700-480A-AD7E-8D7FD27E7340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CAACAE79-7A01-45CA-808A-004E4D979B70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CAACAE79-7A01-45CA-808A-004E4D979B70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CAACAE79-7A01-45CA-808A-004E4D979B70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CAACAE79-7A01-45CA-808A-004E4D979B70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

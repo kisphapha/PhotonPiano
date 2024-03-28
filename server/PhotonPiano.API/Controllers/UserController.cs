@@ -1,6 +1,9 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PhotonPiano.BusinessLogic.Interfaces;
+using PhotonPiano.BusinessLogic.Services;
 using PhotonPiano.Helper.Dtos.User;
 using PhotonPiano.Models.Models;
 
@@ -10,19 +13,17 @@ namespace PhotonPiano.API.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private readonly IMapper _mapper;
+        private readonly IUserService _userService;
 
-        public UserController(IMapper mapper)
+        public UserController(IUserService userService)
         {
-            _mapper = mapper;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<List<GetUserDto>> GetUsers()
         {
-            var context = new PhotonPianoContext();
-            var students = await context.Users.ToListAsync();
-            return _mapper.Map<List<GetUserDto>>(students);
+            return await _userService.GetUsers();
         }
     }
 }
