@@ -10,6 +10,7 @@ using PhotonPiano.Models.Models;
 namespace PhotonPiano.API.Controllers
 {
     [ApiController]
+    [ApiExplorerSettings(GroupName = "v1")]
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {

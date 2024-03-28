@@ -25,8 +25,10 @@ namespace PhotonPiano.API
 
             //Third party services
 
-            builder.Services.AddAutoMapper(typeof(MapperConfig));
+            builder.Services.AddAutoMapper(typeof(MapperConfig))
+                            .AddAuthenticationService(builder.Configuration);
 
+            builder.Services.AddSwaggerWithConfigurations();
 
             var app = builder.Build();
 
@@ -34,13 +36,17 @@ namespace PhotonPiano.API
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();
-                app.UseSwaggerUI();
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/v1/swagger.json", "Photon Piano API V1");
+                });
             }
 
             app.UseHttpsRedirection();
 
-            app.UseAuthorization();
+            app.UseAuthentication();
 
+            app.UseAuthorization();
 
             app.MapControllers();
 
