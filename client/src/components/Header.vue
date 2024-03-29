@@ -3,7 +3,7 @@
         <div class="flex justify-end ml-4 mr-4 text-xl">
             <RouterLink class="p-2 ml-6" to="/">Home</RouterLink>
             <RouterLink class="p-2 ml-6" to="/about">About</RouterLink>
-            <RouterLink class="p-2 ml-6" to="/forum">Forum</RouterLink>
+            <!-- <RouterLink class="p-2 ml-6" to="/forum">Forum</RouterLink> -->
             <RouterLink class="p-2 ml-6 text-blue-400" to="/login">Register</RouterLink>
             <RouterLink class="p-2 ml-6 text-cyan-400" to="/login">Login</RouterLink>
         </div>
