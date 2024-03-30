@@ -147,7 +147,7 @@
 
 
 export default {
-    name : "About",
+    name : "AboutPage",
     inject: ["eventBus"],
 
     mounted() {

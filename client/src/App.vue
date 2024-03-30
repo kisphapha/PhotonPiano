@@ -15,14 +15,13 @@
 
 <script>
 import Header from "./components/Header.vue"
-import Home from "./pages/Home.vue"
 import Footer from "./components/Footer.vue";
 import LoginForm from './components/LoginForm.vue';
 
 export default {
     name : "App",
     inject: ["eventBus"],
-    components : {Header, Home, Footer, LoginForm},
+    components : {Header, Footer, LoginForm},
     data() {
       return {
         user : null,
@@ -43,8 +42,9 @@ export default {
       },
       login(){
         this.user = {
+          id : 1,
           name : "kisphophu",
-          profilePicture : "https://www.ikea.com/gb/en/images/products/kopparfall-picture-moonscape__0997459_pe822680_s5.jpg?f=s"
+          profilePicture : "https://st2.depositphotos.com/2550635/7888/i/450/depositphotos_78887438-stock-photo-colorful-daybreak-in-a-beautiful.jpg"
         }
       }
     }

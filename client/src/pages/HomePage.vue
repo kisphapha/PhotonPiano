@@ -24,7 +24,7 @@
 import PianoKeyboard from '../components/PianoKeyboard.vue';
 
 export default {
-    name : "Home",
+    name : "HomePage",
     inject : ["eventBus"],
     components : {PianoKeyboard},
     methods : {

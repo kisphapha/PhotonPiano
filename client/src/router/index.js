@@ -1,18 +1,25 @@
 import {createRouter , createWebHistory} from 'vue-router';
-import Home from '../pages/Home.vue';
-import About from '../pages/About.vue'
+import HomePage from '../pages/HomePage.vue';
+import AboutPage from '../pages/AboutPage.vue';
+import StudentInfoPage from '../pages/StudentInfoPage.vue'
 
 // Define your routes
 const routes = [
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: HomePage
   },
   {
     path: '/about',
     name : 'About',
-    component: About
+    component: AboutPage
+  },
+  {
+    path: '/user/:userId',
+    name: 'UserProfile',
+    component: StudentInfoPage,
+    props: true
   }
 ];
 
