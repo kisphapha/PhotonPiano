@@ -59,9 +59,7 @@
                         var audio = new Audio(audioFile);
                         audio.play();
                     }
-                });
-
-                
+                });                
             });
         }
     }
