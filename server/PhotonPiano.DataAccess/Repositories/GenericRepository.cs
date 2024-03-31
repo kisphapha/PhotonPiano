@@ -15,7 +15,7 @@ namespace PhotonPiano.DataAccess.Repositories
             _context = context;
         }
 
-        public async Task<T?> GetByIdAsync(int id)
+        public async Task<T?> GetByIdAsync(long id)
         {
             return await _context.Set<T>().FindAsync(id);
         }
@@ -75,7 +75,7 @@ namespace PhotonPiano.DataAccess.Repositories
             await _context.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(long id)
         {
             var entity = await GetByIdAsync(id);
             if (entity != null)
@@ -85,7 +85,7 @@ namespace PhotonPiano.DataAccess.Repositories
             }
         }
 
-        public async Task<bool> Exists(int id)
+        public async Task<bool> Exists(long id)
         {
             var entity = await GetByIdAsync(id);
             return entity != null;

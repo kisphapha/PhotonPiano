@@ -15,7 +15,7 @@ public partial class User
 
     public string? Password { get; set; }
 
-    public string? Role { get; set; }
+    public string Role { get; set; } = string.Empty!;
 
     public virtual ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
 

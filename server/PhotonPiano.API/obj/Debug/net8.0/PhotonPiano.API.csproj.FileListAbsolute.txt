@@ -61,7 +61,6 @@ C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPia
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.BusinessLogic.pdb
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Helper.pdb
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\PhotonPiano.Models.pdb
-C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\obj\Debug\net8.0\PhotonPiano.API.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\obj\Debug\net8.0\staticwebassets.build.json
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\obj\Debug\net8.0\staticwebassets.development.json
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\obj\Debug\net8.0\staticwebassets\msbuild.PhotonPiano.API.Microsoft.AspNetCore.StaticWebAssets.props
@@ -83,3 +82,4 @@ C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPia
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Scrutor.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Swashbuckle.AspNetCore.Filters.Abstractions.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Newtonsoft.Json.dll

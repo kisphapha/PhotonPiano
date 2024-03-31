@@ -1,4 +1,5 @@
 
+using FAMS.API.Middlewares;
 using PhotonPiano.API.Extensions;
 using PhotonPiano.Helper.Configuration;
 using PhotonPiano.Models.Models;
@@ -41,6 +42,7 @@ namespace PhotonPiano.API
                     c.SwaggerEndpoint("/swagger/v1/swagger.json", "Photon Piano API V1");
                 });
             }
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.UseHttpsRedirection();
 

@@ -23,6 +23,7 @@ namespace PhotonPiano.API.Extensions
         public static IServiceCollection AddGeneralServices(this IServiceCollection services)
         {
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthService, AuthService>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
