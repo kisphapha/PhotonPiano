@@ -48,7 +48,6 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
-
     public static string? GetConnectionString(string connectionStringName)
     {
         var config = new ConfigurationBuilder()
@@ -131,6 +130,11 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("PK_EntranceTest_");
 
             entity.ToTable("EntranceTest");
+
+            entity.Property(e => e.BandScore).HasColumnType("decimal(8, 2)");
+            entity.Property(e => e.Rank)
+                .HasMaxLength(255)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Location).WithMany(p => p.EntranceTests)
                 .HasForeignKey(d => d.LocationId)
@@ -258,13 +262,6 @@ public partial class PhotonPianoContext : DbContext
             entity.ToTable("Student");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.EntranceRank)
-                .HasMaxLength(255)
-                .IsUnicode(false)
-                .HasColumnName("Entrance_rank");
-            entity.Property(e => e.EntranceTestScore)
-                .HasColumnType("decimal(8, 2)")
-                .HasColumnName("Entrance_test_score");
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
@@ -338,6 +335,9 @@ public partial class PhotonPianoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Amount).HasColumnName("amount");
+            entity.Property(e => e.CreateDate)
+                .HasColumnType("datetime")
+                .HasColumnName("create_date");
             entity.Property(e => e.DueDate)
                 .HasColumnType("datetime")
                 .HasColumnName("due_date");
@@ -389,8 +389,15 @@ public partial class PhotonPianoContext : DbContext
             entity.ToTable("User");
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.Address).HasMaxLength(255);
+            entity.Property(e => e.BankAccount)
+                .HasMaxLength(100)
+                .IsUnicode(false);
             entity.Property(e => e.Email)
                 .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Gender)
+                .HasMaxLength(50)
                 .IsUnicode(false);
             entity.Property(e => e.Name).HasMaxLength(255);
             entity.Property(e => e.Password)

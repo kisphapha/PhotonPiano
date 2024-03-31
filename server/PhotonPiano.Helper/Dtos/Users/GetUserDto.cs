@@ -2,7 +2,7 @@
 using PhotonPiano.Models.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace PhotonPiano.Helper.Dtos.User
+namespace PhotonPiano.Helper.Dtos.Users
 {
     public class GetUserDto
     {

@@ -19,10 +19,6 @@ public partial class Student
 
     public DateTime RegistrationDate { get; set; }
 
-    public decimal? EntranceTestScore { get; set; }
-
-    public string? EntranceRank { get; set; }
-
     public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();
 
     public virtual ICollection<StudentClass> StudentClasses { get; set; } = new List<StudentClass>();

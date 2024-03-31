@@ -22,7 +22,7 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet]
-        public async Task<List<GetUserDto>> GetUsers()
+        public async Task<ActionResult<List<GetUserDto>>> GetUsers()
         {
             return await _userService.GetUsers();
         }

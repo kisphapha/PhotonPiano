@@ -15,6 +15,10 @@ public partial class EntranceTest
 
     public DateOnly? Date { get; set; }
 
+    public decimal? BandScore { get; set; }
+
+    public string? Rank { get; set; }
+
     public virtual ICollection<EntranceTestResult> EntranceTestResults { get; set; } = new List<EntranceTestResult>();
 
     public virtual Location? Location { get; set; }

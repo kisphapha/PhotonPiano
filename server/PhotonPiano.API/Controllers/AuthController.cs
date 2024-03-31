@@ -23,13 +23,13 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<AuthResponseDto> Login([FromBody] LoginDto loginDto)
+        public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginDto loginDto)
         {
             return await _authService.Login(loginDto);
         }
         [HttpGet("who-am-i")]
         [Authorize]
-        public async Task<GetUserDto> WhoAmI()
+        public async Task<ActionResult<GetUserDto>> WhoAmI()
         {
             return await _authService.GetUserByClaims(HttpContext.User);
         }

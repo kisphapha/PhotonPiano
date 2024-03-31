@@ -1,5 +1,5 @@
 ﻿
-namespace PhotonPiano.Helper.Dtos.User
+namespace PhotonPiano.Helper.Dtos.Users
 {
     public class LoginDto
     {

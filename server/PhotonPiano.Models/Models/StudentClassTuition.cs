@@ -15,6 +15,8 @@ public partial class StudentClassTuition
 
     public bool Status { get; set; }
 
+    public DateTime? CreateDate { get; set; }
+
     public DateTime DueDate { get; set; }
 
     public string? TransactionId { get; set; }

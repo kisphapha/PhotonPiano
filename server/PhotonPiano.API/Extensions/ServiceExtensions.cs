@@ -7,6 +7,7 @@ using PhotonPiano.BusinessLogic.Services;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.DataAccess.Repositories;
 using Swashbuckle.AspNetCore.Filters;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace PhotonPiano.API.Extensions
@@ -17,6 +18,7 @@ namespace PhotonPiano.API.Extensions
         {
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IStudentRepository, StudentRepository>();
             return services;
         }
 
@@ -24,6 +26,7 @@ namespace PhotonPiano.API.Extensions
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
+            services.AddScoped<IStudentService, StudentService>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
@@ -71,6 +74,13 @@ namespace PhotonPiano.API.Extensions
             return services;
         }
 
-
+        public static IServiceCollection AddControllersWithConfiguration(this IServiceCollection services)
+        {
+            services.AddControllers().AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
+            });
+            return services;
+        }
     }
 }

@@ -15,7 +15,7 @@ namespace PhotonPiano.API
             // Add services to the container.
             builder.Services.AddDbContext<PhotonPianoContext>();
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllersWithConfiguration();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
