@@ -15,6 +15,8 @@ public partial class User
 
     public string? Password { get; set; }
 
+    public string? Role { get; set; }
+
     public virtual ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

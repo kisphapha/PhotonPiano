@@ -13,7 +13,7 @@ public partial class Lesson
 
     public long? ClassId { get; set; }
 
-    public bool IsExam { get; set; }
+    public string? ExamType { get; set; }
 
     public DateOnly? Date { get; set; }
 

@@ -48,6 +48,7 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<User> Users { get; set; }
 
+
     public static string? GetConnectionString(string connectionStringName)
     {
         var config = new ConfigurationBuilder()
@@ -184,7 +185,9 @@ public partial class PhotonPianoContext : DbContext
             entity.ToTable("Lesson");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.IsExam).HasColumnName("isExam");
+            entity.Property(e => e.ExamType)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.LocationId).HasColumnName("locationId");
             entity.Property(e => e.Shift).HasColumnName("shift");
 
@@ -283,6 +286,7 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.Gpa)
                 .HasColumnType("decimal(8, 2)")
                 .HasColumnName("GPA");
+            entity.Property(e => e.InstructorComment).HasColumnName("Instructor_comment");
             entity.Property(e => e.Rank)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -394,6 +398,9 @@ public partial class PhotonPianoContext : DbContext
                 .IsUnicode(false);
             entity.Property(e => e.Phone)
                 .HasMaxLength(255)
+                .IsUnicode(false);
+            entity.Property(e => e.Role)
+                .HasMaxLength(50)
                 .IsUnicode(false);
         });
 

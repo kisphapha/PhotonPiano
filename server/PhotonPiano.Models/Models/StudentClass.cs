@@ -17,6 +17,8 @@ public partial class StudentClass
 
     public string? Rank { get; set; }
 
+    public string? InstructorComment { get; set; }
+
     public virtual Class Class { get; set; } = null!;
 
     public virtual Student Student { get; set; } = null!;
