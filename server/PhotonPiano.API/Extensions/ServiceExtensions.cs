@@ -82,5 +82,14 @@ namespace PhotonPiano.API.Extensions
             });
             return services;
         }
+
+        public static IServiceCollection AddCorsWithConfigurations(this IServiceCollection services)
+        {
+            services.AddCors(options =>
+                options.AddPolicy("AllowAll", b => b.AllowAnyHeader().AllowAnyOrigin().AllowAnyMethod()));
+            return services;
+        }
+
+
     }
 }

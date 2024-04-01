@@ -1,12 +1,13 @@
 <template>
     <div class="flex gap-4 p-8 ">
-        <img class="w-32 h-32 rounded-full" src="https://st2.depositphotos.com/2550635/7888/i/450/depositphotos_78887438-stock-photo-colorful-daybreak-in-a-beautiful.jpg">
+        <img class="w-32 h-32 rounded-full"
+            src="https://st2.depositphotos.com/2550635/7888/i/450/depositphotos_78887438-stock-photo-colorful-daybreak-in-a-beautiful.jpg">
         <div class="text-4xl font-bold mt-auto mb-auto">Kisphophu</div>
-    </div>   
+    </div>
     <div class="flex">
         <div class="w-1/2">
             <div class="italic text-xl ml-4">General</div>
-            <hr/>
+            <hr />
             <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
                 <tbody>
                     <tr>
@@ -39,10 +40,10 @@
                     </tr>
                 </tbody>
             </table>
-        </div>   
+        </div>
         <div class="w-1/2">
             <div class="italic text-xl ml-4">Academic</div>
-            <hr/>
+            <hr />
             <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
                 <tbody>
                     <tr>
@@ -79,12 +80,12 @@
                     </tr>
                 </tbody>
             </table>
-        </div>         
-    </div> 
+        </div>
+    </div>
     <div class="mt-4 flex">
         <div class="w-1/2">
             <div class="italic text-xl ml-4">Tuition Debt</div>
-            <hr/>
+            <hr />
             <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
                 <thead>
                     <tr>
@@ -115,7 +116,7 @@
         </div>
         <div class="w-1/2">
             <div class="italic text-xl ml-4">Activeness</div>
-            <hr/>
+            <hr />
             <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
                 <tbody>
                     <tr>
@@ -144,17 +145,17 @@
                     </tr>
                 </tbody>
             </table>
-        </div>             
-    </div> 
+        </div>
+    </div>
     <div class="mt-4 flex">
         <div class="w-full">
             <div class="italic text-xl ml-4">Educational Path</div>
-            <hr/>
+            <hr />
             <div class="flex flex-col gap-8">
                 <div class="flex justify-center gap-8 mt-4 ml-4">
                     <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
                         2023
-                    </div>                 
+                    </div>
                     <table id="student-info-table" class="bg-slate-50 w-1/3">
                         <tbody>
                             <tr>
@@ -225,29 +226,39 @@
                         </tbody>
                     </table>
                 </div>
-            </div>      
-        </div>                
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 //import { RouterLink } from 'vue-router';
 
 export default {
-    name : "StudentInfoPage",
-    props : ['user']
+    name: "StudentInfoPage",
+    props: ['user'],
+    mounted() {
+        this.fetchData();
+    },
+    methods: {
+        async fetchData () { 
+            console.log(import.meta.env.VITE_API_URL);
+            await axios.get('https://localhost:7179/api/Student/1')
+                .then(response => {
+                    console.log(response.data);
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    }
 }
 </script>
 <style>
-#student-info-table tr td, #student-info-table th{
+#student-info-table tr td,
+#student-info-table th {
     padding: 0.5rem 2rem 0.5rem 2rem;
-    border : solid 1px #a9a9bd
+    border: solid 1px #a9a9bd
 }
-/* .line {
-  width: 2px;
-  background-color: gray;
-  align-self: center;
-  height: 100px;
-  display: absolute;
-} */
 </style>

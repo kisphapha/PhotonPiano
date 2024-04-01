@@ -14,6 +14,24 @@ namespace PhotonPiano.DataAccess.Repositories
             _context = context;
         }
 
+        public async Task<Student?> GetStudentWithPostsAndComments(long id)
+        {
+            var student = await _context.Students
+                .Include(x => x.User.Posts)
+                .Include(x => x.User.PostVotes)
+                .Include(x => x.User.CommentVotes)
+                .Include(x => x.User.Comments)
+                .SingleOrDefaultAsync(x => x.Id == id);
+            return student;
+        }
+        public async Task<Student?> GetStudentWithComments(long id)
+        {
+            var student = await _context.Students
+                .Include(x => x.User)
+                    .ThenInclude(x => x.CommentVotes)
+                .SingleOrDefaultAsync(x => x.Id == id);
+            return student;
+        }
         public async Task<Student?> GetStudentDetailAsync(long id)
         {
             var student = await _context.Students
@@ -38,18 +56,6 @@ namespace PhotonPiano.DataAccess.Repositories
                 await _context.Entry(student.CurrentClass.Instructor).Reference(c => c.User)
                     .LoadAsync();           
             }
-
-
-            //if (student?.CurrentClass is not null)
-            //{
-            //    var instructor = await _context.Classes
-            //        .Include(c => c.Instructor)
-            //            .ThenInclude(i => i.User)
-            //        .Select(c => c.Instructor)
-            //        .FirstOrDefaultAsync(c => c.Id == student.CurrentClass.Id);
-
-            //    student.CurrentClass.Instructor = instructor!;
-            //}
             return student;
         }
     }

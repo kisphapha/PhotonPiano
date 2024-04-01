@@ -35,5 +35,15 @@ namespace PhotonPiano.BusinessLogic.Services
             //};
             return student.Adapt<GetStudentProfileDto>();
         }
+
+        public async Task<GetStudentWithPostsDto?> GetStudentWithPostsAndComments(long id)
+        {
+            var student = await _studentRepository.GetStudentWithPostsAndComments(id);
+            if (student is null)
+            {
+                throw new NotFoundException("Student not found");
+            }
+            return student.Adapt<GetStudentWithPostsDto>();
+        }
     }
 }

@@ -7,5 +7,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
     public interface IStudentService
     {
         Task<GetStudentProfileDto?> GetStudentDetailById(long id);
+
+        Task<GetStudentWithPostsDto?> GetStudentWithPostsAndComments(long id);
     }
 }

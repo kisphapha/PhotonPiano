@@ -64,6 +64,7 @@ public partial class PhotonPianoContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("PhotonPiano"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Class>(entity =>
@@ -71,6 +72,8 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("class_id_primary");
 
             entity.ToTable("Class");
+
+            entity.HasIndex(e => e.InstructorId, "IX_Class_Instructor_Id");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.EndDate).HasColumnName("end_date");
@@ -96,6 +99,10 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("Comment");
 
+            entity.HasIndex(e => e.PostId, "IX_Comment_Post_id");
+
+            entity.HasIndex(e => e.ReplyToCommentId, "IX_Comment_ReplyToCommentId");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CommentDate)
                 .HasColumnType("datetime")
@@ -103,6 +110,11 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.Content).HasColumnName("content");
             entity.Property(e => e.OwnerId).HasColumnName("ownerId");
             entity.Property(e => e.PostId).HasColumnName("Post_id");
+
+            entity.HasOne(d => d.Owner).WithMany(p => p.Comments)
+                .HasForeignKey(d => d.OwnerId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Comment_User");
 
             entity.HasOne(d => d.Post).WithMany(p => p.Comments)
                 .HasForeignKey(d => d.PostId)
@@ -119,6 +131,8 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => new { e.CommentId, e.UserId });
 
             entity.ToTable("CommentVote");
+
+            entity.HasIndex(e => e.UserId, "IX_CommentVote_UserId");
 
             entity.Property(e => e.UpOrDown).HasColumnName("Up_or_down");
 
@@ -153,6 +167,10 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("EntranceTest");
 
+            entity.HasIndex(e => e.LocationId, "IX_EntranceTest_LocationId");
+
+            entity.HasIndex(e => e.StudentId, "IX_EntranceTest_StudentId");
+
             entity.Property(e => e.BandScore).HasColumnType("decimal(8, 2)");
             entity.Property(e => e.Rank)
                 .HasMaxLength(255)
@@ -172,6 +190,10 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("entrancetest_id_primary");
 
             entity.ToTable("EntranceTestResult");
+
+            entity.HasIndex(e => e.CriteriaId, "IX_EntranceTestResult_Criteria_id");
+
+            entity.HasIndex(e => e.EntranceTestId, "IX_EntranceTestResult_entrance_test_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CriteriaId).HasColumnName("Criteria_id");
@@ -195,6 +217,8 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("Instructor");
 
+            entity.HasIndex(e => e.UserId, "IX_Instructor_UserId");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ContributeScore).HasColumnName("Contribute_score");
 
@@ -209,6 +233,10 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("lesson_id_primary");
 
             entity.ToTable("Lesson");
+
+            entity.HasIndex(e => e.ClassId, "IX_Lesson_ClassId");
+
+            entity.HasIndex(e => e.LocationId, "IX_Lesson_locationId");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ExamType)
@@ -246,6 +274,8 @@ public partial class PhotonPianoContext : DbContext
         {
             entity.ToTable("Notification");
 
+            entity.HasIndex(e => e.RecieverId, "IX_Notification_RecieverId");
+
             entity.Property(e => e.Picture).IsUnicode(false);
             entity.Property(e => e.RefUrl).IsUnicode(false);
             entity.Property(e => e.ViewStatus).HasColumnName("View_status");
@@ -260,6 +290,8 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("post_id_primary");
 
             entity.ToTable("Post");
+
+            entity.HasIndex(e => e.OwnerId, "IX_Post_ownerId");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ClassId).HasColumnName("class_id");
@@ -283,6 +315,8 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("PostVote");
 
+            entity.HasIndex(e => e.UserId, "IX_PostVote_UserId");
+
             entity.Property(e => e.UpOrDown).HasColumnName("Up_or_down");
 
             entity.HasOne(d => d.Post).WithMany(p => p.PostVotes)
@@ -301,6 +335,10 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("student_id_primary");
 
             entity.ToTable("Student");
+
+            entity.HasIndex(e => e.CurrentClassId, "IX_Student_CurrentClassId");
+
+            entity.HasIndex(e => e.UserId, "IX_Student_UserId");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
@@ -323,6 +361,10 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("studentclass_id_primary");
 
             entity.ToTable("StudentClass");
+
+            entity.HasIndex(e => e.ClassId, "IX_StudentClass_classId");
+
+            entity.HasIndex(e => e.StudentId, "IX_StudentClass_studentId");
 
             entity.Property(e => e.ClassId).HasColumnName("classId");
             entity.Property(e => e.Gpa)
@@ -354,6 +396,10 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("StudentClassScore");
 
+            entity.HasIndex(e => e.CriteriaId, "IX_StudentClassScore_criteriaId");
+
+            entity.HasIndex(e => e.StudentClassId, "IX_StudentClassScore_student_class_id");
+
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CriteriaId).HasColumnName("criteriaId");
             entity.Property(e => e.Score)
@@ -377,6 +423,8 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => e.Id).HasName("studentclasstuition_id_primary");
 
             entity.ToTable("StudentClassTuition");
+
+            entity.HasIndex(e => e.StudentClassId, "IX_StudentClassTuition_student_class_id");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Amount).HasColumnName("amount");
@@ -412,6 +460,8 @@ public partial class PhotonPianoContext : DbContext
             entity.HasKey(e => new { e.StudentId, e.LessonId }).HasName("PK__StudentL__D2997F4B71CCF9B2");
 
             entity.ToTable("StudentLesson");
+
+            entity.HasIndex(e => e.LessonId, "IX_StudentLesson_lessonId");
 
             entity.Property(e => e.StudentId).HasColumnName("studentId");
             entity.Property(e => e.LessonId).HasColumnName("lessonId");

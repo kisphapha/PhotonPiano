@@ -22,5 +22,11 @@ namespace PhotonPiano.API.Controllers
         {
             return await _studentService.GetStudentDetailById(studentId);
         }
+
+        [HttpGet("{studentId}/posts")]
+        public async Task<ActionResult<GetStudentWithPostsDto?>> GetStudentWithPostsAndComments([FromRoute] long studentId)
+        {
+            return await _studentService.GetStudentWithPostsAndComments(studentId);
+        }
     }
 }

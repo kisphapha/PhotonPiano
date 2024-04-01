@@ -29,6 +29,8 @@ public partial class User
 
     public virtual ICollection<CommentVote> CommentVotes { get; set; } = new List<CommentVote>();
 
+    public virtual ICollection<Comment> Comments { get; set; } = new List<Comment>();
+
     public virtual ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();

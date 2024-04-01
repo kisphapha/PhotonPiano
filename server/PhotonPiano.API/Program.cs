@@ -31,11 +31,15 @@ namespace PhotonPiano.API
                             .AddAuthenticationService(builder.Configuration);
             builder.Services.AddMapster();
 
-            builder.Services.AddSwaggerWithConfigurations();
+            builder.Services.AddSwaggerWithConfigurations()
+                            .AddCorsWithConfigurations();
 
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
+
+            app.UseCors("AllowAll");
+
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

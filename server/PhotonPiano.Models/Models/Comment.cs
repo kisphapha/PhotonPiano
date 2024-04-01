@@ -23,6 +23,8 @@ public partial class Comment
 
     public virtual ICollection<Comment> InverseReplyToComment { get; set; } = new List<Comment>();
 
+    public virtual User Owner { get; set; } = null!;
+
     public virtual Post Post { get; set; } = null!;
 
     public virtual Comment? ReplyToComment { get; set; }
