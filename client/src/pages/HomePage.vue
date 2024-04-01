@@ -1,8 +1,10 @@
 <template>
-  <div class="w-full flex justify-center items-center flex-col">
-    <div class="text-4xl  m-8 font-bold">WELCOME TO THE PARADISE OF PIANO ART</div>
-  </div>
-  <PianoKeyboard />
+  <div>
+
+    <div class="w-full flex justify-center items-center flex-col">
+      <div class="text-4xl  m-8 font-bold">WELCOME TO THE PARADISE OF PIANO ART</div>
+    </div>
+    <PianoKeyboard />
   <div class="text-2xl m-8 font-bold text-center drop-shadow-sm	">JOIN US! BECOME A PART OF PHOTONPIANO</div>
   <div class="text-xl m-4 text-center drop-shadow-sm italic">MAKE YOURSELF BECOME A GRANDMASTER OF PIANO</div>
   <div class="text-xl m-4 text-center drop-shadow-sm italic">AND HAVE A CHANCE TO INTERACT WITH THE DIAMOND GOD!</div>
@@ -17,6 +19,7 @@
       About Us
     </RouterLink>
   </div>
+F</div>
     
 </template>
 

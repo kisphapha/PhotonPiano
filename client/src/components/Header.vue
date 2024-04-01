@@ -10,7 +10,7 @@
             <RouterLink v-if="user" class="p-2 ml-6" to="/forum">Forum</RouterLink>
             <button class="p-2 ml-6 text-blue-400" @click="triggerOpenPopup">Enroll</button>
             <button  v-if="!user" class="p-2 ml-6 text-cyan-400" @click="triggerOpenPopup">Login</button>
-            <RouterLink v-if="user" class="p-2 ml-6" :to="`/user/${user.id}`">
+            <RouterLink v-if="user" class="p-2 ml-6" :to="`/student`">
                 <div class="flex gap-2">
                     {{user.name}}
                     <img :src="user.profilePicture" class="w-8 h-8 rounded-full" alt="Profile Picture"/>

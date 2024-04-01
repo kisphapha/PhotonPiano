@@ -16,8 +16,8 @@ const routes = [
     component: AboutPage
   },
   {
-    path: '/user/:userId',
-    name: 'UserProfile',
+    path: '/student',
+    name: 'StudentProfile',
     component: StudentInfoPage,
     props: true
   }
