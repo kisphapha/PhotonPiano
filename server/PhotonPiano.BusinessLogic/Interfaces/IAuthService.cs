@@ -1,5 +1,5 @@
 ﻿using PhotonPiano.Helper.Dtos.Auth;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Users;
 using System.Security.Claims;
 
 namespace PhotonPiano.BusinessLogic.Interfaces

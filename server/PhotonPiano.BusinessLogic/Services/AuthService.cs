@@ -4,7 +4,7 @@ using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.Helper.Dtos.Auth;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;
 using PhotonPiano.Models.Models;
 using System.IdentityModel.Tokens.Jwt;

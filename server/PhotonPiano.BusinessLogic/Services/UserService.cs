@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+using Mapster;
 using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;
 
 namespace PhotonPiano.BusinessLogic.Services
@@ -10,21 +11,19 @@ namespace PhotonPiano.BusinessLogic.Services
     public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
 
-        public UserService(IUserRepository userRepository, IMapper mapper)
+        public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
-            _mapper = mapper;
         }
 
         public async Task<List<GetUserDto>> GetUsers()
         {
-            return _mapper.Map<List<GetUserDto>>(await _userRepository.GetAllAsync());
+            return (await _userRepository.GetAllAsync()).Adapt<List<GetUserDto>>();
         }
         public async Task<GetUserDto> GetUserById(long id)
         {
-            return _mapper.Map<GetUserDto>(await _userRepository.GetByIdAsync(id));
+            return (await _userRepository.GetByIdAsync(id)).Adapt<GetUserDto>();
         }
 
         public async Task<GetUserDto> VerifyLogin(string? emailOrPhone, string? password)
@@ -44,7 +43,7 @@ namespace PhotonPiano.BusinessLogic.Services
                 throw new NotFoundException("Wrong email, phone number or password");
             }
 
-            return _mapper.Map<GetUserDto>(user);
+            return user.Adapt<GetUserDto>();
         }
     }
 }

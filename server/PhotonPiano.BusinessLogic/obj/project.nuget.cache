@@ -1,12 +1,15 @@
 {
   "version": 2,
-  "dgSpecHash": "HcRCmHpZQ34zoJf4cjB85aZdZ16u4fbFDsDN4JV2lhtIALSL5bYLBu1ijbveqf4n7heCJ25thL0GZytliQb9zA==",
+  "dgSpecHash": "/XZ2WNXUHu4Mp+yD0d7b6LzUIC6F/LBe0s7KnLVf7BXTTmXn3SLLoK26+RpCTcPtwIehqD9ctLQ3B/3kGNBUhA==",
   "success": true,
   "projectFilePath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Administrator\\.nuget\\packages\\automapper\\13.0.1\\automapper.13.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.core\\1.35.0\\azure.core.1.35.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\azure.identity\\1.10.3\\azure.identity.1.10.3.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\mapster\\7.4.0\\mapster.7.4.0.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\mapster.core\\1.2.1\\mapster.core.1.2.1.nupkg.sha512",
+    "C:\\Users\\Administrator\\.nuget\\packages\\mapster.dependencyinjection\\1.0.1\\mapster.dependencyinjection.1.0.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
     "C:\\Users\\Administrator\\.nuget\\packages\\microsoft.data.sqlclient\\5.1.5\\microsoft.data.sqlclient.5.1.5.nupkg.sha512",

@@ -27,9 +27,13 @@ public partial class User
 
     public string? BankAccount { get; set; }
 
+    public virtual ICollection<CommentVote> CommentVotes { get; set; } = new List<CommentVote>();
+
     public virtual ICollection<Instructor> Instructors { get; set; } = new List<Instructor>();
 
     public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
+    public virtual ICollection<PostVote> PostVotes { get; set; } = new List<PostVote>();
 
     public virtual ICollection<Post> Posts { get; set; } = new List<Post>();
 

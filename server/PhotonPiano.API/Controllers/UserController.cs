@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.BusinessLogic.Services;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.API.Controllers
@@ -26,6 +26,7 @@ namespace PhotonPiano.API.Controllers
         {
             return await _userService.GetUsers();
         }
+
 
         //[HttpPost]
         //public async Task<GetUserDto> Login([FromBody] LoginDto loginDto)

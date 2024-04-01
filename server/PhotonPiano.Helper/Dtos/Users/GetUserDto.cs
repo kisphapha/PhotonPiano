@@ -14,7 +14,19 @@ namespace PhotonPiano.Helper.Dtos.Users
 
         public string? Email { get; set; }
 
-        public string Role { get; set; } = string.Empty!;
+        public string? Password { get; set; }
+
+        public string Role { get; set; } = null!;
+
+        public string? Picture { get; set; }
+
+        public DateOnly? DoB { get; set; }
+
+        public string? Address { get; set; }
+
+        public string? Gender { get; set; }
+
+        public string? BankAccount { get; set; }
 
 
     }

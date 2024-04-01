@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.BusinessLogic.Services;
 using PhotonPiano.Helper.Dtos.Auth;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.API.Controllers

@@ -1,7 +1,10 @@
 ﻿
 
+using PhotonPiano.Helper.Dtos.Classes;
+using PhotonPiano.Helper.Dtos.EntranceTest;
 using PhotonPiano.Helper.Dtos.StudentClasses;
 using PhotonPiano.Helper.Dtos.StudentClassTuitons;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.Helper.Dtos.Students
@@ -14,51 +17,20 @@ namespace PhotonPiano.Helper.Dtos.Students
 
         public long? CurrentClassId { get; set; }
 
-        public string? InstructorName { get; set; }
-
         public int Level { get; set; }
 
         public string Status { get; set; } = null!;
 
         public long UserId { get; set; }
 
-        public string Name { get; set; } = null!;
+        public DateTime RegistrationDate { get; set; }
 
-        public string? Phone { get; set; }
+        public GetClassWithInstructorDto? CurrentClass { get; set; }
 
-        public string? Email { get; set; }
+        public ICollection<GetEntranceTestScoreDto> EntranceTests { get; set; } = new List<GetEntranceTestScoreDto>();
 
-        public string? Password { get; set; }
+        public ICollection<GetStudentClassDetailDto> StudentClasses { get; set; } = new List<GetStudentClassDetailDto>();
 
-        public string Role { get; set; } = null!;
-
-        public string? Picture { get; set; }
-
-        public DateOnly? DoB { get; set; }
-
-        public string? Address { get; set; }
-
-        public string? Gender { get; set; }
-
-        public string? BankAccount { get; set; }
-
-        public int NumberOfPosts { get; set; }
-
-        public int NumberOfComments { get; set; }
-
-        public int NumberOfUpvotes { get; set; }
-
-        public int NumberOfDownvotes { get; set; }
-
-        public int UpvotesGiven { get; set; }
-
-        public int DownvotesGiven { get; set; }
-
-        public decimal? EntranceTestScore { get; set; }
-
-        public string? EntranceTestRank { get; set; }
-
-        public List<GetStudentClassDetailDto> StudentClasses { get; set; } = new List<GetStudentClassDetailDto>();
-        public List<GetStudentClassTuitionDebtDto> TutionDebts { get; set; } = new List<GetStudentClassTuitionDebtDto>();
+        public GetUserDto User { get; set; } = null!;
     }
 }

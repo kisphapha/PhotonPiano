@@ -1,8 +1,10 @@
 ﻿using AutoMapper;
+using Mapster;
 using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
-using PhotonPiano.Helper.Dtos.User;
+using PhotonPiano.Helper.Dtos.Students;
+using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;
 using PhotonPiano.Models.Models;
 
@@ -11,17 +13,27 @@ namespace PhotonPiano.BusinessLogic.Services
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
-        private readonly IMapper _mapper;
-
-        public StudentService(IStudentRepository studentRepository, IMapper mapper)
+        public StudentService(IStudentRepository studentRepository)
         {
             _studentRepository = studentRepository;
-            _mapper = mapper;
         }
 
-        public async Task<Student?> GetStudentDetailById(long id)
+        public async Task<GetStudentProfileDto?> GetStudentDetailById(long id)
         {
-            return await _studentRepository.GetStudentDetailAsync(id);
+            var student =  await _studentRepository.GetStudentDetailAsync(id);
+            if (student is null)
+            {
+                throw new NotFoundException("Student not found");
+            }
+            //var studentInfo = _mapper.Map<GetStudentDto>(student);
+            //var userInfo = _mapper.Map<GetUserDto>(student.User);
+            //var studentProfile = new GetStudentProfileDto()
+            //{
+            //    UserInfo = userInfo,
+            //    StudentInfo = studentInfo,
+            //    InstructorName = student?.CurrentClass?.Instructor?.User?.Name,
+            //};
+            return student.Adapt<GetStudentProfileDto>();
         }
     }
 }

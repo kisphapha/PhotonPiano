@@ -14,7 +14,6 @@ namespace PhotonPiano.Helper.Dtos.StudentClassTuitons
 
         public DateTime CreateDate { get; set; }
         public DateTime DueDate { get; set; }
-        
-        public int RemindTimes {  get; set; } = 0;
+
     }
 }

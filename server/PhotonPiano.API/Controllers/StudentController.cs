@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
+using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.API.Controllers
@@ -17,7 +18,7 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet("{studentId}")]
-        public async Task<ActionResult<Student?>> GetStudentDetail([FromRoute] long studentId)
+        public async Task<ActionResult<GetStudentProfileDto?>> GetStudentDetail([FromRoute] long studentId)
         {
             return await _studentService.GetStudentDetailById(studentId);
         }

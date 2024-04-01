@@ -20,6 +20,8 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<Comment> Comments { get; set; }
 
+    public virtual DbSet<CommentVote> CommentVotes { get; set; }
+
     public virtual DbSet<Criterion> Criteria { get; set; }
 
     public virtual DbSet<EntranceTest> EntranceTests { get; set; }
@@ -35,6 +37,8 @@ public partial class PhotonPianoContext : DbContext
     public virtual DbSet<Notification> Notifications { get; set; }
 
     public virtual DbSet<Post> Posts { get; set; }
+
+    public virtual DbSet<PostVote> PostVotes { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
@@ -60,7 +64,6 @@ public partial class PhotonPianoContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("PhotonPiano"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Class>(entity =>
@@ -109,6 +112,25 @@ public partial class PhotonPianoContext : DbContext
             entity.HasOne(d => d.ReplyToComment).WithMany(p => p.InverseReplyToComment)
                 .HasForeignKey(d => d.ReplyToCommentId)
                 .HasConstraintName("FK_Comment_Comment");
+        });
+
+        modelBuilder.Entity<CommentVote>(entity =>
+        {
+            entity.HasKey(e => new { e.CommentId, e.UserId });
+
+            entity.ToTable("CommentVote");
+
+            entity.Property(e => e.UpOrDown).HasColumnName("Up_or_down");
+
+            entity.HasOne(d => d.Comment).WithMany(p => p.CommentVotes)
+                .HasForeignKey(d => d.CommentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CommentVote_Comment");
+
+            entity.HasOne(d => d.User).WithMany(p => p.CommentVotes)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_CommentVote_User");
         });
 
         modelBuilder.Entity<Criterion>(entity =>
@@ -255,6 +277,25 @@ public partial class PhotonPianoContext : DbContext
                 .HasConstraintName("FK_Post_User");
         });
 
+        modelBuilder.Entity<PostVote>(entity =>
+        {
+            entity.HasKey(e => new { e.PostId, e.UserId });
+
+            entity.ToTable("PostVote");
+
+            entity.Property(e => e.UpOrDown).HasColumnName("Up_or_down");
+
+            entity.HasOne(d => d.Post).WithMany(p => p.PostVotes)
+                .HasForeignKey(d => d.PostId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PostVote_Post");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PostVotes)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PostVote_User");
+        });
+
         modelBuilder.Entity<Student>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("student_id_primary");
@@ -266,6 +307,10 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+
+            entity.HasOne(d => d.CurrentClass).WithMany(p => p.Students)
+                .HasForeignKey(d => d.CurrentClassId)
+                .HasConstraintName("FK_Student_Class");
 
             entity.HasOne(d => d.User).WithMany(p => p.Students)
                 .HasForeignKey(d => d.UserId)

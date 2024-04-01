@@ -1,4 +1,4 @@
-﻿using PhotonPiano.Helper.Dtos.User;
+﻿using PhotonPiano.Helper.Dtos.Users;
 
 namespace PhotonPiano.BusinessLogic.Interfaces
 {

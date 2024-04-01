@@ -1,5 +1,6 @@
 
 using FAMS.API.Middlewares;
+using Mapster;
 using PhotonPiano.API.Extensions;
 using PhotonPiano.Helper.Configuration;
 using PhotonPiano.Models.Models;
@@ -28,6 +29,7 @@ namespace PhotonPiano.API
 
             builder.Services.AddAutoMapper(typeof(MapperConfig))
                             .AddAuthenticationService(builder.Configuration);
+            builder.Services.AddMapster();
 
             builder.Services.AddSwaggerWithConfigurations();
 

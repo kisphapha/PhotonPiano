@@ -24,4 +24,6 @@ public partial class Class
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 
     public virtual ICollection<StudentClass> StudentClasses { get; set; } = new List<StudentClass>();
+
+    public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 }

@@ -19,6 +19,8 @@ public partial class Comment
 
     public DateTime? CommentDate { get; set; }
 
+    public virtual ICollection<CommentVote> CommentVotes { get; set; } = new List<CommentVote>();
+
     public virtual ICollection<Comment> InverseReplyToComment { get; set; } = new List<Comment>();
 
     public virtual Post Post { get; set; } = null!;

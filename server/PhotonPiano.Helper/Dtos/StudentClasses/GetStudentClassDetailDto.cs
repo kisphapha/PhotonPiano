@@ -1,4 +1,6 @@
 ﻿
+using PhotonPiano.Helper.Dtos.StudentClassTuitons;
+
 namespace PhotonPiano.Helper.Dtos.StudentClasses
 {
     public class GetStudentClassDetailDto
@@ -13,12 +15,7 @@ namespace PhotonPiano.Helper.Dtos.StudentClasses
 
         public string? Rank { get; set; }
 
-        public string? InstructorComment { get; set; }
+        public List<GetStudentClassTuitionDebtDto> TutionDebts { get; set; } = new List<GetStudentClassTuitionDebtDto>();
 
-        public int TotalLesson { get; set; } = 0;
-
-        public int LessonAttended { get; set; } = 0;
-
-        public int Year { get; set; } = DateTime.Now.Year;
     }
 }
