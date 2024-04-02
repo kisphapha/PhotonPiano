@@ -13,9 +13,11 @@ namespace PhotonPiano.BusinessLogic.Services
     public class StudentService : IStudentService
     {
         private readonly IStudentRepository _studentRepository;
-        public StudentService(IStudentRepository studentRepository)
+        private readonly IStudentLessonService _studentLessonService;
+        public StudentService(IStudentRepository studentRepository, IStudentLessonService studentLessonService)
         {
             _studentRepository = studentRepository;
+            _studentLessonService = studentLessonService;
         }
 
         public async Task<GetStudentProfileDto?> GetStudentDetailById(long id)
@@ -25,7 +27,12 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 throw new NotFoundException("Student not found");
             }
-            return student.Adapt<GetStudentProfileDto>();
+            var mappedStudent = student.Adapt<GetStudentProfileDto>();
+            foreach (var item in mappedStudent.StudentClasses)
+            {
+                item.StudentLessons = await _studentLessonService.GetStudentLessonsByClassIdAndStudentId(item.ClassId, item.StudentId);
+            }
+            return mappedStudent;
         }
 
         public async Task<GetStudentWithPostsDto?> GetStudentWithPostsAndComments(long id)

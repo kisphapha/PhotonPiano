@@ -1,6 +1,7 @@
 ﻿
 using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.StudentClassTuitons;
+using PhotonPiano.Helper.Dtos.StudentLessons;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.Helper.Dtos.StudentClasses
@@ -21,9 +22,11 @@ namespace PhotonPiano.Helper.Dtos.StudentClasses
 
         public string? InstructorComment { get; set; }
 
-        public virtual GetClassDto Class { get; set; } = null!;
+        public GetClassWithInstructorDto Class { get; set; } = null!;
 
-        public virtual ICollection<GetStudentClassTuitionDebtDto> StudentClassTuitions { get; set; } = new List<GetStudentClassTuitionDebtDto>();
+        public ICollection<GetStudentClassTuitionDebtDto> StudentClassTuitions { get; set; } = new List<GetStudentClassTuitionDebtDto>();
+
+        public List<GetStudentLessonDto> StudentLessons { get; set; } = new List<GetStudentLessonDto>();
 
     }
 }

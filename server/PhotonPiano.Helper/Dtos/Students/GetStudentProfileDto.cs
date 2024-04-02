@@ -4,6 +4,7 @@ using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.EntranceTest;
 using PhotonPiano.Helper.Dtos.StudentClasses;
 using PhotonPiano.Helper.Dtos.StudentClassTuitons;
+using PhotonPiano.Helper.Dtos.StudentLessons;
 using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Models.Models;
 

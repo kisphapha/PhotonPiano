@@ -38,6 +38,7 @@ namespace PhotonPiano.DataAccess.Repositories
                 .Include(s => s.User)
                 .Include(s => s.StudentClasses)
                     .ThenInclude(sc => sc.Class)
+                        .ThenInclude(sc => sc.Instructor.User)
                 .Include(s => s.StudentClasses)
                     .ThenInclude(sc => sc.StudentClassTuitions)
                 .Include(s => s.CurrentClass)

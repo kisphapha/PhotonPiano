@@ -69,7 +69,7 @@
                         <tr>
                             <td>Registration date</td>
                             <td>{{ student.registrationDate.substring(0, 10) +
-        " " + student.registrationDate.substring(11, 20) }}</td>
+                             " " + student.registrationDate.substring(11, 20) }}</td>
                         </tr>
                         <tr>
                             <td>Entrace Test Band Score</td>
@@ -120,27 +120,27 @@
                     <tbody>
                         <tr>
                             <td>Number of Posts</td>
-                            <td>1</td>
+                            <td>{{ this.student_post?.user.posts.length ?? 0}}</td>
                         </tr>
                         <tr>
                             <td>Number of Comments/Answers</td>
-                            <td>10</td>
+                            <td>{{ this.student_post?.user.comments.length ?? 0}}</td>
                         </tr>
                         <tr>
                             <td>Number of Upvotes</td>
-                            <td>69</td>
+                            <td>{{  this.student_post_statistic.up_taken }}</td>
                         </tr>
                         <tr>
                             <td>Number of Downvotes</td>
-                            <td>40</td>
+                            <td>{{ this.student_post_statistic.down_taken }}</td>
                         </tr>
                         <tr>
                             <td>Upvotes given</td>
-                            <td>24</td>
+                            <td>{{ this.student_post_statistic.up_given }}</td>
                         </tr>
                         <tr>
                             <td>Downvotes given</td>
-                            <td>12</td>
+                            <td>{{ this.student_post_statistic.up_given }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -150,81 +150,47 @@
             <div class="w-full">
                 <div class="italic text-xl ml-4">Educational Path</div>
                 <hr />
-                <div class="flex flex-col gap-8">
-                    <div class="flex justify-center gap-8 mt-4 ml-4">
+                <div v-if="this.student.studentClasses.length > 0" class="flex flex-col gap-8">
+                    <div class="flex justify-center gap-8 mt-4 ml-4" v-for="studentClass in this.student.studentClasses" :key="studentClass.id">
                         <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
-                            2023
+                            {{studentClass.class.startDate.substring(0,4)}}
                         </div>
                         <table id="student-info-table" class="bg-slate-50 w-1/3">
                             <tbody>
                                 <tr>
                                     <td>Class Name</td>
-                                    <td>Pink_2_2023</td>
+                                    <td>{{ studentClass.class.name }}</td>
                                 </tr>
                                 <tr>
                                     <td>Instructor</td>
-                                    <td>White Wine</td>
+                                    <td>{{studentClass.class.instructor?.user.name ?? ""}}</td>
                                 </tr>
                                 <tr>
                                     <td>Result</td>
-                                    <td>Passed</td>
+                                    <td>{{ studentClass.result ?? "" }}</td>
                                 </tr>
                                 <tr>
                                     <td>GPA</td>
-                                    <td>7.5</td>
+                                    <td>{{ studentClass.gpa ?? "" }}</td>
                                 </tr>
                                 <tr>
                                     <td>Instructor Comments</td>
-                                    <td>Very good! Need more finger practicing!</td>
+                                    <td>{{ studentClass.instructorComment ?? "" }}</td>
                                 </tr>
                                 <tr>
                                     <td>Lesson Attended</td>
-                                    <td>95/100</td>
+                                    <td>{{calculateAttendance(studentClass.studentLessons) + " / " + studentClass.studentLessons.length }}</td>
                                 </tr>
                                 <tr>
                                     <td>Ranking</td>
-                                    <td>Good</td>
+                                    <td>{{ studentClass.rank ?? "" }}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
-                    <div class="flex justify-center gap-8 mt-4 ml-4">
-                        <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
-                            2024
-                        </div>
-                        <table id="student-info-table" class="bg-slate-50 w-1/3">
-                            <tbody>
-                                <tr>
-                                    <td>Class Name</td>
-                                    <td>RED_1_2024</td>
-                                </tr>
-                                <tr>
-                                    <td>Instructor</td>
-                                    <td>Baby Shark</td>
-                                </tr>
-                                <tr>
-                                    <td>Result</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>GPA</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Instructor Comments</td>
-                                    <td></td>
-                                </tr>
-                                <tr>
-                                    <td>Lesson Attended</td>
-                                    <td>10/100</td>
-                                </tr>
-                                <tr>
-                                    <td>Ranking</td>
-                                    <td></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                </div>
+                <div v-else class="italic text-center">
+                    Look like you haven't enrolled any classes yet.
                 </div>
             </div>
         </div>
@@ -240,6 +206,13 @@ export default {
     data() {
         return {
             student: null,
+            student_post : null,
+            student_post_statistic : {
+                up_taken : 0,
+                down_taken : 0,
+                up_given : 0,
+                down_give : 0
+            },
             debts: [],
             class_level: [
                 "Blue Diamond (Beginner)",
@@ -256,6 +229,35 @@ export default {
         }
     },
     methods: {
+        statisticizeActiveness(){
+            let totalUpTaken = 0, totalDowntaken = 0, totalUpGiven = 0, totalDownGiven = 0
+            this.student_post.user.posts.forEach(p => {
+                totalUpTaken += p.upvote
+                totalUpTaken += p.downvote
+            })
+            this.student_post.user.comments.forEach(c => {
+                totalUpTaken += c.upvote
+                //totalUpTaken += p.downvote
+            })
+            this.student_post.user.postVotes.forEach(pv => {
+                if (pv.upOrDown){
+                    totalUpGiven += 1
+                } else {
+                    totalDownGiven += 1
+                }
+            })
+            this.student_post.user.commentVotes.forEach(cv => {
+                if (cv.upOrDown){
+                    totalUpGiven += 1
+                } else {
+                    totalDownGiven += 1
+                }
+            })
+            this.student_post_statistic.up_taken = totalUpTaken
+            this.student_post_statistic.down_taken = totalDowntaken
+            this.student_post_statistic.up_given = totalUpGiven
+            this.student_post_statistic.down_given = totalDownGiven
+        },
         async fetchData(token) {
             const response = await axios.get(import.meta.env.VITE_API_URL + '/api/auth/who-am-i', {
                 headers: {
@@ -278,14 +280,33 @@ export default {
                     });
                     console.log(this.debts)
                 }
+                const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
+                    headers: {
+                        'Authorization': 'Bearer ' + token,
+                    }
+                })
+                if (studentPostDetail.data){
+                    this.student_post = studentPostDetail.data
+                    this.statisticizeActiveness()
+                }
             }
+            
         },
         calculateRemindTimes(date1, date2) {
             const timeDifference = Math.abs(date2.getTime() - date1.getTime());
             const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
             return Math.floor(weeksDifference / 2);
 
-        }
+        },
+        calculateAttendance(studentLessons){
+            let count = 0;
+            studentLessons.forEach((sl) => {
+                if (sl.attendence){
+                    count++
+                }
+            })
+            return count;
+        },   
     }
 }
 </script>

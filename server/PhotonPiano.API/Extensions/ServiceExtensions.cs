@@ -19,6 +19,8 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IStudentRepository, StudentRepository>();
+            services.AddScoped<IStudentClassRepository, StudentClassRepository>();
+            services.AddScoped<IStudentLessonRepository, StudentLessonRepository>();
             return services;
         }
 
@@ -27,6 +29,8 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<IStudentClassService, StudentClassService>();
+            services.AddScoped<IStudentLessonService, StudentLessonService>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
