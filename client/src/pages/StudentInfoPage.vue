@@ -1,9 +1,8 @@
 <template>
-    <div>
+    <div v-if="student">
         <div class="flex gap-4 p-8 ">
-            <img class="w-32 h-32 rounded-full"
-                src="https://st2.depositphotos.com/2550635/7888/i/450/depositphotos_78887438-stock-photo-colorful-daybreak-in-a-beautiful.jpg">
-            <div class="text-4xl font-bold mt-auto mb-auto">Kisphophu</div>
+            <img class="w-32 h-32 rounded-full" :src="student.user.picture">
+            <div class="text-4xl font-bold mt-auto mb-auto">{{ student.user.name }}</div>
         </div>
         <div class="flex">
             <div class="w-1/2">
@@ -13,31 +12,31 @@
                     <tbody>
                         <tr>
                             <td>Full Name</td>
-                            <td>Kisphophu King</td>
+                            <td>{{ student.user.name }}</td>
                         </tr>
                         <tr>
                             <td>Email</td>
-                            <td>Kisphophu@gmail.com</td>
+                            <td>{{ student.user.email }}</td>
                         </tr>
                         <tr>
                             <td>Phone</td>
-                            <td>0987654321</td>
+                            <td>{{ student.user.phone }}</td>
                         </tr>
                         <tr>
                             <td>Date of Birth</td>
-                            <td>16/08/2003</td>
+                            <td>{{ student.user.dob }}</td>
                         </tr>
                         <tr>
                             <td>Address</td>
-                            <td>Kisphophu Castle, Kisphophu Castle, Kisphophu Castle</td>
+                            <td>{{ student.user.address }}</td>
                         </tr>
                         <tr>
                             <td>Gender</td>
-                            <td>Male</td>
+                            <td>{{ student.user.gender }}</td>
                         </tr>
                         <tr>
                             <td>Bank Account</td>
-                            <td>1020788689 VCB</td>
+                            <td>{{ student.user.bankAccount }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -49,35 +48,36 @@
                     <tbody>
                         <tr>
                             <td>Current Class</td>
-                            <td>BLUE_1_2024</td>
+                            <td>{{ student.currentClass?.name ?? "" }}</td>
                         </tr>
                         <tr>
                             <td>Current Instructor</td>
-                            <td>Baby Shark</td>
+                            <td>{{ student.currentClass?.instructor?.user.name ?? "" }}</td>
                         </tr>
                         <tr>
                             <td>Current Level</td>
-                            <td>Red Diamond (Intermediate)</td>
+                            <td>{{ this.class_level[student.level - 1] }}</td>
                         </tr>
                         <tr>
                             <td>Status</td>
-                            <td>In Class</td>
+                            <td>{{ student.status }}</td>
                         </tr>
                         <tr>
                             <td>Joined date</td>
-                            <td>16/08/2023</td>
+                            <td>{{ student.joinedDate }}</td>
                         </tr>
                         <tr>
                             <td>Registration date</td>
-                            <td>01/01/2023</td>
+                            <td>{{ student.registrationDate.substring(0, 10) +
+        " " + student.registrationDate.substring(11, 20) }}</td>
                         </tr>
                         <tr>
                             <td>Entrace Test Band Score</td>
-                            <td>4.5</td>
+                            <td>{{ student.entranceTests[student.entranceTests.length - 1]?.bandScore ?? "" }}</td>
                         </tr>
                         <tr>
                             <td>Entrance Test Ranked</td>
-                            <td>Intermediate</td>
+                            <td>{{ student.entranceTests[student.entranceTests.length - 1]?.rank ?? "" }}</td>
                         </tr>
                     </tbody>
                 </table>
@@ -87,33 +87,31 @@
             <div class="w-1/2">
                 <div class="italic text-xl ml-4">Tuition Debt</div>
                 <hr />
-                <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Period</th>
-                            <th>Annouced Date</th>
-                            <th>Deadline</th>
-                            <th>Remind times</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Febuary 2024</td>
-                            <td>15/1/2024 00:00:00 AM</td>
-                            <td>15/2/2024 00:00:00 AM</td>
-                            <td>4</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>March 2024</td>
-                            <td>15/2/2024 00:00:00 AM</td>
-                            <td>15/3/2024 00:00:00 AM</td>
-                            <td>2</td>
-                        </tr>
-                    </tbody>
-                </table>
+                <div v-if="this.debts.length > 0" class="mt-4 ml-4">
+                    <table id="student-info-table" class="bg-slate-50">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Period</th>
+                                <th>Annouced Date</th>
+                                <th>Deadline</th>
+                                <th>Remind times</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="debt in this.debts" :key="debt.id">
+                                <td>{{ debt.id }}</td>
+                                <td>{{ debt.month + "/" + debt.dueDate.substring(0, 4) }}</td>
+                                <td>{{ debt.createDate.substring(0, 10) }}</td>
+                                <td>{{ debt.dueDate.substring(0, 10) }}</td>
+                                <td>{{ calculateRemindTimes(new Date(), new Date(debt.dueDate)) }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div v-else class="italic mt-4 ml-4">
+                    Congratulations! You currently have no tuition debts
+                </div>
             </div>
             <div class="w-1/2">
                 <div class="italic text-xl ml-4">Activeness</div>
@@ -239,20 +237,54 @@ import axios from 'axios';
 
 export default {
     name: "StudentInfoPage",
-    props: ['user'],
+    data() {
+        return {
+            student: null,
+            debts: [],
+            class_level: [
+                "Blue Diamond (Beginner)",
+                "Pink Diamond (Novice)",
+                "Red Diamond (Intermediate)",
+                "Black Diamond (Advanced)",
+                "White Diamond (Virtuoso)",
+            ]
+        }
+    },
     mounted() {
-        this.fetchData();
+        if (localStorage.token) {
+            this.fetchData(localStorage.token);
+        }
     },
     methods: {
-        async fetchData() {
-            console.log(import.meta.env.VITE_API_URL);
-            await axios.get('https://localhost:7179/api/Student/1')
-                .then(response => {
-                    console.log(response.data);
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+        async fetchData(token) {
+            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/auth/who-am-i', {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
+                }
+            })
+            if (response.data) {
+                const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id)
+                if (studentDetail.data) {
+                    this.student = studentDetail.data
+                    // console.log(this.student)
+                    this.debts = []
+                    const studentClasses = studentDetail.data.studentClasses
+                    studentClasses.forEach(element => {
+                        element.studentClassTuitions.forEach(td => {
+                            if (td.status == 0) {
+                                this.debts.push(td)
+                            }
+                        })
+                    });
+                    console.log(this.debts)
+                }
+            }
+        },
+        calculateRemindTimes(date1, date2) {
+            const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+            const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
+            return Math.floor(weeksDifference / 2);
+
         }
     }
 }

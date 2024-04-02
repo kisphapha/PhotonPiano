@@ -55,7 +55,7 @@ namespace PhotonPiano.BusinessLogic.Services
             };
         }
 
-        public async Task<GetUserDto> GetUserByClaims(ClaimsPrincipal claims)
+        public async Task<GetLoginedUserDto> GetUserByClaims(ClaimsPrincipal claims)
         {
             var userId = claims.FindFirst(c => c.Type == "uid")?.Value;
 
@@ -64,7 +64,7 @@ namespace PhotonPiano.BusinessLogic.Services
                 throw new UnauthorizedException("Not found user");
             }
 
-            var user = await _userService.GetUserById(Convert.ToInt64(userId));
+            var user = await _userService.GetUserWithStudentsAndInstructors(Convert.ToInt64(userId));
 
             if (user == null)
             {

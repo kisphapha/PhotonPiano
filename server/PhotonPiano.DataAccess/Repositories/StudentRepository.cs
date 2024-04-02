@@ -36,7 +36,6 @@ namespace PhotonPiano.DataAccess.Repositories
         {
             var student = await _context.Students
                 .Include(s => s.User)
-                    .ThenInclude(s => s.Posts)
                 .Include(s => s.StudentClasses)
                     .ThenInclude(sc => sc.Class)
                 .Include(s => s.StudentClasses)
@@ -46,7 +45,6 @@ namespace PhotonPiano.DataAccess.Repositories
                     //    .ThenInclude(i => i.User)
                 .Include(s => s.StudentLessons)
                 .Include(s => s.EntranceTests)
-                .AsNoTracking()
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student?.CurrentClass is not null)

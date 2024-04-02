@@ -13,7 +13,7 @@
             <RouterLink v-if="user" class="p-2 ml-6" :to="`/student`">
                 <div class="flex gap-2">
                     {{user.name}}
-                    <img :src="user.profilePicture" class="w-8 h-8 rounded-full" alt="Profile Picture"/>
+                    <img :src="user.picture" class="w-8 h-8 rounded-full" alt="Profile Picture"/>
                 </div>
             </RouterLink>
         </div>

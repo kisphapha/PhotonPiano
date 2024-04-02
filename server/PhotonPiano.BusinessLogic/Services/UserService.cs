@@ -25,7 +25,10 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             return (await _userRepository.GetByIdAsync(id)).Adapt<GetUserDto>();
         }
-
+        public async Task<GetLoginedUserDto> GetUserWithStudentsAndInstructors(long id)
+        {
+            return (await _userRepository.GetUserWithStudentsAndInstructorsByIdAsync(id)).Adapt<GetLoginedUserDto>();
+        }
         public async Task<GetUserDto> VerifyLogin(string? emailOrPhone, string? password)
         {
             if (emailOrPhone.IsNullOrEmpty())
@@ -36,7 +39,7 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 throw new BadRequestException("Input password is empty");
             }
-            var user = await _userRepository.FindOneAsync(u => (u.Email == emailOrPhone || u.Phone == emailOrPhone) && u.Password == password);
+            var user = await _userRepository.FindOneAsync(u => (u.Email == emailOrPhone || u.Phone == emailOrPhone) && u.Password!.Equals(password));
 
             if (user is null)
             {

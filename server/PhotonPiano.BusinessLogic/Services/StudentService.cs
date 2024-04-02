@@ -25,14 +25,6 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 throw new NotFoundException("Student not found");
             }
-            //var studentInfo = _mapper.Map<GetStudentDto>(student);
-            //var userInfo = _mapper.Map<GetUserDto>(student.User);
-            //var studentProfile = new GetStudentProfileDto()
-            //{
-            //    UserInfo = userInfo,
-            //    StudentInfo = studentInfo,
-            //    InstructorName = student?.CurrentClass?.Instructor?.User?.Name,
-            //};
             return student.Adapt<GetStudentProfileDto>();
         }
 

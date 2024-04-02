@@ -1,6 +1,7 @@
 <template>
     <div class="max-w-md w-full px-6 py-8 bg-white rounded-lg shadow-md">
       <h2 class="text-2xl font-semibold text-gray-800 mb-6">Sign in PhotonPiano</h2>
+      <div v-if="error" class="text-red-500">{{ error }}</div>
       <div>
         <div class="mb-4">
           <label for="emailOrPhone" class="block text-gray-700 text-sm font-bold mb-2">Email or Phone Number</label>
@@ -24,19 +25,27 @@
 export default {
     name : "LoginForm",
     inject : ["eventBus"],
+    mounted() {
+      this.eventBus.on("login-set-error", (message) => {
+        this.setError(message)
+      })
+    },
     data() {
       return {
+        error : '',
         emailOrPhone: '',
         password: '',
       };
     },
     methods : {
       login(){
-        this.eventBus.emit("open-login-popup");
         this.eventBus.emit("login", {
           emailOrPhone : this.emailOrPhone,
           password : this.password
         })
+      },
+      setError(error){
+        this.error = error
       }
     }
 }

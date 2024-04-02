@@ -8,6 +8,6 @@ namespace PhotonPiano.BusinessLogic.Interfaces
     {
         Task<AuthResponseDto> Login(LoginDto loginDto);
 
-        Task<GetUserDto> GetUserByClaims(ClaimsPrincipal claims);
+        Task<GetLoginedUserDto> GetUserByClaims(ClaimsPrincipal claims);
     }
 }

@@ -29,7 +29,7 @@ namespace PhotonPiano.API.Controllers
         }
         [HttpGet("who-am-i")]
         [Authorize]
-        public async Task<ActionResult<GetUserDto>> WhoAmI()
+        public async Task<ActionResult<GetLoginedUserDto>> WhoAmI()
         {
             return await _authService.GetUserByClaims(HttpContext.User);
         }

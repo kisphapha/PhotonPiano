@@ -49,27 +49,32 @@ export default {
       this.isOpenLoginPopup = !this.isOpenLoginPopup;
     },
     async login(loginDto) {
-      await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', {
-        emailOrPhone: loginDto.emailOrPhone,
-        password: loginDto.password
-      })
-        .then(response => {
+      try {
+        const response = await axios.post(import.meta.env.VITE_API_URL + '/api/auth/login', {
+          emailOrPhone: loginDto.emailOrPhone,
+          password: loginDto.password
+        })
+        if (response.data) {
           localStorage.setItem("token", response.data.token)
           this.getUser(response.data.token)
-        })
-        .catch(error => {
-          console.error('Error:', error);
-        });
+          this.toggleLoginPopup()
+        }
+      } catch (e) {
+        if (e.response.data){
+          this.eventBus.emit("login-set-error", e.response.data.ErrorMessage)
+        } else {
+          this.eventBus.emit("login-set-error", "Something went wrong. Please try again later!")
+        }
+      }
     },
     async getUser(token) {
       const response = await axios.get(import.meta.env.VITE_API_URL + '/api/auth/who-am-i', {
         headers: {
-          'Authorization': 'Bearer ' +  token,
+          'Authorization': 'Bearer ' + token,
         }
       })
       if (response.data) {
         this.user = response.data
-        console.log(this.user)
       }
     }
   }

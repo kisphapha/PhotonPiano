@@ -3,18 +3,23 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\interfaces\\istudentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\studentclasses\\getstudentclassdetaildto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\classes\\getclassdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:extensions\\serviceextensions.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.api\\controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\studentcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{CAACAE79-7A01-45CA-808A-004E4D979B70}|..\\PhotonPiano.DataAccess\\PhotonPiano.DataAccess.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.dataaccess\\interfaces\\istudentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\students\\getstudentprofiledto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\studentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\userservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -26,6 +31,20 @@
           "DockedWidth": 200,
           "SelectedChildIndex": 9,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "StudentService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
+              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
+              "ViewState": "AQIAABAAAAAAAAAAAAAgwBsAAAATAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-02T07:22:38.584Z",
+              "IsPinned": true,
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
@@ -56,52 +75,68 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "ServiceExtensions.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Extensions\\ServiceExtensions.cs",
-              "RelativeDocumentMoniker": "Extensions\\ServiceExtensions.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Extensions\\ServiceExtensions.cs",
-              "RelativeToolTip": "Extensions\\ServiceExtensions.cs",
-              "ViewState": "AQIAAEcAAAAAAAAAAAAIwFUAAABCAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T09:32:42.992Z"
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Program.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Program.cs",
-              "RelativeDocumentMoniker": "Program.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Program.cs",
-              "RelativeToolTip": "Program.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAgwB0AAABAAAAA",
+              "Title": "GetClassDto.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Classes\\GetClassDto.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\Classes\\GetClassDto.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Classes\\GetClassDto.cs",
+              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\Classes\\GetClassDto.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T09:24:14.404Z"
+              "WhenOpened": "2024-04-02T07:47:03.92Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "IStudentService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IStudentService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IStudentService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IStudentService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IStudentService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAABOAAAA",
+              "Title": "GetStudentClassDetailDto.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\StudentClasses\\GetStudentClassDetailDto.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\StudentClasses\\GetStudentClassDetailDto.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\StudentClasses\\GetStudentClassDetailDto.cs",
+              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\StudentClasses\\GetStudentClassDetailDto.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAA3wBUAAAA0AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T09:07:05.069Z",
+              "WhenOpened": "2024-04-02T07:46:08.81Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
-              "Title": "IStudentRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Interfaces\\IStudentRepository.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.DataAccess\\Interfaces\\IStudentRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Interfaces\\IStudentRepository.cs",
-              "RelativeToolTip": "..\\PhotonPiano.DataAccess\\Interfaces\\IStudentRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAA/AAAA",
+              "Title": "GetStudentProfileDto.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Students\\GetStudentProfileDto.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\Students\\GetStudentProfileDto.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Students\\GetStudentProfileDto.cs",
+              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\Students\\GetStudentProfileDto.cs",
+              "ViewState": "AQIAAA8AAAAAAAAAAAA5wB8AAAAzAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-01T09:03:15.883Z"
+              "WhenOpened": "2024-04-02T07:45:42.5Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "StudentController.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\StudentController.cs",
+              "RelativeDocumentMoniker": "Controllers\\StudentController.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\StudentController.cs",
+              "RelativeToolTip": "Controllers\\StudentController.cs",
+              "ViewState": "AQIAAAsAAAAAAAAAAAAYwBUAAAAIAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-02T07:40:44.39Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "UserService.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\UserService.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\UserService.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\UserService.cs",
+              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\UserService.cs",
+              "ViewState": "AQIAABMAAAAAAAAAAAA1wAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-04-02T07:22:26.947Z",
+              "EditorCaption": ""
             }
           ]
         },

@@ -3,7 +3,8 @@ namespace PhotonPiano.Helper.Dtos.StudentClassTuitons
 {
     public class GetStudentClassTuitionDebtDto
     {
-        public int Id { get; set; }
+        public long Id { get; set; }
+
         public long StudentClassId { get; set; }
 
         public int Month { get; set; }
@@ -12,7 +13,8 @@ namespace PhotonPiano.Helper.Dtos.StudentClassTuitons
 
         public bool Status { get; set; }
 
-        public DateTime CreateDate { get; set; }
+        public DateTime? CreateDate { get; set; }
+
         public DateTime DueDate { get; set; }
 
     }
