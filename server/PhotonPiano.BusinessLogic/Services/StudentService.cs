@@ -6,6 +6,7 @@ using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;
+using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Services
@@ -22,7 +23,7 @@ namespace PhotonPiano.BusinessLogic.Services
 
         public async Task<GetStudentProfileDto?> GetStudentDetailById(long id)
         {
-            var student =  await _studentRepository.GetStudentDetailAsync(id);
+            var student = await _studentRepository.GetStudentDetailAsync(id);
             if (student is null)
             {
                 throw new NotFoundException("Student not found");
@@ -43,6 +44,18 @@ namespace PhotonPiano.BusinessLogic.Services
                 throw new NotFoundException("Student not found");
             }
             return student.Adapt<GetStudentWithPostsDto>();
+        }
+
+        public async Task<GetStudentDto> CreateStudentAfterCreatedUser(long userId)
+        {
+            var student = new Student
+            {
+                Level = 0,
+                Status = StudentStatus.Unregistered.ToString(),
+                UserId = userId,
+                RegistrationDate = DateTime.Now
+            };
+            return (await _studentRepository.AddAsync(student)).Adapt<GetStudentDto>();
         }
     }
 }

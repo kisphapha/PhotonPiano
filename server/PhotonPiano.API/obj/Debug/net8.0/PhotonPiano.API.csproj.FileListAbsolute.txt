@@ -152,3 +152,6 @@ C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPia
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Mapster.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Mapster.Core.dll
 C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Mapster.DependencyInjection.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\Administrator\Desktop\studyFPT\My projects\PhotonPiano\server\PhotonPiano.API\bin\Debug\net8.0\Newtonsoft.Json.Bson.dll

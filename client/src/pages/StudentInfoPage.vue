@@ -56,7 +56,7 @@
                         </tr>
                         <tr>
                             <td>Current Level</td>
-                            <td>{{ this.class_level[student.level - 1] }}</td>
+                            <td>{{ this.class_level[student.level] }}</td>
                         </tr>
                         <tr>
                             <td>Status</td>
@@ -203,6 +203,7 @@ import axios from 'axios';
 
 export default {
     name: "StudentInfoPage",
+    inject : ["eventBus"],
     data() {
         return {
             student: null,
@@ -215,6 +216,7 @@ export default {
             },
             debts: [],
             class_level: [
+                "",
                 "Blue Diamond (Beginner)",
                 "Pink Diamond (Novice)",
                 "Red Diamond (Intermediate)",
@@ -224,6 +226,9 @@ export default {
         }
     },
     mounted() {
+        this.eventBus.on("update-profile", () => {
+            this.fetchData(localStorage.token)
+        })
         if (localStorage.token) {
             this.fetchData(localStorage.token);
         }
@@ -278,7 +283,6 @@ export default {
                             }
                         })
                     });
-                    console.log(this.debts)
                 }
                 const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
                     headers: {

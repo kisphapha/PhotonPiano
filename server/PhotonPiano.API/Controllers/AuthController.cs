@@ -16,10 +16,12 @@ namespace PhotonPiano.API.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IAuthService _authService;
+        private readonly IUserService _userService;
 
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IUserService userService)
         {
             _authService = authService;
+            _userService = userService;
         }
 
         [HttpPost("login")]
@@ -32,6 +34,12 @@ namespace PhotonPiano.API.Controllers
         public async Task<ActionResult<GetLoginedUserDto>> WhoAmI()
         {
             return await _authService.GetUserByClaims(HttpContext.User);
+        }
+
+        [HttpPost("register")]
+        public async Task<ActionResult<GetUserWithStudentDto>> Register([FromBody] CreateUserDto body)
+        {
+            return await _userService.CreateUser(body);
         }
     }
 }

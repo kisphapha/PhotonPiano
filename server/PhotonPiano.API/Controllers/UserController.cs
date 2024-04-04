@@ -27,7 +27,6 @@ namespace PhotonPiano.API.Controllers
             return await _userService.GetUsers();
         }
 
-
         //[HttpPost]
         //public async Task<GetUserDto> Login([FromBody] LoginDto loginDto)
         //{
