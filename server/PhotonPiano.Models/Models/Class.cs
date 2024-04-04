@@ -19,6 +19,8 @@ public partial class Class
 
     public long InstructorId { get; set; }
 
+    public bool IsAnnouced { get; set; }
+
     public virtual Instructor Instructor { get; set; } = null!;
 
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
@@ -26,4 +28,6 @@ public partial class Class
     public virtual ICollection<StudentClass> StudentClasses { get; set; } = new List<StudentClass>();
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
+
+    public virtual ICollection<SwitchClassRequest> SwitchClassRequests { get; set; } = new List<SwitchClassRequest>();
 }

@@ -8,7 +8,7 @@
             <RouterLink class="p-2 ml-6" to="/">Home</RouterLink>
             <RouterLink class="p-2 ml-6" to="/about">About</RouterLink>
             <RouterLink v-if="this.user" class="p-2 ml-6" to="/forum">Forum</RouterLink>
-            <button v-if='this.user_detail && this.user_detail.status == "Unregistered"' class="p-2 ml-6    text-blue-400" @click="triggerOpenPopup">Enroll</button>
+            <button v-if='this.student_status == "Unregistered"' class="p-2 ml-6    text-blue-400" @click="triggerOpenPopup">Enroll</button>
             <button  v-if="!this.user" class="p-2 ml-6 text-cyan-400" @click="triggerOpenPopup">Login</button>
             <RouterLink v-if="this.user" class="p-2 ml-6" :to="`/student`">
                 <div class="flex gap-2">
@@ -16,6 +16,7 @@
                     <img :src="user.picture" class="w-8 h-8 rounded-full" alt="Profile Picture"/>
                 </div>
             </RouterLink>
+            <button v-if='this.user' class="p-2 ml-6" @click="logout">Logout</button>
         </div>
         <div class="text-5xl pl-8 pt-28 w-full italic">PHOTON PIANO</div>
         <div class="shadow text-2xl pl-8 pb-32 font-bold">Kim Cương's Piano Master Class</div>
@@ -31,7 +32,7 @@ export default {
     data () {
         return {
             user : null,
-            user_detail : null
+            student_status : ""
         }
     },
     inject : ["eventBus"],
@@ -53,10 +54,10 @@ export default {
             });
             const user = await userPromise;
             this.user = user;
-
-            if (user) {
-                this.user_detail = await this.fetchStudentDetail(user.students[0].id);
-            }
+            this.student_status = this.user?.students[0]?.status ?? "" 
+        },
+        logout(){
+            this.eventBus.emit("logout")
         }
     },
     mounted() {

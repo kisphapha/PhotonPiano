@@ -19,6 +19,15 @@
           </div>
         </div>
       </div>
+      <div v-if="isOpenConfirmPopup" class="popup-overlay">
+        <div class="sticky top-1/4 flex justify-center">
+          <div class="relative">
+            <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+              @click="toggleOpenOnfirmPopup">X</button>
+            <ConfirmationForm :message="this.cfmMessage" :callback="this.cfmCallBack"/>
+          </div>
+        </div>
+      </div>
     </div>
   
   </template>
@@ -27,15 +36,19 @@
   import axios from "axios";
   import LoginForm from './LoginForm.vue';
   import RegisterForm from "./RegisterForm.vue";
+  import ConfirmationForm from "./ConfirmationForm.vue";
   
   export default {
     name: "Authourization",
     inject: ["eventBus"],
-    components: { LoginForm, RegisterForm },
+    components: { LoginForm, RegisterForm, ConfirmationForm },
     data() {
       return {
+        cfmMessage : '',
+        cfmCallBack : '',
         isOpenLoginPopup: false,
         isOpenRegisterPopup: false,
+        isOpenConfirmPopup: false,
       };
     },
     mounted() {
@@ -45,12 +58,21 @@
       this.eventBus.on("open-register-popup", () => {
         this.toggleRegsiterPopup()
       });
+      this.eventBus.on("open-confirmation-popup", (request) => {
+        this.toggleOpenOnfirmPopup(request.message, request.callback)
+      });
       this.eventBus.on("get-user", async (resolve) => {
-        const user = await this.getUser(localStorage.token)
+        let user = null;
+        if (localStorage.token){
+          user = await this.getUser(localStorage.token)
+        } 
         resolve(user)
       });
       this.eventBus.on("login", (loginDto) => {
         this.login(loginDto)
+      });
+      this.eventBus.on("logout", () => {
+        this.logout()
       });
       this.eventBus.on("register", (registerDto) => {
         this.register(registerDto)
@@ -61,12 +83,23 @@
       updateApp(){
         this.eventBus.emit("update-header")
         this.eventBus.emit("update-profile")
+        this.eventBus.emit("update-home-page")
       },
       toggleLoginPopup() {
         this.isOpenLoginPopup = !this.isOpenLoginPopup;
       },
       toggleRegsiterPopup() {
         this.isOpenRegisterPopup = !this.isOpenRegisterPopup;
+      },
+      toggleOpenOnfirmPopup(message, callback) {
+        if (this.isOpenConfirmPopup){
+          this.isOpenConfirmPopup = false;
+          this.cfmMessage = ""
+        } else {
+          this.isOpenConfirmPopup = true;
+          this.cfmMessage = message
+          this.cfmCallBack = callback
+        }
       },
       async login(loginDto) {
         try {
@@ -126,7 +159,11 @@
         }
         return null;
         
-      }
+      },
+      logout(){
+        localStorage.removeItem("token")
+        this.updateApp()
+      },
     }
   }
   </script>

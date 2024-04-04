@@ -22,6 +22,8 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<CommentVote> CommentVotes { get; set; }
 
+    public virtual DbSet<ConfigurationVarible> ConfigurationVaribles { get; set; }
+
     public virtual DbSet<Criterion> Criteria { get; set; }
 
     public virtual DbSet<EntranceTest> EntranceTests { get; set; }
@@ -50,6 +52,8 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<StudentLesson> StudentLessons { get; set; }
 
+    public virtual DbSet<SwitchClassRequest> SwitchClassRequests { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
 
     public static string? GetConnectionString(string connectionStringName)
@@ -64,7 +68,6 @@ public partial class PhotonPianoContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("PhotonPiano"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Class>(entity =>
@@ -147,6 +150,14 @@ public partial class PhotonPianoContext : DbContext
                 .HasConstraintName("FK_CommentVote_User");
         });
 
+        modelBuilder.Entity<ConfigurationVarible>(entity =>
+        {
+            entity.HasNoKey();
+
+            entity.Property(e => e.Name).HasMaxLength(50);
+            entity.Property(e => e.Value).HasMaxLength(200);
+        });
+
         modelBuilder.Entity<Criterion>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("criteria_id_primary");
@@ -175,6 +186,9 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.Rank)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.ShortDesc)
+                .HasMaxLength(500)
+                .HasColumnName("Short_desc");
 
             entity.HasOne(d => d.Location).WithMany(p => p.EntranceTests)
                 .HasForeignKey(d => d.LocationId)
@@ -475,6 +489,22 @@ public partial class PhotonPianoContext : DbContext
                 .HasForeignKey(d => d.StudentId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_StudentLesson_Student");
+        });
+
+        modelBuilder.Entity<SwitchClassRequest>(entity =>
+        {
+            entity.ToTable("SwitchClassRequest");
+
+            entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
+            entity.Property(e => e.RequestDate).HasColumnType("datetime");
+
+            entity.HasOne(d => d.OldClass).WithMany(p => p.SwitchClassRequests)
+                .HasForeignKey(d => d.OldClassId)
+                .HasConstraintName("FK_SwitchClassRequest_Class");
+
+            entity.HasOne(d => d.Student).WithMany(p => p.SwitchClassRequests)
+                .HasForeignKey(d => d.StudentId)
+                .HasConstraintName("FK_SwitchClassRequest_Student");
         });
 
         modelBuilder.Entity<User>(entity =>

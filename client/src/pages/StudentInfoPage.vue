@@ -69,7 +69,7 @@
                         <tr>
                             <td>Registration date</td>
                             <td>{{ student.registrationDate.substring(0, 10) +
-                             " " + student.registrationDate.substring(11, 20) }}</td>
+        " " + student.registrationDate.substring(11, 20) }}</td>
                         </tr>
                         <tr>
                             <td>Entrace Test Band Score</td>
@@ -120,15 +120,15 @@
                     <tbody>
                         <tr>
                             <td>Number of Posts</td>
-                            <td>{{ this.student_post?.user.posts.length ?? 0}}</td>
+                            <td>{{ this.student_post?.user.posts.length ?? 0 }}</td>
                         </tr>
                         <tr>
                             <td>Number of Comments/Answers</td>
-                            <td>{{ this.student_post?.user.comments.length ?? 0}}</td>
+                            <td>{{ this.student_post?.user.comments.length ?? 0 }}</td>
                         </tr>
                         <tr>
                             <td>Number of Upvotes</td>
-                            <td>{{  this.student_post_statistic.up_taken }}</td>
+                            <td>{{ this.student_post_statistic.up_taken }}</td>
                         </tr>
                         <tr>
                             <td>Number of Downvotes</td>
@@ -151,9 +151,10 @@
                 <div class="italic text-xl ml-4">Educational Path</div>
                 <hr />
                 <div v-if="this.student.studentClasses.length > 0" class="flex flex-col gap-8">
-                    <div class="flex justify-center gap-8 mt-4 ml-4" v-for="studentClass in this.student.studentClasses" :key="studentClass.id">
+                    <div class="flex justify-center gap-8 mt-4 ml-4" v-for="studentClass in this.student.studentClasses"
+                        :key="studentClass.id">
                         <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
-                            {{studentClass.class.startDate.substring(0,4)}}
+                            {{ studentClass.class.startDate.substring(0, 4) }}
                         </div>
                         <table id="student-info-table" class="bg-slate-50 w-1/3">
                             <tbody>
@@ -163,7 +164,7 @@
                                 </tr>
                                 <tr>
                                     <td>Instructor</td>
-                                    <td>{{studentClass.class.instructor?.user.name ?? ""}}</td>
+                                    <td>{{ studentClass.class.instructor?.user.name ?? "" }}</td>
                                 </tr>
                                 <tr>
                                     <td>Result</td>
@@ -179,7 +180,8 @@
                                 </tr>
                                 <tr>
                                     <td>Lesson Attended</td>
-                                    <td>{{calculateAttendance(studentClass.studentLessons) + " / " + studentClass.studentLessons.length }}</td>
+                                    <td>{{ calculateAttendance(studentClass.studentLessons) + " / " +
+        studentClass.studentLessons.length }}</td>
                                 </tr>
                                 <tr>
                                     <td>Ranking</td>
@@ -203,16 +205,16 @@ import axios from 'axios';
 
 export default {
     name: "StudentInfoPage",
-    inject : ["eventBus"],
+    inject: ["eventBus"],
     data() {
         return {
             student: null,
-            student_post : null,
-            student_post_statistic : {
-                up_taken : 0,
-                down_taken : 0,
-                up_given : 0,
-                down_give : 0
+            student_post: null,
+            student_post_statistic: {
+                up_taken: 0,
+                down_taken: 0,
+                up_given: 0,
+                down_give: 0
             },
             debts: [],
             class_level: [
@@ -227,14 +229,18 @@ export default {
     },
     mounted() {
         this.eventBus.on("update-profile", () => {
-            this.fetchData(localStorage.token)
+            if (localStorage.token) {
+                this.fetchData(localStorage.token)
+            } else {
+                this.$router.push('/')
+            }
         })
         if (localStorage.token) {
             this.fetchData(localStorage.token);
         }
     },
     methods: {
-        statisticizeActiveness(){
+        statisticizeActiveness() {
             let totalUpTaken = 0, totalDowntaken = 0, totalUpGiven = 0, totalDownGiven = 0
             this.student_post.user.posts.forEach(p => {
                 totalUpTaken += p.upvote
@@ -245,14 +251,14 @@ export default {
                 //totalUpTaken += p.downvote
             })
             this.student_post.user.postVotes.forEach(pv => {
-                if (pv.upOrDown){
+                if (pv.upOrDown) {
                     totalUpGiven += 1
                 } else {
                     totalDownGiven += 1
                 }
             })
             this.student_post.user.commentVotes.forEach(cv => {
-                if (cv.upOrDown){
+                if (cv.upOrDown) {
                     totalUpGiven += 1
                 } else {
                     totalDownGiven += 1
@@ -270,31 +276,35 @@ export default {
                 }
             })
             if (response.data) {
-                const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id)
-                if (studentDetail.data) {
-                    this.student = studentDetail.data
-                    // console.log(this.student)
-                    this.debts = []
-                    const studentClasses = studentDetail.data.studentClasses
-                    studentClasses.forEach(element => {
-                        element.studentClassTuitions.forEach(td => {
-                            if (td.status == 0) {
-                                this.debts.push(td)
-                            }
-                        })
-                    });
-                }
-                const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
-                    headers: {
-                        'Authorization': 'Bearer ' + token,
+                if (response.data.role != "Student") {
+                    this.$router.push("/")
+                } else {
+                    console.log("abc")
+                    const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id)
+                    if (studentDetail.data) {
+                        this.student = studentDetail.data
+                        // console.log(this.student)
+                        this.debts = []
+                        const studentClasses = studentDetail.data.studentClasses
+                        studentClasses.forEach(element => {
+                            element.studentClassTuitions.forEach(td => {
+                                if (td.status == 0) {
+                                    this.debts.push(td)
+                                }
+                            })
+                        });
                     }
-                })
-                if (studentPostDetail.data){
-                    this.student_post = studentPostDetail.data
-                    this.statisticizeActiveness()
+                    const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
+                        headers: {
+                            'Authorization': 'Bearer ' + token,
+                        }
+                    })
+                    if (studentPostDetail.data) {
+                        this.student_post = studentPostDetail.data
+                        this.statisticizeActiveness()
+                    }
                 }
             }
-            
         },
         calculateRemindTimes(date1, date2) {
             const timeDifference = Math.abs(date2.getTime() - date1.getTime());
@@ -302,15 +312,15 @@ export default {
             return Math.floor(weeksDifference / 2);
 
         },
-        calculateAttendance(studentLessons){
+        calculateAttendance(studentLessons) {
             let count = 0;
             studentLessons.forEach((sl) => {
-                if (sl.attendence){
+                if (sl.attendence) {
                     count++
                 }
             })
             return count;
-        },   
+        },
     }
 }
 </script>

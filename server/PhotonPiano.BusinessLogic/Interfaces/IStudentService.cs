@@ -9,5 +9,10 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task<GetStudentProfileDto?> GetStudentDetailById(long id);
         Task<GetStudentDto> CreateStudentAfterCreatedUser(long userId);
         Task<GetStudentWithPostsDto?> GetStudentWithPostsAndComments(long id);
+
+        Task<bool> CheckStudentExists(long studentId);
+
+        Task<Student> GetRequiredStudentById(long studentId);
+        Task ChangeStatusOfStudent(long studentId, string status);
     }
 }

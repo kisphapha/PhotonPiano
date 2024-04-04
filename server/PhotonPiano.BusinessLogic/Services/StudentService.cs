@@ -21,6 +21,11 @@ namespace PhotonPiano.BusinessLogic.Services
             _studentLessonService = studentLessonService;
         }
 
+        public async Task<bool> CheckStudentExists(long studentId)
+        {
+            var student = await _studentRepository.GetByIdAsync(studentId);
+            return (student is not null) ;
+        }
         public async Task<GetStudentProfileDto?> GetStudentDetailById(long id)
         {
             var student = await _studentRepository.GetStudentDetailAsync(id);
@@ -34,6 +39,15 @@ namespace PhotonPiano.BusinessLogic.Services
                 item.StudentLessons = await _studentLessonService.GetStudentLessonsByClassIdAndStudentId(item.ClassId, item.StudentId);
             }
             return mappedStudent;
+        }
+        public async Task<Student> GetRequiredStudentById(long studentId)
+        {
+            var student = await _studentRepository.GetByIdAsync(studentId);
+            if (student is null)
+            {
+                throw new NotFoundException("Student not found");
+            }
+            return student;
         }
 
         public async Task<GetStudentWithPostsDto?> GetStudentWithPostsAndComments(long id)
@@ -56,6 +70,17 @@ namespace PhotonPiano.BusinessLogic.Services
                 RegistrationDate = DateTime.Now
             };
             return (await _studentRepository.AddAsync(student)).Adapt<GetStudentDto>();
+        }
+
+        public async Task ChangeStatusOfStudent(long studentId, string status)
+        {
+            var student = await GetRequiredStudentById(studentId);
+            if (!Enum.TryParse<StudentStatus>(status, out var result))
+            {
+                throw new BadRequestException("Status invalid");
+            }
+            student.Status = status;
+            await _studentRepository.UpdateAsync(student);
         }
     }
 }

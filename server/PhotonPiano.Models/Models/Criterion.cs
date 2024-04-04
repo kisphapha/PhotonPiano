@@ -13,6 +13,8 @@ public partial class Criterion
 
     public string? Description { get; set; }
 
+    public string? For { get; set; }
+
     public virtual ICollection<EntranceTestResult> EntranceTestResults { get; set; } = new List<EntranceTestResult>();
 
     public virtual ICollection<StudentClassScore> StudentClassScores { get; set; } = new List<StudentClassScore>();

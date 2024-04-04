@@ -27,5 +27,7 @@ public partial class Student
 
     public virtual ICollection<StudentLesson> StudentLessons { get; set; } = new List<StudentLesson>();
 
+    public virtual ICollection<SwitchClassRequest> SwitchClassRequests { get; set; } = new List<SwitchClassRequest>();
+
     public virtual User User { get; set; } = null!;
 }

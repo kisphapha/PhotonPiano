@@ -28,5 +28,12 @@ namespace PhotonPiano.API.Controllers
         {
             return await _studentService.GetStudentWithPostsAndComments(studentId);
         }
+
+        [HttpPatch("{studentId}/change-status")]
+        public async Task<IActionResult> UpdateStatusStudent([FromRoute] long studentId, [FromQuery] string status)
+        {
+            await _studentService.ChangeStatusOfStudent(studentId,status);
+            return NoContent();
+        }
     }
 }

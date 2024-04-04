@@ -19,6 +19,10 @@ public partial class EntranceTest
 
     public string? Rank { get; set; }
 
+    public string? ShortDesc { get; set; }
+
+    public bool IsAnnouced { get; set; }
+
     public virtual ICollection<EntranceTestResult> EntranceTestResults { get; set; } = new List<EntranceTestResult>();
 
     public virtual Location? Location { get; set; }

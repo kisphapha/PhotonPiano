@@ -64,8 +64,8 @@
         class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Register</button>
     </div>
     <div class="text-center">
-        Already have an account?<a href="#" @click="switchToLogin" class="underline text-blue-400"> Sign in here</a>
-      </div>
+      Already have an account?<a href="#" @click="switchToLogin" class="underline text-blue-400"> Sign in here</a>
+    </div>
   </div>
 
 </template>
@@ -86,39 +86,40 @@ export default {
       error: '',
       email: '',
       password: '',
-      cfm_password : "",
-      address : "",
-      phone : "",
-      dob : null,
-      gender : '',
-      bankAccount : ''
+      cfm_password: "",
+      address: "",
+      phone: "",
+      dob: null,
+      gender: '',
+      bankAccount: ''
     };
   },
   methods: {
     register() {
-      if (this.cfm_password != this.password){
+      if (this.cfm_password != this.password) {
         this.setError("Password and confirm password didn't match")
       } else {
         this.eventBus.emit("register", {
           name: this.name,
           password: this.password,
-          phone : this.phone,
-          email : this.email,
-          dob : this.dob,
-          address : this.address,
-          gender : this.gender,
-          bankAccount : this.bankAccount ? this.bankAccount : null
+          phone: this.phone,
+          email: this.email,
+          dob: this.dob,
+          address: this.address,
+          gender: this.gender,
+          bankAccount: this.bankAccount ? this.bankAccount : null
         })
       }
 
     },
-    switchToLogin(){
+    switchToLogin() {
       this.eventBus.emit("open-register-popup")
       this.eventBus.emit("open-login-popup")
     },
     setError(error) {
       this.error = error
-    }
+    },
+
   }
 }
 </script>

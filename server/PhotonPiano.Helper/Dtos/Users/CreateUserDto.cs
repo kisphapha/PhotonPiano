@@ -17,7 +17,7 @@ namespace PhotonPiano.Helper.Dtos.Users
         [Required]
         public string? Password { get; set; }
         [Required]
-        public DateOnly? Dob { get; set; }
+        public DateOnly? DoB { get; set; }
         //public DateTime? CreateDob { get; set; }
         [Required]
         public string? Address { get; set; }

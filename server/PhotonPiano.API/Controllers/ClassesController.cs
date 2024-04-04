@@ -1,8 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
-using PhotonPiano.BusinessLogic.Services;
-using PhotonPiano.Helper.Dtos.StudentClasses;
-using PhotonPiano.Helper.Dtos.Students;
 
 namespace PhotonPiano.API.Controllers
 {
