@@ -166,6 +166,9 @@
       </div>
 
     </div>
+    <div v-else-if='this.enroll_status == "InClass"'>
+      <ClassDetailOfStudent />
+    </div>
   </div>
 
 </template>
@@ -173,6 +176,7 @@
 <script>
 import PianoKeyboard from '../components/PianoKeyboard.vue';
 import EnrollForm from '../components/EnrollForm.vue';
+import ClassDetailOfStudent from '../components/ClassDetailOfStudent.vue';
 
 export default {
   name: "HomePage",
@@ -181,12 +185,12 @@ export default {
     return {
       user: null,
       student_status: "None",
-      enroll_status: "Examined",
+      enroll_status: "InClass",
       entrance_test_detail: null,
       entrance_test_result: "yes",
     }
   },
-  components: { PianoKeyboard, EnrollForm },
+  components: { PianoKeyboard, EnrollForm, ClassDetailOfStudent },
   methods: {
     triggerOpenPopup() {
       this.eventBus.emit("open-login-popup")
