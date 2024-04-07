@@ -13,7 +13,7 @@ public partial class Location
 
     public long Capacity { get; set; }
 
-    public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();
+    public virtual ICollection<EntranceTestSlot> EntranceTestSlots { get; set; } = new List<EntranceTestSlot>();
 
     public virtual ICollection<Lesson> Lessons { get; set; } = new List<Lesson>();
 }

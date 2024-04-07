@@ -35,5 +35,12 @@ namespace PhotonPiano.API.Controllers
             await _studentService.ChangeStatusOfStudent(studentId,status);
             return NoContent();
         }
+
+        [HttpPatch("{studentId}/change-short-desc")]
+        public async Task<IActionResult> UpdateShortDescription([FromRoute] long studentId, [FromBody] string description)
+        {
+            await _studentService.UpdateStudentShortDescription(studentId, description);
+            return NoContent();
+        }
     }
 }

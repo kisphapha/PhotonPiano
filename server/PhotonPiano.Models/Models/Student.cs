@@ -19,6 +19,8 @@ public partial class Student
 
     public DateTime RegistrationDate { get; set; }
 
+    public string? ShortDesc { get; set; }
+
     public virtual Class? CurrentClass { get; set; }
 
     public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();

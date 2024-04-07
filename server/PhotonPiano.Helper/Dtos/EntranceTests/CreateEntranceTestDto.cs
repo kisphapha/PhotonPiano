@@ -7,7 +7,5 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
     {
         [Required]
         public long StudentId { get; set; }
-
-        public string? ShortDesc { get; set; }
     }
 }

@@ -15,6 +15,13 @@ namespace PhotonPiano.API.Controllers
         {
             _entranceTestService = entranceTestService;
         }
+
+        [HttpGet("{studentId}/by-student")]
+        public async Task<GetEntranceTestDto?> GetEntranceTestByStudentId([FromRoute] long studentId)
+        {
+            return await _entranceTestService.GetEntranceTestByStudentId(studentId,true);
+        }
+
         [HttpPost]
         public async Task<GetEntranceTestDto> CreateEntranceTest([FromBody] CreateEntranceTestDto createEntranceTestDto)
         {

@@ -14,5 +14,9 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<Student> GetRequiredStudentById(long studentId);
         Task ChangeStatusOfStudent(long studentId, string status);
+
+        Task UpdateStudentShortDescription(long studentId, string desc);
+
+
     }
 }

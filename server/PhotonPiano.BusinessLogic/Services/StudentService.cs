@@ -82,5 +82,12 @@ namespace PhotonPiano.BusinessLogic.Services
             student.Status = status;
             await _studentRepository.UpdateAsync(student);
         }
+
+        public async Task UpdateStudentShortDescription(long studentId, string desc)
+        {
+            var student = await GetRequiredStudentById(studentId);
+            student.ShortDesc = desc;
+            await _studentRepository.UpdateAsync(student);
+        }
     }
 }

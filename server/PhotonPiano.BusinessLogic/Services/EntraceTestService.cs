@@ -29,8 +29,17 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 throw new NotFoundException("Student not found");
             }
-            var createdEntranceTest = (await _entranceTestRepository.AddAsync(createEntranceTestDto.Adapt<EntranceTest>()))
+            if (await GetEntranceTestByStudentId(createEntranceTestDto.StudentId, false) is not null)
+            {
+                throw new NotFoundException("This student already has an entrance test!");
+            }
+
+            var mappedEntranceTest = createEntranceTestDto.Adapt<EntranceTest>();
+            mappedEntranceTest.IsAnnouced = false;
+
+            var createdEntranceTest = (await _entranceTestRepository.AddAsync(mappedEntranceTest))
                                     .Adapt<GetEntranceTestDto>();
+
             var criterias = await _criteriaService.GetEntranceTestCriteria();
             foreach (var c in criterias)
             {
@@ -42,6 +51,16 @@ namespace PhotonPiano.BusinessLogic.Services
                 });
             }
             return createdEntranceTest;
+        }
+
+        public async Task<GetEntranceTestDto?> GetEntranceTestByStudentId(long studentId, bool isRequired)
+        {
+            var result = (await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId))?.Adapt<GetEntranceTestDto>();
+            if (result is null && isRequired)
+            {
+                throw new NotFoundException("Entrance Test not found");
+            }
+            return result;
         }
     }
 }

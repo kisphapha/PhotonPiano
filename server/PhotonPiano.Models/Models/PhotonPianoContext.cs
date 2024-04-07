@@ -30,6 +30,8 @@ public partial class PhotonPianoContext : DbContext
 
     public virtual DbSet<EntranceTestResult> EntranceTestResults { get; set; }
 
+    public virtual DbSet<EntranceTestSlot> EntranceTestSlots { get; set; }
+
     public virtual DbSet<Instructor> Instructors { get; set; }
 
     public virtual DbSet<Lesson> Lessons { get; set; }
@@ -166,6 +168,7 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.Description)
                 .HasMaxLength(255)
                 .IsUnicode(false);
+            entity.Property(e => e.For).HasMaxLength(255);
             entity.Property(e => e.Name)
                 .HasMaxLength(255)
                 .IsUnicode(false);
@@ -178,21 +181,17 @@ public partial class PhotonPianoContext : DbContext
 
             entity.ToTable("EntranceTest");
 
-            entity.HasIndex(e => e.LocationId, "IX_EntranceTest_LocationId");
-
             entity.HasIndex(e => e.StudentId, "IX_EntranceTest_StudentId");
 
             entity.Property(e => e.BandScore).HasColumnType("decimal(8, 2)");
+            entity.Property(e => e.EntranceTestSlot).HasColumnName("Entrance_test_slot");
             entity.Property(e => e.Rank)
                 .HasMaxLength(255)
                 .IsUnicode(false);
-            entity.Property(e => e.ShortDesc)
-                .HasMaxLength(500)
-                .HasColumnName("Short_desc");
 
-            entity.HasOne(d => d.Location).WithMany(p => p.EntranceTests)
-                .HasForeignKey(d => d.LocationId)
-                .HasConstraintName("FK_EntranceTest_Location");
+            entity.HasOne(d => d.EntranceTestSlotNavigation).WithMany(p => p.EntranceTests)
+                .HasForeignKey(d => d.EntranceTestSlot)
+                .HasConstraintName("FK_EntranceTest_EntranceTestSlot");
 
             entity.HasOne(d => d.Student).WithMany(p => p.EntranceTests)
                 .HasForeignKey(d => d.StudentId)
@@ -223,6 +222,16 @@ public partial class PhotonPianoContext : DbContext
                 .HasForeignKey(d => d.EntranceTestId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EntranceTestResult_EntranceTest");
+        });
+
+        modelBuilder.Entity<EntranceTestSlot>(entity =>
+        {
+            entity.ToTable("EntranceTestSlot");
+
+            entity.HasOne(d => d.Location).WithMany(p => p.EntranceTestSlots)
+                .HasForeignKey(d => d.LocationId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_EntranceTestSlot_Location");
         });
 
         modelBuilder.Entity<Instructor>(entity =>
@@ -356,6 +365,9 @@ public partial class PhotonPianoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.RegistrationDate).HasColumnType("datetime");
+            entity.Property(e => e.ShortDesc)
+                .HasMaxLength(500)
+                .HasColumnName("Short_desc");
             entity.Property(e => e.Status)
                 .HasMaxLength(255)
                 .IsUnicode(false);
