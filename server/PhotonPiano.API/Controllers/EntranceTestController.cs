@@ -10,10 +10,12 @@ namespace PhotonPiano.API.Controllers
     public class EntranceTestController : ControllerBase
     {
         private readonly IEntranceTestService _entranceTestService;
+        private readonly IEntranceTestSlotService _entranceTestSlotService;
 
-        public EntranceTestController(IEntranceTestService entranceTestService)
+        public EntranceTestController(IEntranceTestService entranceTestService, IEntranceTestSlotService entranceTestSlotService)
         {
             _entranceTestService = entranceTestService;
+            _entranceTestSlotService = entranceTestSlotService;
         }
 
         [HttpGet("{studentId}/by-student")]
@@ -21,11 +23,20 @@ namespace PhotonPiano.API.Controllers
         {
             return await _entranceTestService.GetEntranceTestByStudentId(studentId,true);
         }
-
+        [HttpGet("slots")]
+        public async Task<List<GetEntranceTestSlotDto>> GetPagedEntranceTestSlot([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
+        {
+            return await _entranceTestSlotService.GetPagedEntranceTestSlots(pageNumber, pageSize);
+        }
         [HttpPost]
         public async Task<GetEntranceTestDto> CreateEntranceTest([FromBody] CreateEntranceTestDto createEntranceTestDto)
         {
             return await _entranceTestService.CreateEntranceTest(createEntranceTestDto);
+        }
+        [HttpPost("slot")]
+        public async Task<GetEntranceTestSlotDto> CreateEntranceTestSlot([FromBody] CreateEntranceTestSlotDto createEntranceTestSlotDto)
+        {
+            return await _entranceTestSlotService.CreateEntranceTestSlot(createEntranceTestSlotDto);
         }
     }
 }

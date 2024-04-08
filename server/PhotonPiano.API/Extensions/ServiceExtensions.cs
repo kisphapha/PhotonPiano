@@ -24,7 +24,9 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IStudentLessonRepository, StudentLessonRepository>();
             services.AddScoped<IEntranceTestRepository, EntranceTestRepository>();
             services.AddScoped<IEntranceTestResultRepository, EntranceTestResultRepository>();
+            services.AddScoped<IEntranceTestSlotRepository, EntranceTestSlotRepository>();
             services.AddScoped<ICriteriaRepository, CriteriaRepository>();
+            services.AddScoped<ILocationRepository, LocationRepository>();
             return services;
         }
 
@@ -36,8 +38,10 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IStudentClassService, StudentClassService>();
             services.AddScoped<IStudentLessonService, StudentLessonService>();
             services.AddScoped<IEntranceTestService, EntranceTestSerivce>();
+            services.AddScoped<IEntranceTestSlotService, EntranceTestSlotSerivce>();
             services.AddScoped<IEntranceTestResultService, EntranceTestResultSerivce>();
             services.AddScoped<ICriteriaSerivce, CriteriaSerivce>();
+            services.AddScoped<ILocationSerivce, LocationSerivce>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)

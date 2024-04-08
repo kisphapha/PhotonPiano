@@ -13,6 +13,8 @@ public partial class EntranceTestSlot
 
     public DateOnly Date { get; set; }
 
+    public bool isAnnouced { get; set; }
+
     public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();
 
     public virtual Location Location { get; set; } = null!;
