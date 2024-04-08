@@ -8,7 +8,7 @@
             <RouterLink class="p-2 ml-6" to="/">Home</RouterLink>
             <RouterLink class="p-2 ml-6" to="/about">About</RouterLink>
             <RouterLink v-if="this.user" class="p-2 ml-6" to="/forum">Forum</RouterLink>
-            <button v-if='this.student_status == "Unregistered"' class="p-2 ml-6    text-blue-400" @click="triggerOpenPopup">Enroll</button>
+            <button v-if='this.student_status == "Unregistered"' class="p-2 ml-6    text-blue-400" @click="changeEnrollingStatusToEnroll">Enroll</button>
             <button  v-if="!this.user" class="p-2 ml-6 text-cyan-400" @click="triggerOpenPopup">Login</button>
             <RouterLink v-if="this.user" class="p-2 ml-6" :to="`/student`">
                 <div class="flex gap-2">
@@ -58,6 +58,9 @@ export default {
         },
         logout(){
             this.eventBus.emit("logout")
+        },
+        changeEnrollingStatusToEnroll(){
+            this.eventBus.emit("update-home-page-enrolling-status","Enrolling")
         }
     },
     mounted() {

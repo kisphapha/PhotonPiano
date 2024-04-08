@@ -16,5 +16,8 @@ namespace PhotonPiano.Helper.Dtos.Students
         public long UserId { get; set; }
 
         public DateTime RegistrationDate { get; set; }
+    
+        public string? ShortDesc { get; set; }
+
     }
 }

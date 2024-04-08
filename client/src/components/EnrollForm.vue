@@ -13,7 +13,7 @@
       </div>
       <div>
         Short Description : 
-        <textarea rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Write a short description about your piano skills"></textarea>
+        <textarea v-model="short_desc" rows="4" class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300" placeholder="Write a short description about your piano skills"></textarea>
 
       </div>
       <div class="flex justify-center mt-4">
@@ -25,6 +25,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 
 export default {
   name: "EnrollForm",
@@ -32,7 +33,8 @@ export default {
   data() {
     return {
       user: null,
-      student_status: "None"
+      student_status: "None",
+      short_desc : ""
     }
   },
   methods: {
@@ -48,9 +50,14 @@ export default {
     setEnrollingStatus(status){
       this.eventBus.emit("update-home-page-enrolling-status",status)
     },
-    enroll(notAsking){
+    async enroll(notAsking){
       if (notAsking){
-        this.setEnrollingStatus("Applied")
+        await axios.patch(import.meta.env.VITE_API_URL + '/api/Student/' + this.user.students[0].id + '/change-status?status=PendingRegistration')
+        await axios.patch(import.meta.env.VITE_API_URL + '/api/Student/' + this.user.students[0].id + '/change-short-desc',{
+          content : this.short_desc
+        })
+
+        this.eventBus.emit("update-home-page")
       } else {
         this.eventBus.emit("open-confirmation-popup",{
           message : "Are you sure about this?",

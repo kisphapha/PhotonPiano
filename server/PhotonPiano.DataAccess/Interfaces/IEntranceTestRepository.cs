@@ -4,6 +4,6 @@ namespace PhotonPiano.DataAccess.Interfaces
 {
     public interface IEntranceTestRepository : IGenericRepository<EntranceTest>
     {
-        //Task<StudentClass?> GetStudentClassWithStudentLessonsById(long classId, long studentId);
+        Task<EntranceTest?> GetEntranceTestWithResultByStudentId(long studentId);
     }
 }

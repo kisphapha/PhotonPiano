@@ -36,21 +36,21 @@
         <div class="bg-gray-300 rounded-lg p-8">
           <div class="text-5xl font-bold text-green-600">SUCCESSFULLY!</div>
           <div class="text-3xl font-bold">Your request is pending</div>
-          <div class="text-2xl">2024-06-04 12:00:00</div>
+          <div class="text-2xl">{{ student_detail.registrationDate }}</div>
           <div class="mt-4">
-            Name : <span class="ml-4 font-bold"></span><br>
-            Email : <span class="ml-4 font-bold"></span><br>
-            Phone : <span class="ml-4 font-bold"></span><br>
-            Gender : <span class="ml-4 font-bold"></span><br>
-            Date Of Birth : <span class="ml-4 font-bold"></span><br>
+            Name : <span class="ml-4 font-bold">{{ user.name }}</span><br>
+            Email : <span class="ml-4 font-bold">{{ user.email }}</span><br>
+            Phone : <span class="ml-4 font-bold">{{ user.phone }}</span><br>
+            Gender : <span class="ml-4 font-bold">{{ user.gender }}</span><br>
+            Date Of Birth : <span class="ml-4 font-bold">{{ user.dob }}</span><br>
           </div>
           <div>
-            Short Description : <span class="ml-4 italic">ABXdxyz</span><br>
+            Short Description : <span class="ml-4 italic">{{ user.students[0]?.shortDesc }}</span><br>
 
             <div class="flex justify-center mt-4">
               <button @click="handleCancelRegistration(true)"
-                class="bg-red-500 pl-12 pr-12 pt-4 pb-4 rounded-lg font-bold hover:bg-red-700 text-white">Withdraw
-                your registration</button>
+                class="bg-red-500 pl-12 pr-12 pt-4 pb-4 rounded-lg font-bold hover:bg-red-700 text-white">Withdraw your
+                registration</button>
             </div>
           </div>
         </div>
@@ -64,15 +64,15 @@
       <div class="mt-8 mb-8  mr-auto ml-auto w-1/2 ">
         <div class="text-5xl font-bold text-green-600">CONGRATULATIONS!!!!!</div>
         <div class="text-3xl font-bold mt-2">Your registration has been accepted!</div>
-        <div class="text-2xl mt-2">2024-08-04 12:00:00</div>
-        <div v-if="this.entrance_test_detail">
+        <div v-if="this.entrance_test_detail?.entranceTestSlot.isAnnouced">
           <div class="text-xl italic mt-2">
             We kindly inform you about the location and time for you entrance test!
           </div>
           <div class="mt-8 mb-8 w-full bg-orange-100 p-8 rounded-xl font-bold">
-            <ul>
-              <li>Location : Mozart 1</li>
-              <li>Time : 7:00 AM - 8:30 AM (Shift 1)</li>
+            <ul class="list-disc">
+              <li>Location : {{ this.entrance_test_detail.entranceTestSlot.location.name }}</li>
+              <li>Shift : {{ this.shifts[this.entrance_test_detail.entranceTestSlot.shift] }}</li>
+              <li>Date : {{ this.entrance_test_detail.entranceTestSlot.date }}</li>
             </ul>
           </div>
         </div>
@@ -82,18 +82,20 @@
           </div>
         </div>
         <div class="mt-4">
-          Name : <span class="ml-4 font-bold"></span><br>
-          Email : <span class="ml-4 font-bold"></span><br>
-          Phone : <span class="ml-4 font-bold"></span><br>
-          Gender : <span class="ml-4 font-bold"></span><br>
-          Date Of Birth : <span class="ml-4 font-bold"></span><br>
+          Name : <span class="ml-4 font-bold">{{ user.name }}</span><br>
+          Email : <span class="ml-4 font-bold">{{ user.email }}</span><br>
+          Phone : <span class="ml-4 font-bold">{{ user.phone }}</span><br>
+          Gender : <span class="ml-4 font-bold">{{ user.gender }}</span><br>
+          Date Of Birth : <span class="ml-4 font-bold">{{ user.dob }}</span><br>
+          Registration time : <span class="ml-4 font-bold">{{ student_detail.registrationDate.substring(0, 10) + " " +
+      student_detail.registrationDate.substring(11, 19) }}</span><br>
         </div>
         <div>
-          Short Description : <span class="ml-4 italic">ABXdxyz</span><br>
+          Short Description : <span class="ml-4 italic">{{ user.students[0].shortDesc }}</span><br>
         </div>
       </div>
       <div class="mt-8 mb-8  mr-auto ml-auto w-1/2 ">
-        <div class="text-xl text-center">Let's celebrating!!</div>
+        <div class="text-xl text-center">Let's celebrate!!</div>
       </div>
       <PianoKeyboard />
     </div>
@@ -103,45 +105,41 @@
         <div class="text-3xl font-bold text-green-600">
           Congratulations on finishing your entrance test!
         </div>
-        <div v-if="this.entrance_test_result">
+        <div v-if="this.entrance_test_result && this.entrance_test_result.isScoreAnnounced">
           <div class="text-xl mt-4">
             We kindly inform you about your entrance test result as follows :
             <div class="mt-8">
               <table id="entrance-inform-table">
                 <tr>
-                  <th>Criteria 1</th>
-                  <th>Criteria 2</th>
-                  <th>Criteria 3</th>
-                  <th>Criteria 4</th>
+                  <th v-for="result in this.entrance_test_result.entranceTestResults" :key="result.id">
+                    {{ result.criteria.name }} </th>
                 </tr>
                 <tr>
-                  <td>8.0</td>
-                  <td>7.5</td>
-                  <td>6.0</td>
-                  <td>5.0</td>
+                  <td v-for="result in this.entrance_test_result.entranceTestResults" :key="result.id">{{ result.score }}
+                  </td>
                 </tr>
-              </table>        
+              </table>
             </div>
             <div class="mt-2 font-bold w-1/2 mr-auto ml-auto">
               <div>
                 <span class="font-bold">Final score :</span>
-                <span class="font-bold text-3xl ml-4 text-red-400">6.4</span>
+                <span class="font-bold text-3xl ml-4 text-red-400">{{ this.entrance_test_result.bandScore }}</span>
               </div>
               <div>
                 <span class="font-bold">Ranked :</span>
-                <span class="font-bold ml-4 text-blue-400">Level 4 (Advanced)</span>
-              </div>           
+                <span class="font-bold ml-4 text-blue-400">Level {{(this.rank.indexOf(this.entrance_test_result.rank)+1) + " (" + this.entrance_test_result.rank + ")"}}</span>
+              </div>
             </div>
-          </div>        
+          </div>
         </div>
         <div v-else>
           <div class="text-xl mt-4">
-            Your entrance test result should be annouce within a week!
+            Your entrance test result should be announced within a week!
           </div>
         </div>
-        <div v-if="this.entrance_test_result">
+        <div v-if="this.entrance_test_result && this.entrance_test_result.isScoreAnnounced">
           <div class="text-xl mt-4">
-            Based on your result, you will be placed in a suitable class to slowly level your skills. 
+            Based on your result, you will be placed in a suitable class to slowly level your skills.
             The class placement result will be informed as soon as possible.
           </div>
           <div class="italic">
@@ -162,7 +160,7 @@
         <div class="mt-8 mb-8  mr-auto ml-auto w-1/2 ">
           <div class="text-xl text-center">You tried hard! It's time for relaxing</div>
         </div>
-        <PianoKeyboard /> 
+        <PianoKeyboard />
       </div>
 
     </div>
@@ -174,6 +172,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import PianoKeyboard from '../components/PianoKeyboard.vue';
 import EnrollForm from '../components/EnrollForm.vue';
 import ClassDetailOfStudent from '../components/ClassDetailOfStudent.vue';
@@ -184,10 +183,28 @@ export default {
   data() {
     return {
       user: null,
+      student_detail: null,
       student_status: "None",
-      enroll_status: "InClass",
+      enroll_status: "None",
       entrance_test_detail: null,
       entrance_test_result: "yes",
+      shifts: [
+        "7:00 - 8:30",
+        "8:45 - 10:15",
+        "10:30 - 12:00",
+        "12:30 - 14:00",
+        "14:15 - 15:45",
+        "16:00 - 17:30",
+        "18:00 - 19:30",
+        "19:45 - 21:15",
+      ],
+      rank: [
+        "Beginner",
+        "Novice",
+        "Intermediate",
+        "Advanced",
+        "Virtuoso",
+      ]
     }
   },
   components: { PianoKeyboard, EnrollForm, ClassDetailOfStudent },
@@ -196,6 +213,8 @@ export default {
       this.eventBus.emit("open-login-popup")
     },
     async refresh() {
+      this.setEnrollingStatus("None")
+      this.eventBus.emit("update-header");
       const userPromise = new Promise((resolve) => {
         this.eventBus.emit("get-user", resolve);
 
@@ -203,6 +222,30 @@ export default {
       const user = await userPromise;
       this.user = user;
       this.student_status = this.user?.students[0]?.status ?? "None"
+      //Calling student profile endpoint
+      const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + user.students[0].id
+      )
+      if (studentDetail.data) {
+        this.student_detail = studentDetail.data
+      }
+      if (this.student_status == "PendingRegistration") {
+        this.setEnrollingStatus("Applied")
+      }
+      if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {
+        this.setEnrollingStatus("Accepted")
+        this.entrance_test_detail = this.student_detail.entranceTests.find(et => et.year == new Date().getFullYear())
+        const examDate = this.entrance_test_detail.entranceTestSlot?.date ?? "1999-01-01"
+        if (new Date(examDate) < new Date()) {
+          this.setEnrollingStatus("Examined")
+        }
+      }
+
+      //Calling entrance test score endpoint
+      const entranceTestScore = await axios.get(import.meta.env.VITE_API_URL + '/api/EntranceTest/' + user.students[0].id + '/entrance-test-score')
+
+      if (entranceTestScore.data) {
+        this.entrance_test_result = entranceTestScore.data
+      }
     },
     setEnrollingStatus(status) {
       this.enroll_status = status
@@ -216,7 +259,8 @@ export default {
       } else {
         //Call delete endpoint here
       }
-    }
+    },
+
   },
   mounted() {
     this.eventBus.on("update-home-page", async () => {
@@ -225,12 +269,13 @@ export default {
     this.eventBus.on("update-home-page-enrolling-status", async (status) => {
       this.setEnrollingStatus(status)
     })
-    if (localStorage.token) {
-      this.refresh()
-    }
     this.eventBus.on("handle-withdraw-registration-home-page", async () => {
       this.handleCancelRegistration(false)
     })
+    if (localStorage.token) {
+      this.refresh()
+    }
+
   }
 }
 </script>
@@ -238,11 +283,12 @@ export default {
 <style>
 #entrance-inform-table tr td,
 #entrance-inform-table th {
-    padding: 0.5rem 2rem 0.5rem 2rem;
-    border: solid 1px #a9a9bd;
-    text-align : center
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  border: solid 1px #a9a9bd;
+  text-align: center
 }
+
 #entrance-inform-table th {
-    background-color: #eeeeff;
+  background-color: #eeeeff;
 }
 </style>

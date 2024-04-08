@@ -1,5 +1,6 @@
 ﻿
 using PhotonPiano.Helper.Dtos.EntranceTests;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Interfaces
 {
@@ -9,5 +10,10 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<GetEntranceTestDto?> GetEntranceTestByStudentId(long studentId, bool isRequired);
 
+        Task<EntranceTest> GetEntranceTestByRequiredId(long id);
+
+        Task UpdateEntranceTestId(long id, long slotId);
+
+        Task<GetEntranceTestWithResultDto> GetEntranceTestScoreOfAStudent(long studentId);
     }
 }

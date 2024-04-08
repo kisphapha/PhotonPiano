@@ -37,9 +37,9 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpPatch("{studentId}/change-short-desc")]
-        public async Task<IActionResult> UpdateShortDescription([FromRoute] long studentId, [FromBody] string description)
+        public async Task<IActionResult> UpdateShortDescription([FromRoute] long studentId, [FromBody] UpdateShortDescriptionDto description)
         {
-            await _studentService.UpdateStudentShortDescription(studentId, description);
+            await _studentService.UpdateStudentShortDescription(studentId, description.content);
             return NoContent();
         }
     }

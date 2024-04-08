@@ -8,7 +8,6 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
 
         public long CriteriaId { get; set; }
 
-        public int? Year { get; set; }
 
     }
 }

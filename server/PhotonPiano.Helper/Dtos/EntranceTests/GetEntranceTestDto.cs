@@ -10,11 +10,9 @@
 
         public string? Rank { get; set; }
 
-        public string? ShortDesc { get; set; }
-
         public bool IsAnnouced { get; set; }
 
-        public long? EntranceTestSlot { get; set; }
+        public long? EntranceTestSlotId { get; set; }
 
     }
 }

@@ -13,8 +13,6 @@ public partial class EntranceTestResult
 
     public long CriteriaId { get; set; }
 
-    public int? Year { get; set; }
-
     public virtual Criterion Criteria { get; set; } = null!;
 
     public virtual EntranceTest EntranceTest { get; set; } = null!;

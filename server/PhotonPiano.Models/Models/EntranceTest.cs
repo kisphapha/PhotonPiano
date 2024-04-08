@@ -13,13 +13,15 @@ public partial class EntranceTest
 
     public string? Rank { get; set; }
 
-    public bool IsAnnouced { get; set; }
+    public long? EntranceTestSlotId { get; set; }
 
-    public long? EntranceTestSlot { get; set; }
+    public int? Year { get; set; }
+
+    public bool IsScoreAnnounced { get; set; }
 
     public virtual ICollection<EntranceTestResult> EntranceTestResults { get; set; } = new List<EntranceTestResult>();
 
-    public virtual EntranceTestSlot? EntranceTestSlotNavigation { get; set; }
+    public virtual EntranceTestSlot? EntranceTestSlot { get; set; }
 
     public virtual Student? Student { get; set; }
 }

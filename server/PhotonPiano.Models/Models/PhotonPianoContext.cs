@@ -184,13 +184,14 @@ public partial class PhotonPianoContext : DbContext
             entity.HasIndex(e => e.StudentId, "IX_EntranceTest_StudentId");
 
             entity.Property(e => e.BandScore).HasColumnType("decimal(8, 2)");
-            entity.Property(e => e.EntranceTestSlot).HasColumnName("Entrance_test_slot");
+            entity.Property(e => e.EntranceTestSlotId).HasColumnName("Entrance_test_slot_id");
+            entity.Property(e => e.IsScoreAnnounced).HasColumnName("isScoreAnnounced");
             entity.Property(e => e.Rank)
                 .HasMaxLength(255)
                 .IsUnicode(false);
 
-            entity.HasOne(d => d.EntranceTestSlotNavigation).WithMany(p => p.EntranceTests)
-                .HasForeignKey(d => d.EntranceTestSlot)
+            entity.HasOne(d => d.EntranceTestSlot).WithMany(p => p.EntranceTests)
+                .HasForeignKey(d => d.EntranceTestSlotId)
                 .HasConstraintName("FK_EntranceTest_EntranceTestSlot");
 
             entity.HasOne(d => d.Student).WithMany(p => p.EntranceTests)
@@ -227,6 +228,9 @@ public partial class PhotonPianoContext : DbContext
         modelBuilder.Entity<EntranceTestSlot>(entity =>
         {
             entity.ToTable("EntranceTestSlot");
+
+            entity.Property(e => e.AnnounceTime).HasColumnType("datetime");
+            entity.Property(e => e.IsAnnouced).HasColumnName("isAnnouced");
 
             entity.HasOne(d => d.Location).WithMany(p => p.EntranceTestSlots)
                 .HasForeignKey(d => d.LocationId)

@@ -279,7 +279,6 @@ export default {
                 if (response.data.role != "Student") {
                     this.$router.push("/")
                 } else {
-                    console.log("abc")
                     const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id)
                     if (studentDetail.data) {
                         this.student = studentDetail.data

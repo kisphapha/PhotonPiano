@@ -46,6 +46,7 @@ namespace PhotonPiano.DataAccess.Repositories
                     //    .ThenInclude(i => i.User)
                 .Include(s => s.StudentLessons)
                 .Include(s => s.EntranceTests)
+                    .ThenInclude(et => et.EntranceTestSlot)
                 .FirstOrDefaultAsync(s => s.Id == id);
 
             if (student?.CurrentClass is not null)
@@ -54,6 +55,17 @@ namespace PhotonPiano.DataAccess.Repositories
                     .LoadAsync();               
                 await _context.Entry(student.CurrentClass.Instructor).Reference(c => c.User)
                     .LoadAsync();           
+            }
+            if (student?.EntranceTests.ToList().Count > 0)
+            {
+                foreach (var entranceTest in student.EntranceTests)
+                {
+                    if (entranceTest.EntranceTestSlot is not null)
+                    {
+                        await _context.Entry(entranceTest.EntranceTestSlot).Reference(ets => ets.Location)
+                            .LoadAsync();
+                    }
+                }
             }
             return student;
         }

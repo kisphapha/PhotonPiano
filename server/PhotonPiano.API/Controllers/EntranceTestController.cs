@@ -24,19 +24,39 @@ namespace PhotonPiano.API.Controllers
             return await _entranceTestService.GetEntranceTestByStudentId(studentId,true);
         }
         [HttpGet("slots")]
-        public async Task<List<GetEntranceTestSlotDto>> GetPagedEntranceTestSlot([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
+        public async Task<ActionResult<List<GetEntranceTestSlotDto>>> GetPagedEntranceTestSlot([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
         {
             return await _entranceTestSlotService.GetPagedEntranceTestSlots(pageNumber, pageSize);
         }
+        [HttpGet("{studentId}/entrance-test-score")]
+        public async Task<ActionResult<GetEntranceTestWithResultDto>> GetEntranceTestScore([FromRoute] long studentId)
+        {
+            return await _entranceTestService.GetEntranceTestScoreOfAStudent(studentId);
+        }
         [HttpPost]
-        public async Task<GetEntranceTestDto> CreateEntranceTest([FromBody] CreateEntranceTestDto createEntranceTestDto)
+        public async Task<ActionResult<GetEntranceTestDto>> CreateEntranceTest([FromBody] CreateEntranceTestDto createEntranceTestDto)
         {
             return await _entranceTestService.CreateEntranceTest(createEntranceTestDto);
         }
         [HttpPost("slot")]
-        public async Task<GetEntranceTestSlotDto> CreateEntranceTestSlot([FromBody] CreateEntranceTestSlotDto createEntranceTestSlotDto)
+        public async Task<ActionResult<GetEntranceTestSlotDto>> CreateEntranceTestSlot([FromBody] CreateEntranceTestSlotDto createEntranceTestSlotDto)
         {
             return await _entranceTestSlotService.CreateEntranceTestSlot(createEntranceTestSlotDto);
         }
+
+        [HttpPatch("{slotId}/add-entrance-tests")]
+        public async Task<IActionResult> AddEntranceTests([FromRoute] long slotId,[FromBody] AddEntranceTestToASlotDto addEntranceTestToASlotDto)
+        {
+            await _entranceTestSlotService.AddEntranceTestToEntranceTestSlot(addEntranceTestToASlotDto, slotId);
+            return Ok();
+        }
+
+        [HttpPatch("{slotId}/announce")]
+        public async Task<IActionResult> AnnounceEntranceTestSlot([FromRoute] long slotId)
+        {
+            await _entranceTestSlotService.AnnouceEntranceTestSlot(slotId);
+            return Ok();
+        }
+
     }
 }

@@ -12,6 +12,13 @@ namespace PhotonPiano.DataAccess.Repositories
         {
             _context = context;
         }
-
+        public async Task<EntranceTest?> GetEntranceTestWithResultByStudentId(long studentId)
+        {
+            return await _context.EntranceTests
+                .Include(x => x.EntranceTestResults)
+                    .ThenInclude(x => x.Criteria)
+                .SingleOrDefaultAsync(x => x.StudentId == studentId);
+        }
+        
     }
 }

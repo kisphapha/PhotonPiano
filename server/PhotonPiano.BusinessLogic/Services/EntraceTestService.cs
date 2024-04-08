@@ -35,7 +35,8 @@ namespace PhotonPiano.BusinessLogic.Services
             }
 
             var mappedEntranceTest = createEntranceTestDto.Adapt<EntranceTest>();
-            mappedEntranceTest.IsAnnouced = false;
+            mappedEntranceTest.IsScoreAnnounced = false;
+            mappedEntranceTest.Year = DateTime.Now.Year;
 
             var createdEntranceTest = (await _entranceTestRepository.AddAsync(mappedEntranceTest))
                                     .Adapt<GetEntranceTestDto>();
@@ -46,8 +47,7 @@ namespace PhotonPiano.BusinessLogic.Services
                 await _entranceTestResultService.CreateEntranceTestResult(new CreateEntranceTestResultDto
                 {
                     CriteriaId = c.Id,
-                    EntranceTestId = createdEntranceTest.Id,
-                    Year = DateTime.Now.Year
+                    EntranceTestId = createdEntranceTest.Id,                
                 });
             }
             return createdEntranceTest;
@@ -55,12 +55,37 @@ namespace PhotonPiano.BusinessLogic.Services
 
         public async Task<GetEntranceTestDto?> GetEntranceTestByStudentId(long studentId, bool isRequired)
         {
-            var result = (await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId))?.Adapt<GetEntranceTestDto>();
+            var result = await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId);
             if (result is null && isRequired)
             {
                 throw new NotFoundException("Entrance Test not found");
             }
-            return result;
+            return result is not null ? result.Adapt<GetEntranceTestDto>() : null;
         }
+
+        public async Task<EntranceTest> GetEntranceTestByRequiredId(long id)
+        {
+            var entranceTest = await _entranceTestRepository.GetByIdAsync(id);
+            if (entranceTest is null)
+            {
+                throw new NotFoundException($"Entrance Test {id} not found");
+            }
+            return entranceTest;
+        }
+
+        public async Task UpdateEntranceTestId(long id, long slotId)
+        {
+            var entranceTest = await GetEntranceTestByRequiredId(id);
+            entranceTest.EntranceTestSlotId = slotId;
+
+            await _entranceTestRepository.UpdateAsync(entranceTest);
+        }
+
+        public async Task<GetEntranceTestWithResultDto> GetEntranceTestScoreOfAStudent(long studentId)
+        {
+            await _studentService.GetRequiredStudentById(studentId);
+            return (await _entranceTestRepository.GetEntranceTestWithResultByStudentId(studentId)).Adapt<GetEntranceTestWithResultDto>();
+        }
+    
     }
 }
