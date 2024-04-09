@@ -246,7 +246,6 @@ export default {
       this.eventBus.emit("update-header");
       const userPromise = new Promise((resolve) => {
         this.eventBus.emit("get-user", resolve);
-
       });
       const user = await userPromise;
       this.user = user;

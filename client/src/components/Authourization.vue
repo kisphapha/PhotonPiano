@@ -84,6 +84,7 @@
         this.eventBus.emit("update-header")
         this.eventBus.emit("update-profile")
         this.eventBus.emit("update-home-page")
+        this.eventBus.emit("update-class-page")
       },
       toggleLoginPopup() {
         this.isOpenLoginPopup = !this.isOpenLoginPopup;

@@ -237,6 +237,8 @@ export default {
         })
         if (localStorage.token) {
             this.fetchData(localStorage.token);
+        } else {
+            this.$router.push("/")
         }
     },
     methods: {
@@ -314,7 +316,7 @@ export default {
         calculateAttendance(studentLessons) {
             let count = 0;
             studentLessons.forEach((sl) => {
-                if (sl.attendence) {
+                if (sl.attendence == "Attended") {
                     count++
                 }
             })
