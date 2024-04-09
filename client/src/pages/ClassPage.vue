@@ -89,7 +89,7 @@
 //import { RouterLink } from 'vue-router';
 
 export default {
-    name: "ClassDetailOfStudent",
+    name: "ClassPage",
     data() {
         return {
             colors: [

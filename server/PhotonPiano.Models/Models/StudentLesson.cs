@@ -9,7 +9,7 @@ public partial class StudentLesson
 
     public long LessonId { get; set; }
 
-    public bool Attendence { get; set; }
+    public string Attendence { get; set; } = null!;
 
     public virtual Lesson Lesson { get; set; } = null!;
 

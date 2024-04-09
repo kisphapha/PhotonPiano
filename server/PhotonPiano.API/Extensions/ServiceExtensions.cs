@@ -27,6 +27,7 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IEntranceTestSlotRepository, EntranceTestSlotRepository>();
             services.AddScoped<ICriteriaRepository, CriteriaRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<IClassRepostiory, ClassRepository>();
             return services;
         }
 
@@ -37,11 +38,12 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IStudentService, StudentService>();
             services.AddScoped<IStudentClassService, StudentClassService>();
             services.AddScoped<IStudentLessonService, StudentLessonService>();
+            services.AddScoped<ILocationSerivce, LocationSerivce>();
+            services.AddScoped<ICriteriaSerivce, CriteriaSerivce>();
+            services.AddScoped<IClassService, ClassSerivce>();
             services.AddScoped<IEntranceTestService, EntranceTestSerivce>();
             services.AddScoped<IEntranceTestSlotService, EntranceTestSlotSerivce>();
             services.AddScoped<IEntranceTestResultService, EntranceTestResultSerivce>();
-            services.AddScoped<ICriteriaSerivce, CriteriaSerivce>();
-            services.AddScoped<ILocationSerivce, LocationSerivce>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)
@@ -85,6 +87,7 @@ namespace PhotonPiano.API.Extensions
                     Scheme = "Bearer"
                 });
                 options.OperationFilter<SecurityRequirementsOperationFilter>(); // Handles the authorization button
+                options.SchemaFilter<DateOnlyDocumentFilter>();
             });
             return services;
         }

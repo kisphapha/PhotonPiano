@@ -1,4 +1,5 @@
 ﻿
+using PhotonPiano.Helper.Dtos.Locations;
 using PhotonPiano.Helper.Dtos.StudentLessons;
 using PhotonPiano.Models.Models;
 
@@ -17,5 +18,7 @@ namespace PhotonPiano.Helper.Dtos.Lessons
         public DateOnly? Date { get; set; }
 
         public virtual ICollection<GetStudentLessonDto> StudentLessons { get; set; } = new List<GetStudentLessonDto>();
+
+
     }
 }

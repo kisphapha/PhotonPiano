@@ -495,6 +495,9 @@ public partial class PhotonPianoContext : DbContext
 
             entity.Property(e => e.StudentId).HasColumnName("studentId");
             entity.Property(e => e.LessonId).HasColumnName("lessonId");
+            entity.Property(e => e.Attendence)
+                .HasMaxLength(50)
+                .IsUnicode(false);
 
             entity.HasOne(d => d.Lesson).WithMany(p => p.StudentLessons)
                 .HasForeignKey(d => d.LessonId)

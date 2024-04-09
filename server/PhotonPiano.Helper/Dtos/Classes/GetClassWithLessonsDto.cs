@@ -20,5 +20,5 @@ namespace PhotonPiano.Helper.Dtos.Classes
         public string Status { get; set; } = null!;
 
         public virtual ICollection<GetLessonWithStudentLessonsDto> Lessons { get; set; } = new List<GetLessonWithStudentLessonsDto>();
-}
+    }
 }

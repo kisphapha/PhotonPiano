@@ -7,6 +7,6 @@ namespace PhotonPiano.Helper.Dtos.StudentLessons
 
         public long LessonId { get; set; }
 
-        public bool Attendence { get; set; }
+        public string Attendence { get; set; } = null!;
     }
 }

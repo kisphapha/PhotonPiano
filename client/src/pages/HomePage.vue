@@ -115,7 +115,8 @@
                     {{ result.criteria.name }} </th>
                 </tr>
                 <tr>
-                  <td v-for="result in this.entrance_test_result.entranceTestResults" :key="result.id">{{ result.score }}
+                  <td v-for="result in this.entrance_test_result.entranceTestResults" :key="result.id">{{ result.score
+                    }}
                   </td>
                 </tr>
               </table>
@@ -127,7 +128,9 @@
               </div>
               <div>
                 <span class="font-bold">Ranked :</span>
-                <span class="font-bold ml-4 text-blue-400">Level {{(this.rank.indexOf(this.entrance_test_result.rank)+1) + " (" + this.entrance_test_result.rank + ")"}}</span>
+                <span class="font-bold ml-4 text-blue-400">Level {{ (this.rank.indexOf(this.entrance_test_result.rank) +
+      1)
+      + " (" + this.entrance_test_result.rank + ")" }}</span>
               </div>
             </div>
           </div>
@@ -165,7 +168,34 @@
 
     </div>
     <div v-else-if='this.enroll_status == "InClass"'>
-      <ClassDetailOfStudent />
+      <div class="p-8 flex flex-col items-center">
+        <div class="text-3xl font-bold text-blue-600">
+          WELCOME TO PHOTONPIANO!
+        </div>
+        <img src="../assets/diamonds_strip5.png" class="w-96 mt-4 mb-4">
+        <div class="text-xl mt-4 text-center">
+          We're pleased to inform you that you have been successfully placed in a class.
+        </div>
+      </div>
+      <div class="mt-4 flex flex-col items-center">
+        <ul class="list-disc">
+          <li>Class name :
+            <button class="font-bold text-blue-400" @click="goToClass">
+              {{ this.student_detail.currentClass.name }}
+            </button>
+          </li>
+          <li>Level : <span class="font-bold">{{ this.student_detail.currentClass.level }}</span></li>
+          <li>Instructor : <span class="font-bold">{{ this.student_detail.currentClass.instructor.user.name }}</span>
+          </li>
+          <li>Duration : <span class="font-bold">{{ "From " + this.student_detail.currentClass.startDate + " to " +
+      this.student_detail.currentClass.endDate }}</span></li>
+        </ul>
+        <button class="font-bold text-blue-400" @click="goToClass">More information here</button>
+      </div>
+      <div class="mt-4 italic text-center">
+        Our journey is open ahead!
+      </div>
+      <PianoKeyboard />
     </div>
   </div>
 
@@ -175,7 +205,6 @@
 import axios from 'axios';
 import PianoKeyboard from '../components/PianoKeyboard.vue';
 import EnrollForm from '../components/EnrollForm.vue';
-import ClassDetailOfStudent from '../components/ClassDetailOfStudent.vue';
 
 export default {
   name: "HomePage",
@@ -207,7 +236,7 @@ export default {
       ]
     }
   },
-  components: { PianoKeyboard, EnrollForm, ClassDetailOfStudent },
+  components: { PianoKeyboard, EnrollForm },
   methods: {
     triggerOpenPopup() {
       this.eventBus.emit("open-login-popup")
@@ -222,9 +251,10 @@ export default {
       const user = await userPromise;
       this.user = user;
       this.student_status = this.user?.students[0]?.status ?? "None"
+
       //Calling student profile endpoint
-      const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + user.students[0].id
-      )
+      const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + user.students[0].id)
+
       if (studentDetail.data) {
         this.student_detail = studentDetail.data
       }
@@ -246,6 +276,11 @@ export default {
       if (entranceTestScore.data) {
         this.entrance_test_result = entranceTestScore.data
       }
+
+      if (this.student_detail.currentClass) {
+        this.setEnrollingStatus("InClass")
+      }
+      console.log(this.student_detail)
     },
     setEnrollingStatus(status) {
       this.enroll_status = status
@@ -260,7 +295,10 @@ export default {
         //Call delete endpoint here
       }
     },
-
+    goToClass() {
+      window.scrollTo(0, 0)
+      this.$router.push("/class")
+    }
   },
   mounted() {
     this.eventBus.on("update-home-page", async () => {
