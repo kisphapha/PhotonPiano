@@ -1,8 +1,8 @@
 <template>
   <div>
-
+    <!-- <button @click="playSomething">Hello world</button> -->
     <div id="piano">
-      <div v-for="key in this.piano_key" :key="key.id" :class="key.css_string" @click="playAudio(key.id)">
+      <div v-for="key in this.piano_key" :key="key.id" :class='key.css_string' @click="playAudio(key.id)">
         {{ isShowKey && key.isWhite ? key.note : "" }}
       </div>
     </div>
@@ -17,7 +17,14 @@
 export default {
   name: "PianoKeyboard",
   mounted() {
+    document.addEventListener('keydown',this.handleKeyDown)
+    document.addEventListener('keyup',this.handleKeyUp)
     this.generateKeys("La", 21)
+  },
+  beforeUnmount() {
+  // Remove event listener
+    document.removeEventListener('keydown', this.handleKeyDown);
+    document.removeEventListener('keyup', this.handleKeyUp);
   },
   methods: {
     generateKeys(startNote, numberOfKeys) {
@@ -33,7 +40,7 @@ export default {
           isWhite: isWhite,
           id: i,
           note: currentNote,
-          css_string: "border border-black border-b-8 border-b-slate-300 active:border-b rounded-b " + (isWhite ? "white-key" : "black-key")
+          css_string: "keyid-" + i + " border border-black border-b-8 border-b-slate-300 active:border-b rounded-b " + (isWhite ? "white-key" : "black-key") + " key-" + (i < this.pressableKey.length ? this.pressableKey[i].key : '') 
         });
       }
     },
@@ -41,7 +48,23 @@ export default {
       const audioIndex = keyId; // Assuming the audioList and piano_key have the same index for corresponding keys
       const audio = new Audio(this.audioList[audioIndex]);
       audio.play();
+    },
+    handleKeyDown(event){
+      // Get the key code of the pressed key
+        var keyCode = event.keyCode;
+        var keys = document.getElementsByClassName("key-" + this.pressableKey.find(k => k.code == keyCode).key)
+        keys[0].classList.add('border-b')
+        var audioId = keys[0].className.substring(6,8);
+        const audio = new Audio(this.audioList[parseInt(audioId)]);
+        audio.play();
+    },
+    handleKeyUp(event){
+      // Get the key code of the pressed key
+        var keyCode = event.keyCode;
+        var keys = document.getElementsByClassName("key-" + this.pressableKey.find(k => k.code == keyCode).key)
+        keys[0].classList.remove('border-b')
     }
+
   },
   data() {
     return {
@@ -119,12 +142,32 @@ export default {
           isWhite: true
         },
       ],
+      pressableKey: [
+        { key: 'A', code: 65 },
+        { key: 'W', code: 87 },
+        { key: 'S', code: 83 },
+        { key: 'D', code: 68 },
+        { key: 'E', code: 69 },
+        { key: 'F', code: 70 },
+        { key: 'R', code: 82 },
+        { key: 'G', code: 71 },
+        { key: 'H', code: 72 },
+        { key: 'Y', code: 89 },
+        { key: 'J', code: 74 },
+        { key: 'U', code: 85 },
+        { key: 'K', code: 75 },
+        { key: 'I', code: 73 },
+        { key: 'L', code: 76 },
+        { key: '\;', code: 59 },
+        { key: 'P', code: 80 },
+        { key: '\"', code: 34 }
+      ],
       piano_key: [
         {
           isWhite: true,
           id: 0,
           note: "Do",
-          css_string: ""
+          css_string: "",
         }
       ]
     };
@@ -144,7 +187,6 @@ export default {
 .white-key {
   width: 40px;
   height: 200px;
-  background-color: white;
   display: flex;
   flex-direction: column;
   align-items: center;

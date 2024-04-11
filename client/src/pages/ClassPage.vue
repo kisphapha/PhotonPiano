@@ -9,8 +9,7 @@
             </div>
             <div class="mt-4">
                 <div class="text-2xl">
-                    LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{ this.class_level[this.class.level -
-        1] }}
+                    LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{ this.class_level[this.class.level - 1] }}
                 </div>
                 <div class="text-2xl">
                     INSTRUCTOR : <span class="font-bold">{{ this.class.instructor.user.name }}</span>
@@ -327,4 +326,5 @@ export default {
     }
 }
 </script>
-<style></style>
+<style>
+</style>

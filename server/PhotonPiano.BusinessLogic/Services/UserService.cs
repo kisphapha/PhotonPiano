@@ -25,9 +25,9 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             return (await _userRepository.GetAllAsync()).Adapt<List<GetUserDto>>();
         }
-        public async Task<GetUserDto> GetUserById(long id)
+        public async Task<User?> GetUserById(long id)
         {
-            return (await _userRepository.GetByIdAsync(id)).Adapt<GetUserDto>();
+            return await _userRepository.GetByIdAsync(id);
         }
         public async Task<GetLoginedUserDto> GetUserWithStudentsAndInstructors(long id)
         {
@@ -77,5 +77,27 @@ namespace PhotonPiano.BusinessLogic.Services
 
             return getUserWithStudentDto;
         }
+
+        public async Task UpdateUser(long userId, UpdateUserDto updateUserDto)
+        {
+            var curentUser = await GetUserById(userId);
+            if (curentUser is null)
+            {
+                throw new NotFoundException("User not found");
+            }
+            if (!string.IsNullOrEmpty(updateUserDto.Name))
+            {
+                curentUser.Name = updateUserDto.Name;
+            }
+            if (updateUserDto.DoB is not null)
+            {
+                curentUser.DoB = updateUserDto.DoB;
+            }
+            curentUser.Address = updateUserDto.Address;
+            curentUser.Gender = updateUserDto.Gender;
+            curentUser.BankAccount = updateUserDto.BankAccount;
+            await _userRepository.UpdateAsync(curentUser);
+        }
+
     }
 }

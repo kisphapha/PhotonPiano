@@ -26,7 +26,12 @@ namespace PhotonPiano.API.Controllers
         {
             return await _userService.GetUsers();
         }
-
+        [HttpPatch("{studentId}")]
+        public async Task<IActionResult> UpdateUser([FromRoute] long studentId, [FromBody] UpdateUserDto updateUserDto)
+        {
+            await _userService.UpdateUser(studentId, updateUserDto);
+            return NoContent();
+        }
         //[HttpPost]
         //public async Task<GetUserDto> Login([FromBody] LoginDto loginDto)
         //{

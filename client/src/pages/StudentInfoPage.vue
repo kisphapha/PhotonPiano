@@ -6,10 +6,15 @@
         </div>
         <div class="flex">
             <div class="w-1/2">
-                <div class="italic text-xl ml-4">General</div>
+                <div class="flex gap-8">
+                    <div class="italic text-xl ml-4">General</div>
+                    <button class="material-icons" @click="toggleEditMode">
+                        edit
+                    </button>
+                </div>
                 <hr />
                 <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
-                    <tbody>
+                    <tbody v-if="!this.editMode">
                         <tr>
                             <td>Full Name</td>
                             <td>{{ student.user.name }}</td>
@@ -24,7 +29,7 @@
                         </tr>
                         <tr>
                             <td>Date of Birth</td>
-                            <td>{{ student.user.dob }}</td>
+                            <td>{{ student.user.doB }}</td>
                         </tr>
                         <tr>
                             <td>Address</td>
@@ -39,7 +44,55 @@
                             <td>{{ student.user.bankAccount }}</td>
                         </tr>
                     </tbody>
+                    <tbody v-else>
+                        <tr>
+                            <td>Full Name</td>
+                            <td><input class="w-full border border-gray-400 p-1" type="text" v-model="editDto.name">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Email</td>
+                            <td>{{ student.user.email }}</td>
+                        </tr>
+                        <tr>
+                            <td>Phone</td>
+                            <td>{{ student.user.phone }}</td>
+                        </tr>
+                        <tr>
+                            <td>Date of Birth</td>
+                            <td><input class="w-full border border-gray-400 p-1" type="date" v-model="editDto.dob"></td>
+                        </tr>
+                        <tr>
+                            <td>Address</td>
+                            <td><input class="w-full border border-gray-400 p-1" type="text" v-model="editDto.address">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Gender</td>
+                            <td>
+                                <select class="w-full border border-gray-400 p-1" v-model="editDto.gender">
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Bank Account</td>
+                            <td><input class="w-full border border-gray-400 p-1" type="text"
+                                    v-model="editDto.bankAccount"></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td class="flex justify-center">
+                                <button @click="updateInformation(true)" class="px-4 py-2 rounded-md bg-blue-400 text-white">Save</button>
+                            </td>
+                        </tr>
+                    </tbody>
+
                 </table>
+
+
             </div>
             <div class="w-1/2">
                 <div class="italic text-xl ml-4">Academic</div>
@@ -210,6 +263,7 @@ export default {
         return {
             student: null,
             student_post: null,
+            editMode: false,
             student_post_statistic: {
                 up_taken: 0,
                 down_taken: 0,
@@ -224,7 +278,17 @@ export default {
                 "Red Diamond (Intermediate)",
                 "Black Diamond (Advanced)",
                 "White Diamond (Virtuoso)",
-            ]
+            ],
+            editDto: {
+                id: 0,
+                name: '',
+                email: '',
+                dob: null,
+                phone: '',
+                address: '',
+                gender: '',
+                bankAccount: ''
+            }
         }
     },
     mounted() {
@@ -240,6 +304,10 @@ export default {
         } else {
             this.$router.push("/")
         }
+        this.eventBus.on("handle-update-information-student-profile-page", async () => {
+            this.editMode = false;
+            this.updateInformation(false)
+        })
     },
     methods: {
         statisticizeActiveness() {
@@ -277,6 +345,7 @@ export default {
                     'Authorization': 'Bearer ' + token,
                 }
             })
+
             if (response.data) {
                 if (response.data.role != "Student") {
                     this.$router.push("/")
@@ -285,6 +354,11 @@ export default {
                     if (studentDetail.data) {
                         this.student = studentDetail.data
                         // console.log(this.student)
+                        this.editDto.name = this.student.user.name
+                        this.editDto.bankAccount = this.student.user.bankAccount
+                        this.editDto.dob = this.student.user.doB
+                        this.editDto.address = this.student.user.address
+                        this.editDto.gender = this.student.user.gender
                         this.debts = []
                         const studentClasses = studentDetail.data.studentClasses
                         studentClasses.forEach(element => {
@@ -322,6 +396,26 @@ export default {
             })
             return count;
         },
+        toggleEditMode() {
+            this.editMode = !this.editMode
+        },
+        async updateInformation(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "handle-update-information-student-profile-page"
+                })
+            } else {
+                await axios.patch(import.meta.env.VITE_API_URL + '/api/User/' + this.student.user.id, {
+                    name: this.editDto.name,
+                    dob: this.editDto.dob,
+                    address: this.editDto.address,
+                    bankAccount: this.editDto.bankAccount,
+                    gender: this.editDto.gender
+                })
+                await this.fetchData(localStorage.token)
+            }
+        }
     }
 }
 </script>

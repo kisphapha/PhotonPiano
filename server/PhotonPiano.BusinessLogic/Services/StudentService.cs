@@ -89,5 +89,6 @@ namespace PhotonPiano.BusinessLogic.Services
             student.ShortDesc = desc;
             await _studentRepository.UpdateAsync(student);
         }
+
     }
 }

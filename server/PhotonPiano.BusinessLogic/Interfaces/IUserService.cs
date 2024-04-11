@@ -1,4 +1,5 @@
 ﻿using PhotonPiano.Helper.Dtos.Users;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Interfaces
 {
@@ -6,10 +7,12 @@ namespace PhotonPiano.BusinessLogic.Interfaces
     {
         Task<List<GetUserDto>> GetUsers();
 
-        Task<GetUserDto> GetUserById(long id);
+        Task<User?> GetUserById(long id);
         Task<GetUserDto> VerifyLogin(string? emailOrPhone, string? password);
         Task<GetLoginedUserDto> GetUserWithStudentsAndInstructors(long id);
 
         Task<GetUserWithStudentDto> CreateUser(CreateUserDto createUserDto);
+
+        Task UpdateUser(long userId, UpdateUserDto updateUserDto);
     }
 }

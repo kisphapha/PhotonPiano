@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div v-if='this.enroll_status == "None"'>
       <div class="w-full flex justify-center items-center flex-col">
         <div class="text-4xl  m-8 font-bold">WELCOME TO THE PARADISE OF PIANO ART</div>
@@ -205,6 +206,7 @@
 import axios from 'axios';
 import PianoKeyboard from '../components/PianoKeyboard.vue';
 import EnrollForm from '../components/EnrollForm.vue';
+
 
 export default {
   name: "HomePage",
