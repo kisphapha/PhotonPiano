@@ -1,5 +1,5 @@
 <template>
-    <div class="flex justify-end text-xl bg-black text-white sticky top-0 z-[1000]">
+    <div id="hor_nav" class="flex justify-end text-xl bg-black text-white sticky top-0 z-[1000]">
         <RouterLink class="p-2 ml-6" to="/">Home</RouterLink>
         <RouterLink v-if='this.student_status == "InClass"' class="p-2 ml-6" to="/class">Class</RouterLink>
         <RouterLink class="p-2 ml-6" to="/about">About</RouterLink>
@@ -63,4 +63,11 @@ export default {
     },
 }
 </script>
-<style></style>
+<style>
+
+#hor_nav .router-link-active {
+    border-radius: 10px;
+    background-color: white;
+    color : black;
+}
+</style>

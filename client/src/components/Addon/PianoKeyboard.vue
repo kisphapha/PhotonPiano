@@ -55,7 +55,7 @@ export default {
       var codeIndex = this.pressableKey.find(k => k.code == keyCode)
       if (codeIndex) {
         var keys = document.getElementsByClassName("key-" + codeIndex.key)
-        keys[0].classList.add("border-b-0")
+        keys[0].classList.add("border-b")
         var audioId = keys[0].className.substring(6, 8);
         const audio = new Audio(this.audioList[parseInt(audioId)]);
         audio.play();
@@ -67,7 +67,7 @@ export default {
       var codeIndex = this.pressableKey.find(k => k.code == keyCode)
       if (codeIndex) {
         var keys = document.getElementsByClassName("key-" + codeIndex.key)
-        keys[0].classList.remove("border-b-0")
+        keys[0].classList.remove("border-b")
       }
     }
 

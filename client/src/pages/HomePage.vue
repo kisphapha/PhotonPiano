@@ -204,8 +204,8 @@
 
 <script>
 import axios from 'axios';
-import PianoKeyboard from '../components/PianoKeyboard.vue';
-import EnrollForm from '../components/EnrollForm.vue';
+import PianoKeyboard from '../components/Addon/PianoKeyboard.vue';
+import EnrollForm from '../components/Common/EnrollForm.vue';
 
 
 export default {

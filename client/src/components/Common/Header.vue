@@ -18,14 +18,9 @@ export default {
 </script>
 <style>
 #banner{
-    background-image: url("../assets/background.png");
+    background-image: url("../../assets/background.png");
     background-position: center;
     background-repeat: no-repeat;
 }
 
-.router-link-active {
-    border-radius: 10px;
-    background-color: white;
-    color : black;
-}
 </style>
