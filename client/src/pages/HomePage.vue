@@ -286,14 +286,15 @@ export default {
     setEnrollingStatus(status) {
       this.enroll_status = status
     },
-    handleCancelRegistration(confirmation) {
+    async handleCancelRegistration(confirmation) {
       if (confirmation) {
         this.eventBus.emit("open-confirmation-popup", {
           message: "Are you sure about this?",
           callback: "handle-withdraw-registration-home-page"
         })
       } else {
-        //Call delete endpoint here
+        await axios.patch(import.meta.env.VITE_API_URL + '/api/Student/' + this.user.students[0].id + '/change-status?status=Unregistered')
+        await this.refresh()
       }
     },
     goToClass() {

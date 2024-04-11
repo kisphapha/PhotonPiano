@@ -2,7 +2,7 @@
   <div>
     <!-- <button @click="playSomething">Hello world</button> -->
     <div id="piano">
-      <div v-for="key in this.piano_key" :key="key.id" :class='key.css_string' @click="playAudio(key.id)">
+      <div v-for="key in this.piano_key" :key="key.id" :class="key.css_string" @click="playAudio(key.id)">
         {{ isShowKey && key.isWhite ? key.note : "" }}
       </div>
     </div>
@@ -17,12 +17,12 @@
 export default {
   name: "PianoKeyboard",
   mounted() {
-    document.addEventListener('keydown',this.handleKeyDown)
-    document.addEventListener('keyup',this.handleKeyUp)
+    document.addEventListener('keydown', this.handleKeyDown)
+    document.addEventListener('keyup', this.handleKeyUp)
     this.generateKeys("La", 21)
   },
   beforeUnmount() {
-  // Remove event listener
+    // Remove event listener
     document.removeEventListener('keydown', this.handleKeyDown);
     document.removeEventListener('keyup', this.handleKeyUp);
   },
@@ -40,7 +40,7 @@ export default {
           isWhite: isWhite,
           id: i,
           note: currentNote,
-          css_string: "keyid-" + i + " border border-black border-b-8 border-b-slate-300 active:border-b rounded-b " + (isWhite ? "white-key" : "black-key") + " key-" + (i < this.pressableKey.length ? this.pressableKey[i].key : '') 
+          css_string: "keyid-" + i + " border border-black border-b-8 border-b-slate-300 active:border-b rounded-b " + (isWhite ? "white-key" : "black-key") + " key-" + (i < this.pressableKey.length ? this.pressableKey[i].key : '')
         });
       }
     },
@@ -49,20 +49,26 @@ export default {
       const audio = new Audio(this.audioList[audioIndex]);
       audio.play();
     },
-    handleKeyDown(event){
+    handleKeyDown(event) {
       // Get the key code of the pressed key
-        var keyCode = event.keyCode;
-        var keys = document.getElementsByClassName("key-" + this.pressableKey.find(k => k.code == keyCode).key)
-        keys[0].classList.add('border-b')
-        var audioId = keys[0].className.substring(6,8);
+      var keyCode = event.keyCode;
+      var codeIndex = this.pressableKey.find(k => k.code == keyCode)
+      if (codeIndex) {
+        var keys = document.getElementsByClassName("key-" + codeIndex.key)
+        keys[0].classList.add("border-b-0")
+        var audioId = keys[0].className.substring(6, 8);
         const audio = new Audio(this.audioList[parseInt(audioId)]);
         audio.play();
+      }
     },
-    handleKeyUp(event){
+    handleKeyUp(event) {
       // Get the key code of the pressed key
-        var keyCode = event.keyCode;
-        var keys = document.getElementsByClassName("key-" + this.pressableKey.find(k => k.code == keyCode).key)
-        keys[0].classList.remove('border-b')
+      var keyCode = event.keyCode;
+      var codeIndex = this.pressableKey.find(k => k.code == keyCode)
+      if (codeIndex) {
+        var keys = document.getElementsByClassName("key-" + codeIndex.key)
+        keys[0].classList.remove("border-b-0")
+      }
     }
 
   },
@@ -160,7 +166,7 @@ export default {
         { key: 'L', code: 76 },
         { key: '\;', code: 59 },
         { key: 'P', code: 80 },
-        { key: '\"', code: 34 }
+        { key: '"', code: 34 }
       ],
       piano_key: [
         {
@@ -191,7 +197,6 @@ export default {
   flex-direction: column;
   align-items: center;
   justify-content: end;
-  /* Pack items from the end */
 }
 
 .black-key {
@@ -202,7 +207,6 @@ export default {
   margin-right: -12.5px;
   z-index: 1;
   position: relative;
-  /* Add position relative to overlap with white keys */
 }
 
 /* .white-key:hover {

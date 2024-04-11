@@ -306,7 +306,8 @@ export default {
         }
         this.eventBus.on("handle-update-information-student-profile-page", async () => {
             this.editMode = false;
-            this.updateInformation(false)
+            await this.updateInformation(false)
+            await this.fetchData(localStorage.token)
         })
     },
     methods: {
@@ -413,7 +414,6 @@ export default {
                     bankAccount: this.editDto.bankAccount,
                     gender: this.editDto.gender
                 })
-                await this.fetchData(localStorage.token)
             }
         }
     }
