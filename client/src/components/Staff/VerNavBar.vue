@@ -1,32 +1,65 @@
 <template>
-    <div id="ver_nav" class="bg-slate-200 inline-flex flex-col sticky top-0 z-[600] min-w-max">
-        <RouterLink class="px-4 py-2" to="/">
-            <span class="material-icons mr-4">edit</span>Dashboard
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">key</span>Entrance Test
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">calendar_month</span>Schedule
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">school</span>Classes
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">person</span>Students
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">badge</span>Instructors
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">manage_accounts</span>Staffs
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">settings</span>Settings
-        </RouterLink>
-        <RouterLink class="px-4 py-2" to="/student">
-            <span class="material-icons mr-4">logout</span>Logout
-        </RouterLink>
+    <div id="ver_nav" class="flex min-w-max">
+        <div class="bg-slate-100 flex flex-col overflow-y-auto h-[92.5vh]">
+            <RouterLink class="px-4 py-3 flex" to="/manage">
+                <span class="material-icons">edit</span>
+                <span class="ml-3" v-if="!isCollapsed">Dashboard</span>
+            </RouterLink>
+            <button :class="this.buttonEntranceCss" @click="expandEntrance(false)">
+                <span class="material-icons">key</span>
+                <span class="ml-3" v-if="!isCollapsed">Entrance Test</span>
+            </button>
+            <div v-if='isExpandEntrance && !isCollapsed' id="ver-child-nav" class="flex flex-col bg-slate-200">
+                <RouterLink  class="px-4 py-3 flex" to="/manage/entrance-test/registration">
+                    <span class="ml-3" v-if="!isCollapsed">Registration</span>
+                </RouterLink>
+                <RouterLink class="px-4 py-3 flex" to="/manage/entrance-test/arrange">
+                    <span class="ml-3" v-if="!isCollapsed">Arranging</span>
+                </RouterLink>
+            </div>
+            <RouterLink class="px-4 py-3 flex" to="/manage/schedule">
+                <span class="material-icons">calendar_month</span>
+                <span class="ml-3" v-if="!isCollapsed">Schedule</span>
+            </RouterLink>
+            <RouterLink class="px-4 py-3 flex" to="/manage/class">
+                <span class="material-icons">school</span>
+                <span class="ml-3" v-if="!isCollapsed">Classes</span>
+            </RouterLink>
+            <button :class="this.buttonStudentCss" @click="expandStudent(false)">
+                <span class="material-icons">person</span>
+                <span class="ml-3" v-if="!isCollapsed">Students</span>
+            </button>
+            <div v-if='isExpandStudent && !isCollapsed' id="ver-child-nav" class="flex flex-col bg-slate-200">
+                <RouterLink  class="px-4 py-3 flex" to="/manage/student/list">
+                    <span class="ml-3" v-if="!isCollapsed">List</span>
+                </RouterLink>
+                <RouterLink class="px-4 py-3 flex" to="/manage/student/re-class">
+                    <span class="ml-3" v-if="!isCollapsed">Class changing</span>
+                </RouterLink>
+            </div>
+            <RouterLink class="px-4 py-3 flex" to="/manage/instructors">
+                <span class="material-icons">badge</span>
+                <span class="ml-3" v-if="!isCollapsed">Instructors</span>
+            </RouterLink>
+            <RouterLink class="px-4 py-3 flex" to="/manage/staff">
+                <span class="material-icons">manage_accounts</span>
+                <span class="ml-3" v-if="!isCollapsed">Staffs</span>
+            </RouterLink>
+            <RouterLink class="px-4 py-3 flex" to="/manage/settings">
+                <span class="material-icons">settings</span>
+                <span class="ml-3" v-if="!isCollapsed">Settings</span>
+            </RouterLink>
+            <button class="px-4 py-3 flex">
+                <span class="material-icons">logout</span>
+                <span class="ml-3" v-if="!isCollapsed">Logout</span>
+            </button>
+
+        </div>
+        <div class="bg-transparent">
+            <button class="p-3 h-[10vh] bg-slate-50 rounded-r-xl material-icons" @click="toggleIsCollapse">
+                {{ isCollapsed ? "arrow_forward_ios" : "arrow_back_ios" }}
+            </button>
+        </div>
     </div>
 </template>
 
@@ -40,14 +73,70 @@ export default {
     inject: ["eventBus"],
     data() {
         return {
-            isCollapsed: true
+            isCollapsed: false,
+            buttonEntranceCss: "px-4 py-3 flex",
+            buttonStudentCss: "px-4 py-3 flex",
+            isExpandEntrance: false,
+            isExpandStudent: false,
         }
+    },
+    methods: {
+        toggleIsCollapse() {
+            this.isCollapsed = !this.isCollapsed
+        },
+        expandEntrance(reverse) {
+            if (!reverse){
+                this.isExpandEntrance = true
+                this.buttonEntranceCss += " router-link-active"
+                if (!window.location.pathname.startsWith("/manage/entrance-test"))
+                    this.$router.push("/manage/entrance-test/registration")
+            } else {
+                this.isExpandEntrance = false
+                this.buttonEntranceCss = "px-4 py-3 flex"
+            }           
+        },
+        expandStudent(reverse) {
+            if (!reverse){
+                this.isExpandStudent = true
+                this.buttonStudentCss += " router-link-active"
+                if (!window.location.pathname.startsWith("/manage/student"))
+                    this.$router.push("/manage/student/list")
+            } else {
+                this.isExpandStudent = false
+                this.buttonStudentCss = "px-4 py-3 flex"
+            }    
+        },
+        checkPath(){
+            if (window.location.pathname.startsWith("/manage/entrance-test")){
+                this.expandEntrance(false)
+            }
+            if (window.location.pathname.startsWith("/manage/student")){
+                this.expandStudent(false)
+            }
+        }
+    },
+    mounted() {
+        this.$router.afterEach((to, from) => {
+            if (!to.path.startsWith("/manage/entrance-test")){
+                this.expandEntrance(true)
+            }
+            if (!to.path.startsWith("/manage/student")){
+                this.expandStudent(true)
+            }
+        });
+        this.checkPath()
     }
 }
 </script>
 <style>
 #ver_nav .router-link-active {
     background-color: rgb(18, 16, 31);
+    color: white;
+    font-weight: bold;
+}
+
+#ver-child-nav .router-link-active {
+    background-color: rgb(87, 74, 160);
     color: white;
     font-weight: bold;
 }

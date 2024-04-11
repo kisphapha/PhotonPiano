@@ -19,7 +19,7 @@ export default {
   mounted() {
     document.addEventListener('keydown', this.handleKeyDown)
     document.addEventListener('keyup', this.handleKeyUp)
-    this.generateKeys("La", 21)
+    this.generateKeys("La",21)
   },
   beforeUnmount() {
     // Remove event listener

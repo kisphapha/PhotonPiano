@@ -7,11 +7,11 @@
         <RouterView style="min-height: 35vh;" />
         <Footer />
       </div>
-      <div v-else>
-        <HorNavbar/>
+      <div v-else class="h-screen">
+        <HorNavbar class="min-h-[7.5vh]"/>
         <div class="flex">
-          <VerNavBar class="overflow-y-auto h-[563px]"/>
-          <div class="w-full overflow-y-auto h-[563px] ">
+          <VerNavBar class="min-h-[92.5vh]"/>
+          <div class="w-full overflow-y-auto h-[92.5vh]">
             <RouterView style="min-height: 35vh;" />
           </div>
         </div>
