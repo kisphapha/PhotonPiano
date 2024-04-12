@@ -17,8 +17,8 @@
             </button>
             <div class="flex gap-2">
                 <input class="border p-1 rounded-md w-64" type="text" v-model="keyword_name"
-                    placeholder="Search by name" @change="handleKeywordChange">
-                <button class="p-1 bg-slate-100 rounded-lg">
+                    placeholder="Search by name">
+                <button class="p-1 bg-slate-100 rounded-lg" @click="handleSearch">
                     <span class="material-icons p-1">
                         search
                     </span>
@@ -29,10 +29,10 @@
         <table id="staff-table" class="mt-2 w-full">
             <colgroup>
                 <col style="width: 5%;" />
-                <col style="width: 15%;" />
-                <col style="width: 15%;" />
-                <col style="width: 15%;" />
-                <col style="width: 20%;" />
+                <col style="width: 12%;" />
+                <col style="width: 12%;" />
+                <col style="width: 12%;" />
+                <col style="width: 29%;" />
                 <col style="width: 20%;" />
                 <col style="width: 10%;" />
             </colgroup>
@@ -82,7 +82,7 @@
             </button>
         </div>
         <div v-if="isOpenAutomaticPopup" class="popup-overlay">
-            <div class="overflow-y-auto popup-content sticky top-1/4 flex justify-center">
+            <div class="overflow-y-auto flex justify-center items-center">
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutomaticPopup">X</button>
@@ -158,14 +158,4 @@ export default {
 
 </script>
 
-<style>
-.popup-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 2000;
-}
-</style>
+<style></style>
