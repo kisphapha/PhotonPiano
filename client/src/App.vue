@@ -57,4 +57,33 @@ export default {
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
+
+#staff-table tr td,
+#staff-table th {
+  padding: 0.5rem 2rem 0.5rem 2rem;
+  text-align: center
+}
+#staff-table thead tr {
+  background-color: #161618;
+  color : white;
+  font-weight: bold;
+}
+#staff-table tr {
+  background-color: #eeeeee;
+}
+#staff-table tbody tr:nth-child(even) {
+  background-color: #e0e0e0;
+}
+#staff-table thead tr th:first-child{
+  border-radius: 3rem 0 0 0;
+}
+#staff-table thead tr th:last-child{
+  border-radius: 0 3rem 0 0;
+}
+#staff-table tbody tr:last-child td:first-child {
+  border-radius: 0 0 0 3rem;
+}
+#staff-table tbody tr:last-child td:last-child {
+  border-radius: 0 0 3rem 0;
+}
 </style>
