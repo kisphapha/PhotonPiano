@@ -10,7 +10,7 @@
                     New Entrance Test Slot
                 </div>
             </button>
-            <button class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl">
+            <button class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl" @click="toggleAutoArrangePopup">
                 Auto-Arrange
             </button>
         </div>
@@ -112,16 +112,26 @@
                 </div>
             </div>
         </div>
+        <div v-if="isOpenAutoArrangePopup" class="popup-overlay">
+            <div class="flex justify-center items-center w-2/3">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleAutoArrangePopup">X</button>
+                    <EntranceTestAutoArrangeForm />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import EntranceTestSlotForm from '../../components/Staff/EntranceTestSlotForm.vue'
+import EntranceTestAutoArrangeForm from '../../components/Staff/EntranceTestAutoArrangeForm.vue'
 
 export default {
     name: "EntranceTestArrangePage",
     inject: ["eventBus"],
-    components: { EntranceTestSlotForm },
+    components: { EntranceTestSlotForm, EntranceTestAutoArrangeForm },
     data() {
         return {
             slots: [
@@ -164,6 +174,7 @@ export default {
             },
             isOpenAddPopup: false,
             isOpenEditPopup: false,
+            isOpenAutoArrangePopup: false,
             selectedYear: new Date().getFullYear()
         }
     },
@@ -178,6 +189,9 @@ export default {
         },
         toggleAddPopup() {
             this.isOpenAddPopup = !this.isOpenAddPopup
+        },
+        toggleAutoArrangePopup() {
+            this.isOpenAutoArrangePopup = !this.isOpenAutoArrangePopup
         },
         openEditPopup(locationId, instructorId, shiftId, selectedStudentIds) {
             this.isOpenEditPopup = true
@@ -194,6 +208,9 @@ export default {
         this.getYears()
         this.eventBus.on("toggle-add-entrance-test-slot-popup", () => {
             this.toggleAddPopup()
+        })
+        this.eventBus.on("toggle-auto-arrange-entrance-test-slot-popup", () => {
+            this.toggleAutoArrangePopup()
         })
         this.eventBus.on("close-edit-entrance-test-slot-popup", () => {
             this.closeEditPopup()
