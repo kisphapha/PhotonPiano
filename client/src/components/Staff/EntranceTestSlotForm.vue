@@ -15,8 +15,9 @@
                     </div>
                     <div class="mt-2 flex gap-2">
                         <div class="p-2 w-32">Shift</div>
-                        <select class="p-2 rounded-lg border w-full">
-                            <option v-for="shift in shifts" :key="shift.id">{{ shift.detail }}</option>
+                        <select class="p-2 rounded-lg border w-full" v-model="selectedShiftId">
+                            <option value="0">Select a shift</option>
+                            <option v-for="shift in shifts" :key="shift.id" :value="shift.id">{{ shift.detail }}</option>
                         </select>
                     </div>
                     <div class="mt-2 flex">
@@ -41,8 +42,9 @@
                     </div>
                     <div class="mt-2 flex gap-2">
                         <div class="p-2">Instructor</div>
-                        <select class="p-2 rounded-lg border w-full">
-                            <option v-for="instructor in instructors" :key="instructor.id">{{ instructor.name }}
+                        <select class="p-2 rounded-lg border w-full" v-model="selectedInstructorId">
+                            <option value="0">Select an instructor</option>
+                            <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">{{ instructor.name }}
                             </option>
                         </select>
                     </div>
@@ -96,17 +98,22 @@
                 <span class="material-icons p-1">arrow_forward_ios</span>
             </button>
         </div>
-        <div class="flex place-content-between" v-if="selectedLocation">
+        <div class="flex place-content-between" v-if="selectedLocation && selectedInstructorId != 0 && selectedShiftId != 0">
             <div
                 :class='this.studentSelected.length > this.selectedLocation.capacity ? "font-bold italic text-red-400" : "font-bold italic "'>
                 <span>Selected</span>
                 <span class="ml-4 text-2xl">{{ this.studentSelected.length }}</span>
                 <span>/ {{ this.selectedLocation.capacity }} students</span>
             </div>
-            <div class="flex gap-4 mt-4">
+            <div class="flex gap-4 mt-4" v-if='!checkEditTitle()'>
                 <button class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
                 <button class="p-2 text-red-400 underline font-bold"
                     @click="toggleAddSlotFormEntranceTestArrangePage">Cancel</button>
+            </div>
+            <div class="flex gap-4 mt-4" v-else>
+                <button class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
+                <button class="p-2 text-red-400 underline font-bold"
+                    @click="closeEditSlotFormEntranceTestArrangePage">Cancel</button>
             </div>
         </div>
 
@@ -119,7 +126,7 @@
 export default {
     name: "EntranceTestSlotForm",
     inject : ['eventBus'],
-    props: ['title'],
+    props: ['title','locationId','instructorId','shiftId','selectedStudentIds'],
     data() {
         return {
             locations: [
@@ -189,6 +196,8 @@ export default {
             currentPage: 1,
             keyword_name: "",
             selectedLocationId: 0,
+            selectedInstructorId: 0,
+            selectedShiftId: 0,
             selectedLocation: null,
             studentSelected: [],
         }
@@ -211,8 +220,6 @@ export default {
         },
         handleLocationChange() {
             this.selectedLocation = this.locations.find(l => l.id == this.selectedLocationId)
-            console.log(this.selectedLocation)
-            console.log(this.selectedLocationId)
         }, 
         isSelected(studentId) {
             return this.studentSelected.includes(studentId);
@@ -228,8 +235,28 @@ export default {
         toggleAddSlotFormEntranceTestArrangePage(){
             this.eventBus.emit("toggle-add-entrance-test-slot-popup")
         },
-        toggleEditSlotFormEntranceTestArrangePage(){
-            this.eventBus.emit("toggle-edit-entrance-test-slot-popup")
+        closeEditSlotFormEntranceTestArrangePage(){
+            this.eventBus.emit("close-edit-entrance-test-slot-popup")
+        },
+        getFromProps(){
+            this.selectedLocationId = this.locationId
+            this.selectedInstructorId = this.instructorId,
+            this.selectedShiftId = this.shiftId
+            for (var studentId of this.selectedStudentIds){
+                this.studentSelected.push(studentId)
+            }
+            console.log(this.selectedStudentIds)
+            console.log(this.studentSelected)
+            this.handleLocationChange()
+            
+        },
+        checkEditTitle(){
+            return (this.title == "Edit entrance test slot")
+        }
+    },
+    mounted(){
+        if (this.checkEditTitle()){
+            this.getFromProps()
         }
     }
 }

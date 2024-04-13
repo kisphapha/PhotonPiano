@@ -41,7 +41,7 @@
                 </div>
                 <div class="mt-auto mb-auto flex gap-4">
                     <div class="flex flex-col justify-center">
-                        <button>
+                        <button @click="openEditPopup(1,2,4,[1,3])">
                             <span class="material-icons">
                                 edit
                             </span>
@@ -101,7 +101,17 @@
                 </div>
             </div>
         </div>
-
+        <div v-if="isOpenEditPopup" class="popup-overlay">
+            <div class="flex justify-center items-center w-2/3">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="closeEditPopup">X</button>
+                    <EntranceTestSlotForm title="Edit entrance test slot" :locationId="this.editDto.locationId"
+                    :instructorId="this.editDto.instructorId" :shiftId="this.editDto.shiftId" 
+                    :selectedStudentIds="this.editDto.selectedStudentIds"/>
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -146,6 +156,12 @@ export default {
             years: [
 
             ],
+            editDto : {
+                locationId : 0,
+                shiftId : 0,
+                instructorId : 0,
+                selectedStudentIds : []
+            },
             isOpenAddPopup: false,
             isOpenEditPopup: false,
             selectedYear: new Date().getFullYear()
@@ -163,8 +179,15 @@ export default {
         toggleAddPopup() {
             this.isOpenAddPopup = !this.isOpenAddPopup
         },
-        toggleEditPopup() {
-            this.isOpenEditPopup = !this.isOpenEditPopup
+        openEditPopup(locationId, instructorId, shiftId, selectedStudentIds) {
+            this.isOpenEditPopup = true
+            this.editDto.locationId = locationId
+            this.editDto.instructorId = instructorId
+            this.editDto.shiftId = shiftId
+            this.editDto.selectedStudentIds = selectedStudentIds
+        },
+        closeEditPopup() {
+            this.isOpenEditPopup = false
         }
     },
     mounted() {
@@ -172,8 +195,8 @@ export default {
         this.eventBus.on("toggle-add-entrance-test-slot-popup", () => {
             this.toggleAddPopup()
         })
-        this.eventBus.on("toggle-edit-entrance-test-slot-popup", () => {
-            this.toggleEditPopup()
+        this.eventBus.on("close-edit-entrance-test-slot-popup", () => {
+            this.closeEditPopup()
         })
     }
 }
