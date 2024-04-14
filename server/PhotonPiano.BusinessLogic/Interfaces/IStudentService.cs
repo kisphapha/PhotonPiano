@@ -17,6 +17,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task UpdateStudentShortDescription(long studentId, string desc);
 
+        Task<List<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);
 
     }
 }

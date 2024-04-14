@@ -89,6 +89,9 @@ namespace PhotonPiano.BusinessLogic.Services
             student.ShortDesc = desc;
             await _studentRepository.UpdateAsync(student);
         }
-
+        public async Task<List<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto)
+        {
+            return (await _studentRepository.GetPagedStudents(pageNumber,pageSize, queryStudentDto)).Adapt<List<GetStudentWithUserDto>>();
+        }
     }
 }

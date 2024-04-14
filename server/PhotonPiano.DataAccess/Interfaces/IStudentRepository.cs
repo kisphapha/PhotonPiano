@@ -1,4 +1,5 @@
 ﻿
+using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.DataAccess.Interfaces
@@ -7,5 +8,7 @@ namespace PhotonPiano.DataAccess.Interfaces
     {
         Task<Student?> GetStudentDetailAsync(long id);
         Task<Student?> GetStudentWithPostsAndComments(long id);
+
+        Task<List<Student>> GetPagedStudents(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);
     }
 }

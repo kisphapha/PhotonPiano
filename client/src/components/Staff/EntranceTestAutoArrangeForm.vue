@@ -17,29 +17,36 @@
                 <input class="border p-1 rounded-md" type="date" v-model="endDate" @change="calculate">
             </div>
         </div>
-        <div class="mt-4 flex place-content-between gap-4">
+        <div class="mt-4 flex place-content-between gap-4 ">
             <div>
                 <div class="text-xl font-bold">Locations</div>
-                <div v-for="location in locations" class="flex gap-4">
-                    <div class="w-24">{{ location.name }}</div>
-                    <input type="checkbox" :checked="isLocationSelected(location.id)"
-                        @change="toggleLocationSelection(location.id)" />
+                <div class="overflow-y-auto h-48">
+                    <div v-for="location in locations" :key="location.id" class="flex gap-4 ">
+                        <div class="w-24">{{ location.name }}</div>
+                        <input type="checkbox" :checked="isLocationSelected(location.id)"
+                            @change="toggleLocationSelection(location.id)" />
+                    </div>
                 </div>
+
             </div>
             <div>
                 <div class="text-xl font-bold">Shifts</div>
-                <div v-for="shift in shifts" class="flex gap-4">
-                    <div class="w-24">{{ shift.detail }}</div>
-                    <input type="checkbox" :checked="isShiftSelected(shift.id)"
-                        @change="toggleShiftSelection(shift.id)" />
+                <div class="overflow-y-auto h-48">
+                    <div v-for="shift in shifts" :key="shift.id" class="flex gap-4">
+                        <div class="w-24">{{ shift.detail }}</div>
+                        <input type="checkbox" :checked="isShiftSelected(shift.id)"
+                            @change="toggleShiftSelection(shift.id)" />
+                    </div>
                 </div>
             </div>
             <div>
                 <div class="text-xl font-bold">Instructors</div>
-                <div v-for="instructor in instructors" class="flex gap-4">
-                    <div class="w-24">{{ instructor.name }}</div>
-                    <input type="checkbox" :checked="isInstructorSelected(instructor.id)"
-                        @change="toggleInstructorSelection(instructor.id)" />
+                <div class="overflow-y-auto h-48">
+                    <div v-for="instructor in instructors" :key="instructor.id" class="flex gap-4">
+                        <div class="w-24">{{ instructor.name }}</div>
+                        <input type="checkbox" :checked="isInstructorSelected(instructor.id)"
+                            @change="toggleInstructorSelection(instructor.id)" />
+                    </div>
                 </div>
             </div>
         </div>
