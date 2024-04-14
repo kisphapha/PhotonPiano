@@ -17,6 +17,14 @@ namespace PhotonPiano.API.Controllers
             _studentService = studentService;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<GetStudentWithUserDto>>> GetPagedStudentList([FromQuery] QueryStudentDto queryStudentDto,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            return await _studentService.GetPagedStudentList(pageNumber,pageSize,queryStudentDto);
+        }
+
         [HttpGet("{studentId}")]
         public async Task<ActionResult<GetStudentProfileDto?>> GetStudentDetail([FromRoute] long studentId)
         {
@@ -28,6 +36,7 @@ namespace PhotonPiano.API.Controllers
         {
             return await _studentService.GetStudentWithPostsAndComments(studentId);
         }
+
 
         [HttpPatch("{studentId}/change-status")]
         public async Task<IActionResult> UpdateStatusStudent([FromRoute] long studentId, [FromQuery] string status)
