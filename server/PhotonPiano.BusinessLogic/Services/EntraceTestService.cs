@@ -87,5 +87,9 @@ namespace PhotonPiano.BusinessLogic.Services
             return (await _entranceTestRepository.GetEntranceTestWithResultByStudentId(studentId)).Adapt<GetEntranceTestWithResultDto>();
         }
     
+        public async Task<List<GetEntranceTestDto>> GetEntranceTestsByYear(int year)
+        {
+            return (await _entranceTestRepository.FindAsync(et => et.Year == year)).Adapt<List<GetEntranceTestDto>>();
+        }
     }
 }

@@ -17,7 +17,11 @@ namespace PhotonPiano.API.Controllers
             _entranceTestService = entranceTestService;
             _entranceTestSlotService = entranceTestSlotService;
         }
-
+        [HttpGet("{year}/year")]
+        public async Task<List<GetEntranceTestDto>> GetEntranceTestByYear([FromRoute] int year)
+        {
+            return await _entranceTestService.GetEntranceTestsByYear(year);
+        }
         [HttpGet("{studentId}/by-student")]
         public async Task<GetEntranceTestDto?> GetEntranceTestByStudentId([FromRoute] long studentId)
         {

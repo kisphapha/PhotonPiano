@@ -81,6 +81,7 @@
     },
     methods: {
       updateApp(){
+        this.eventBus.emit("update-app-user")
         this.eventBus.emit("update-header")
         this.eventBus.emit("update-profile")
         this.eventBus.emit("update-home-page")

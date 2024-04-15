@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
+using PhotonPiano.Helper.Dtos.Paginations;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 
@@ -18,7 +19,7 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetStudentWithUserDto>>> GetPagedStudentList([FromQuery] QueryStudentDto queryStudentDto,
+        public async Task<ActionResult<PaginatedResult<GetStudentWithUserDto>>> GetPagedStudentList([FromQuery] QueryStudentDto queryStudentDto,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
         {

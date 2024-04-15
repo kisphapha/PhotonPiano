@@ -1,4 +1,5 @@
-﻿using PhotonPiano.Helper.Dtos.Students;
+﻿using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Models.Models;
 
@@ -17,7 +18,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task UpdateStudentShortDescription(long studentId, string desc);
 
-        Task<List<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);
+        Task<PaginatedResult<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);
 
     }
 }

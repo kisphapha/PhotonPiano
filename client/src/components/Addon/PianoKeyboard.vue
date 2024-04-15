@@ -52,10 +52,11 @@ export default {
     handleKeyDown(event) {
       // Get the key code of the pressed key
       var keyCode = event.keyCode;
-      var codeIndex = this.pressableKey.find(k => k.code == keyCode)
+      console.log(keyCode)
+      var codeIndex = this.pressableKey.find(k => k.key.charCodeAt(0) == keyCode)
       if (codeIndex) {
         var keys = document.getElementsByClassName("key-" + codeIndex.key)
-        keys[0].classList.add("border-b")
+        keys[0].classList.add("border-b-0")
         var audioId = keys[0].className.substring(6, 8);
         const audio = new Audio(this.audioList[parseInt(audioId)]);
         audio.play();
@@ -64,10 +65,10 @@ export default {
     handleKeyUp(event) {
       // Get the key code of the pressed key
       var keyCode = event.keyCode;
-      var codeIndex = this.pressableKey.find(k => k.code == keyCode)
+      var codeIndex = this.pressableKey.find(k => k.key.charCodeAt(0) == keyCode)
       if (codeIndex) {
         var keys = document.getElementsByClassName("key-" + codeIndex.key)
-        keys[0].classList.remove("border-b")
+        keys[0].classList.remove("border-b-0")
       }
     }
 
@@ -149,24 +150,24 @@ export default {
         },
       ],
       pressableKey: [
-        { key: 'A', code: 65 },
-        { key: 'W', code: 87 },
-        { key: 'S', code: 83 },
-        { key: 'D', code: 68 },
-        { key: 'E', code: 69 },
-        { key: 'F', code: 70 },
-        { key: 'R', code: 82 },
-        { key: 'G', code: 71 },
-        { key: 'H', code: 72 },
-        { key: 'Y', code: 89 },
-        { key: 'J', code: 74 },
-        { key: 'U', code: 85 },
-        { key: 'K', code: 75 },
-        { key: 'I', code: 73 },
-        { key: 'L', code: 76 },
-        { key: '\;', code: 59 },
-        { key: 'P', code: 80 },
-        { key: '"', code: 34 }
+        { key: 'A'},
+        { key: 'W'},
+        { key: 'S'},
+        { key: 'D'},
+        { key: 'E'},
+        { key: 'F'},
+        { key: 'R'},
+        { key: 'G'},
+        { key: 'H'},
+        { key: 'Y'},
+        { key: 'J'},
+        { key: 'U'},
+        { key: 'K'},
+        { key: 'I'},
+        { key: 'L'},
+        { key: 'º' },
+        { key: 'P'},
+        { key: 'Þ' },
       ],
       piano_key: [
         {

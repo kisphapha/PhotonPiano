@@ -1,40 +1,51 @@
 <template>
-  <div>
-    <Authourization>
-      <div v-if='role == "Student"'>
-        <HorNavbar />
-        <Header />
-        <RouterView style="min-height: 35vh;" />
-        <Footer />
+  <Authourization>
+      <div v-if='!user || user.role == "Student"'>
+        <StudentLayout />
       </div>
-      <div v-else class="h-screen">
-        <HorNavbar class="min-h-[7.5vh]"/>
-        <div class="flex">
-          <VerNavBar class="min-h-[92.5vh]"/>
-          <div class="w-full overflow-y-auto h-[92.5vh]">
-            <RouterView style="min-height: 35vh;" />
-          </div>
-        </div>
+      <div v-else-if='user.role == "Staff"' class="h-screen">
+        <StaffLayout />
       </div>
-    </Authourization>
-  </div>
+      <div v-else-if='user.role == "Instructor"'>
+        <InstructorLayout />
+      </div>
+      <div v-else>
+        <UnexpectedLayout />
+      </div>
+  </Authourization>
 
 </template>
 
 <script>
 import Authourization from "./components/Common/Authourization.vue";
-import HorNavbar from "./components/Common/HorNavbar.vue";
-import Header from "./components/Common/Header.vue"
-import Footer from "./components/Common/Footer.vue";
-import VerNavBar from "./components/Staff/VerNavBar.vue";
+import StudentLayout from "./layouts/StudentLayout.vue";
+import StaffLayout from "./layouts/StaffLayout.vue";
+import InstructorLayout from "./layouts/InstructorLayout.vue";
+import UnexpectedLayout from "./layouts/UnexpectedLayout.vue";
 
 export default {
   name: "App",
-  components: { Header, Footer, Authourization, HorNavbar, VerNavBar },
+  inject: ['eventBus'],
+  components: { Authourization, StudentLayout, StaffLayout, InstructorLayout, UnexpectedLayout },
   data() {
     return {
-      role: "Staff"
+      user: null
     }
+  },
+  methods: {
+    async getUser() {
+      const userPromise = new Promise((resolve) => {
+        this.eventBus.emit("get-user", resolve);
+      });
+      const user = await userPromise;
+      this.user = user;
+    }
+  },
+  mounted() {
+    this.getUser()
+    this.eventBus.on("update-app-user", async() => {
+      await this.getUser()
+    })
   }
 }
 </script>
@@ -45,17 +56,17 @@ export default {
 
 /* Track */
 ::-webkit-scrollbar-track {
-  background: #f1f1f1; 
+  background: #f1f1f1;
 }
- 
+
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #888; 
+  background: #888;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555; 
+  background: #555;
 }
 
 #staff-table tr td,
@@ -63,26 +74,33 @@ export default {
   padding: 0.5rem 2rem 0.5rem 2rem;
   text-align: center
 }
+
 #staff-table thead tr {
   background-color: #161618;
-  color : white;
+  color: white;
   font-weight: bold;
 }
+
 #staff-table tr {
   background-color: #eeeeee;
 }
+
 #staff-table tbody tr:nth-child(even) {
   background-color: #e0e0e0;
 }
-#staff-table thead tr th:first-child{
+
+#staff-table thead tr th:first-child {
   border-radius: 3rem 0 0 0;
 }
-#staff-table thead tr th:last-child{
+
+#staff-table thead tr th:last-child {
   border-radius: 0 3rem 0 0;
 }
+
 #staff-table tbody tr:last-child td:first-child {
   border-radius: 0 0 0 3rem;
 }
+
 #staff-table tbody tr:last-child td:last-child {
   border-radius: 0 0 3rem 0;
 }

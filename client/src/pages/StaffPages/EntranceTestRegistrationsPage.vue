@@ -2,7 +2,8 @@
     <div class="mt-4 ml-4 mr-4">
         <div class="text-4xl font-bold">Entrance Test Registrations</div>
         <div class="mt-4 flex place-content-between italic">
-            <div>Total registrations left : <span class="ml-4 font-bold">{{ totalRegistrations - thisYearRegistration }}</span></div>
+            <div>Total registrations left : <span class="ml-4 font-bold">{{ totalRegistrationsLeft
+                    }}</span></div>
             <div>This year accepted : <span class="ml-4 font-bold">{{ thisYearRegistration }}</span></div>
             <div>Target : <span class="ml-4 font-bold">{{ centerMaxValue }}</span></div>
         </div>
@@ -12,7 +13,8 @@
                 Make sure this is intentional and consider to stop accepting more!</div>
         </div>
         <div class="flex gap-2 place-content-between mt-6">
-            <button @click="toggleAutomaticPopup" class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
+            <button @click="toggleAutomaticPopup"
+                class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Automatic Accepting
             </button>
             <div class="flex gap-2">
@@ -27,22 +29,13 @@
 
         </div>
         <table id="staff-table" class="mt-2 w-full">
-            <colgroup>
-                <col style="width: 5%;" />
-                <col style="width: 12%;" />
-                <col style="width: 12%;" />
-                <col style="width: 12%;" />
-                <col style="width: 29%;" />
-                <col style="width: 20%;" />
-                <col style="width: 10%;" />
-            </colgroup>
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Phone</th>
-                    <th>Short Desc</th>
+                    <th><div class="w-4">ID</div></th>
+                    <th><div class="w-8">Name</div></th>
+                    <th><div class="w-32">Email</div></th>
+                    <th><div class="w-16">Phone</div></th>
+                    <th><div class="w-64">Short Desc</div></th>
                     <th>Registrations Time</th>
                     <th>Action</th>
                 </tr>
@@ -50,19 +43,19 @@
             <tbody>
                 <tr v-for="registration in this.registrations" :key="registration.id">
                     <td>{{ registration.id }}</td>
-                    <td>{{ registration.name }}</td>
-                    <td>{{ registration.email }}</td>
-                    <td>{{ registration.phone }}</td>
-                    <td>{{ registration.shortDesc }}</td>
-                    <td>{{ registration.registrationTime }}</td>
+                    <td><div class="w-8">{{ registration.user.name }}</div></td>
+                    <td><div class="overflow-x-auto max-w-32">{{ registration.user.email }}</div></td>
+                    <td><div class="w-16">{{ registration.user.phone }}</div></td>
+                    <td><div class="w-64 overflow-y-auto max-h-48">{{ registration.shortDesc }}</div></td>
+                    <td>{{ registration.registrationDate.substring(0,10) + " " +   registration.registrationDate.substring(11,19)}}</td>
                     <td>
                         <div class="flex gap-2">
-                            <span class="material-icons text-lime-500 text-3xl">
+                            <button class="material-icons text-lime-500 text-3xl">
                                 check_circle
-                            </span>
-                            <span class="material-icons text-red-500 text-3xl">
+                            </button>
+                            <button class="material-icons text-red-500 text-3xl">
                                 cancel
-                            </span>
+                            </button>
                         </div>
                     </td>
                 </tr>
@@ -86,7 +79,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutomaticPopup">X</button>
-                    <AutoAcceptPopup :totalRegistrations="totalRegistrations" :centerMaxValue="centerMaxValue" :thisYearRegistration="thisYearRegistration"/>
+                    <AutoAcceptPopup :totalRegistrations="totalRegistrationsLeft + thisYearRegistration" :centerMaxValue="centerMaxValue"                      :thisYearRegistration="thisYearRegistration" />
                 </div>
             </div>
         </div>
@@ -95,64 +88,65 @@
 
 <script>
 import AutoAcceptPopup from '../../components/Staff/AutoAcceptPopup.vue'
+import axios from 'axios'
 
 export default {
     name: "EntranceTestRegistrationsPage",
     inject: ["eventBus"],
-    components : {AutoAcceptPopup},
+    components: { AutoAcceptPopup },
     data() {
         return {
-            registrations: [
-                {
-                    id: 1,
-                    name: "Hung dep trai",
-                    email: "hung@abc.com",
-                    phone: "0998765413",
-                    shortDesc: "I'm very good at piano",
-                    registrationTime: '2024-01-01 12:00:00'
-                }, {
-                    id: 2,
-                    name: "Hung dep trai",
-                    email: "hung@abc.com",
-                    phone: "0998765413",
-                    shortDesc: "Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam Spam ",
-                    registrationTime: '2024-01-01 12:00:00'
-                },
-            ],
+            registrations: [],
             totalPage: 100,
             pageSize: 10,
             currentPage: 1,
             keyword_name: "",
-            isOpenAutomaticPopup : false,
-            totalRegistrations : 2000,
-            thisYearRegistration : 1150,
-            centerMaxValue : 1000,
+            isOpenAutomaticPopup: false,
+            totalRegistrationsLeft: 850,
+            thisYearRegistration: 1150,
+            centerMaxValue: 1000,
         }
     },
     methods: {
-        handlePageChange() {
-
+        async handlePageChange() {
+            await this.fetchRegistration(this.currentPage,this.pageSize,this.keyword_name)
         },
-        movePage(forward) {
+        async movePage(forward) {
             if (forward && this.currentPage < this.totalPage) {
                 this.currentPage++
-                this.handlePageChange()
+                await this.handlePageChange()
             } else if (!forward && this.currentPage > 1) {
                 this.currentPage--
-                this.handlePageChange()
+                await this.handlePageChange()
             }
         },
         handleKeywordChange() {
 
         },
-        toggleAutomaticPopup(){
+        toggleAutomaticPopup() {
             this.isOpenAutomaticPopup = !this.isOpenAutomaticPopup
+        },
+        async fetchRegistration(pageNumber, pageSize, name) {
+            const response = await axios.get(import.meta.env.VITE_API_URL + `/api/Student/?status=PendingRegistration&pageSize=${pageSize}&pageNumber=${pageNumber}&name=${name}`)
+
+            if (response.data){
+                this.registrations = response.data.results
+                this.totalPage = response.data.totalPages
+                this.totalRegistrationsLeft = response.data.totalRecords
+            }
+
+            const totalAcceptedRegistrations = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/${new Date().getFullYear()}/year`)
+
+            if (totalAcceptedRegistrations.data){
+                this.thisYearRegistration = totalAcceptedRegistrations.data.length
+            }
         }
     },
-    mounted(){
-        this.eventBus.on("toggle-auto-accept-popup-registration-page",() => {
+    mounted() {
+        this.eventBus.on("toggle-auto-accept-popup-registration-page", () => {
             this.toggleAutomaticPopup()
         })
+        this.fetchRegistration(this.currentPage,this.pageSize,this.keyword_name)
     }
 }
 

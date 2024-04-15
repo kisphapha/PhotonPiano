@@ -37,7 +37,7 @@ export default {
         }
     },
     mounted(){
-        this.acceptValue = this.centerMaxValue - this.thisYearRegistration;
+        this.acceptValue = this.totalRegistrations - this.thisYearRegistration;
         this.acceptValue = (this.acceptValue < 0) ? 0 : this.acceptValue 
     },
     methods : {

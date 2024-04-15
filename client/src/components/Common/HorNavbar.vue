@@ -60,14 +60,16 @@ export default {
         this.eventBus.on("update-header", async () => {
             this.refresh()
         })
+        if (localStorage.token) {
+            this.refresh()
+        }
     },
 }
 </script>
 <style>
-
 #hor_nav .router-link-active {
     border-radius: 10px;
     background-color: white;
-    color : black;
+    color: black;
 }
 </style>

@@ -252,36 +252,38 @@ export default {
       const user = await userPromise;
       this.user = user;
       this.student_status = this.user?.students[0]?.status ?? "None"
+      if (this.user.students[0]) {
+        //Calling student profile endpoint
+        const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + user.students[0].id)
 
-      //Calling student profile endpoint
-      const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + user.students[0].id)
-
-      if (studentDetail.data) {
-        this.student_detail = studentDetail.data
-      }
-      if (this.student_status == "PendingRegistration") {
-        this.setEnrollingStatus("Applied")
-      }
-      if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {
-        this.setEnrollingStatus("Accepted")
-        this.entrance_test_detail = this.student_detail.entranceTests.find(et => et.year == new Date().getFullYear())
-        const examDate = this.entrance_test_detail.entranceTestSlot?.date ?? "1999-01-01"
-        if (new Date(examDate) < new Date()) {
-          this.setEnrollingStatus("Examined")
+        if (studentDetail.data) {
+          this.student_detail = studentDetail.data
         }
+        if (this.student_status == "PendingRegistration") {
+          this.setEnrollingStatus("Applied")
+        }
+        if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {
+          this.setEnrollingStatus("Accepted")
+          this.entrance_test_detail = this.student_detail.entranceTests.find(et => et.year == new Date().getFullYear())
+          const examDate = this.entrance_test_detail.entranceTestSlot?.date ?? "1999-01-01"
+          if (new Date(examDate) < new Date()) {
+            this.setEnrollingStatus("Examined")
+          }
+        }
+
+        //Calling entrance test score endpoint
+        const entranceTestScore = await axios.get(import.meta.env.VITE_API_URL + '/api/EntranceTest/' + user.students[0].id + '/entrance-test-score')
+
+        if (entranceTestScore.data) {
+          this.entrance_test_result = entranceTestScore.data
+        }
+
+        if (this.student_detail.currentClass) {
+          this.setEnrollingStatus("InClass")
+        }
+        console.log(this.student_detail)
       }
 
-      //Calling entrance test score endpoint
-      const entranceTestScore = await axios.get(import.meta.env.VITE_API_URL + '/api/EntranceTest/' + user.students[0].id + '/entrance-test-score')
-
-      if (entranceTestScore.data) {
-        this.entrance_test_result = entranceTestScore.data
-      }
-
-      if (this.student_detail.currentClass) {
-        this.setEnrollingStatus("InClass")
-      }
-      console.log(this.student_detail)
     },
     setEnrollingStatus(status) {
       this.enroll_status = status

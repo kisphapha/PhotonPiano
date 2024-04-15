@@ -3,6 +3,7 @@ using Mapster;
 using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
+using PhotonPiano.Helper.Dtos.Paginations;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;
@@ -89,9 +90,9 @@ namespace PhotonPiano.BusinessLogic.Services
             student.ShortDesc = desc;
             await _studentRepository.UpdateAsync(student);
         }
-        public async Task<List<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto)
+        public async Task<PaginatedResult<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto)
         {
-            return (await _studentRepository.GetPagedStudents(pageNumber,pageSize, queryStudentDto)).Adapt<List<GetStudentWithUserDto>>();
+            return (await _studentRepository.GetPagedStudents(pageNumber,pageSize, queryStudentDto)).Adapt<PaginatedResult<GetStudentWithUserDto>>();
         }
     }
 }

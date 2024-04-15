@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.DataAccess.Interfaces;
+using PhotonPiano.Helper.Dtos.Paginations;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 
@@ -72,7 +73,7 @@ namespace PhotonPiano.DataAccess.Repositories
             return student;
         }
 
-        public async Task<List<Student>> GetPagedStudents(int pageNumber, int pageSize, QueryStudentDto queryStudentDto)
+        public async Task<PaginatedResult<Student>> GetPagedStudents(int pageNumber, int pageSize, QueryStudentDto queryStudentDto)
         {
             var query = _context.Students.AsQueryable();
 
@@ -178,7 +179,22 @@ namespace PhotonPiano.DataAccess.Repositories
                 .Take(pageSize)
                 .ToListAsync();
 
-            return paginatedResult;
+            // Count the total number of records
+            int totalRecords = await query.CountAsync();
+
+            // Calculate the total number of pages
+            int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+
+            var result = new PaginatedResult<Student>
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPages = totalPages,
+                TotalRecords = totalRecords,
+                Results = paginatedResult
+            };
+
+            return result;
         }
     }
 }
