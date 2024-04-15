@@ -1,17 +1,17 @@
 <template>
   <Authourization>
-      <div v-if='!user || user.role == "Student"'>
-        <StudentLayout />
-      </div>
-      <div v-else-if='user.role == "Staff"' class="h-screen">
-        <StaffLayout />
-      </div>
-      <div v-else-if='user.role == "Instructor"'>
-        <InstructorLayout />
-      </div>
-      <div v-else>
-        <UnexpectedLayout />
-      </div>
+    <div v-if='!user || user.role == "Student"'>
+      <StudentLayout />
+    </div>
+    <div v-else-if='user.role == "Staff"' class="h-screen">
+      <StaffLayout />
+    </div>
+    <div v-else-if='user.role == "Instructor"'>
+      <InstructorLayout />
+    </div>
+    <div v-else>
+      <UnexpectedLayout />
+    </div>
   </Authourization>
 
 </template>
@@ -29,7 +29,9 @@ export default {
   components: { Authourization, StudentLayout, StaffLayout, InstructorLayout, UnexpectedLayout },
   data() {
     return {
-      user: null
+      user: {
+        role : "Staff"
+      }
     }
   },
   methods: {
@@ -42,8 +44,11 @@ export default {
     }
   },
   mounted() {
-    this.getUser()
-    this.eventBus.on("update-app-user", async() => {
+    if (localStorage.token) {
+      this.getUser()
+
+    }
+    this.eventBus.on("update-app-user", async () => {
       await this.getUser()
     })
   }
