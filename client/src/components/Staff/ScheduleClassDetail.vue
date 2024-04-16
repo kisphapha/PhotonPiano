@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="px-8 flex gap-4">
-            <button @click="" class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
+            <button @click="toggleOpenAutoSchedulePopup" class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
             </button>
             <button @click="" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
@@ -80,17 +80,28 @@
                 </div>
             </div>
         </div>
+        <div v-if="isOpenAutoSchedulePopup" class="popup-overlay">
+            <div class="overflow-y-auto flex justify-center items-center overflow-x-auto">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleOpenAutoSchedulePopup">X</button>
+                    <AutoScheduleAClassForm :classId="this.classId" />
+                </div>
+            </div>
+        </div>
     </div>
 
 </template>
-
 <script>
+
 import axios from 'axios';
+import AutoScheduleAClassForm from './AutoScheduleAClassForm.vue';
 
 export default {
     name: "ScheduleClassDetail",
     inject: ["eventBus"],
     props: ['classId'],
+    components : {AutoScheduleAClassForm},
     data() {
         return {
             colors: [
@@ -149,7 +160,8 @@ export default {
                         name: "Diamondzz"
                     }
                 }
-            }
+            },
+            isOpenAutoSchedulePopup : false
         }
     },
     methods: {
@@ -300,13 +312,21 @@ export default {
         },
         handleGoBack() {
             this.eventBus.emit("set-selected-class-id-schedule-page", 0)
-        }
+        },
+        toggleOpenAutoSchedulePopup(){
+            this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
+        },
+        
     },
     mounted() {
         //this.refresh();
 
         this.weeksInYear = this.getWeeksOfYear(2024)
         this.getYears()
+
+        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-class-age", ()=>{
+            this.toggleOpenAutoSchedulePopup()
+        })
     }
 }
 </script>

@@ -320,7 +320,7 @@ export default {
         })
         this.refresh();
 
-        this.weeksInYear = this.getWeeksOfYear(2024)
+        this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
         this.getYears()
 
     }
