@@ -7,7 +7,8 @@
         <div class="mt-2 h-96 px-2 overflow-y-auto">
             <div class="flex gap-2">
                 <div class="p-2">Lessons Each Week</div>
-                <input class="p-2 rounded-lg border" type="number" min="0" v-model="lessonEachWeek"  @change="calcLessons">
+                <input class="p-2 rounded-lg border" type="number" min="0" v-model="lessonEachWeek"
+                    @change="calcLessons">
             </div>
             <div class="mt-2 flex gap-2">
                 <div class="p-2">Starting From</div>
@@ -22,7 +23,7 @@
                         @change="calcLessons">
                 </div>
                 <div class="italic p-2">
-                    (Total {{totalLessons}} lessons)
+                    (Total {{ totalLessons }} lessons)
                 </div>
             </div>
 
@@ -56,17 +57,13 @@
                 <input type="checkbox" v-model="optionWeekLocationConsistent"></input><span class="ml-2">Location
                     consistence between weeks</span><br>
                 <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Same location in a
-                    week</span>
-            </div>
-            <div class="mt-2 p-2">
-                <div class=" text-xl font-bold">Day-offs</div>
-                <div class="italic">
-                    (Total 30 day-offs)
-                </div>
-                <button class="px-4 py-2 bg-lime-500 rounded-lg hover:bg-lime-300 flex gap-2">
-                    <span class="text-white font-bold">Select Day-offs </span>
-                    <span class="material-icons">settings</span>
-                </button>
+                    week</span><br>
+                <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Include
+                    Saturday</span><br>
+                <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Include
+                    Sunday</span><br>
+                <input type="checkbox" v-model="optionIgnoreDayOff"></input><span class="ml-2">Ignore Marked
+                    Day-offs <span class="text-orange-400">(Marked {{this.markedDayOffs.length}} days)</span></span>
             </div>
             <div class="mt-2 flex gap-4 justify-center">
                 <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
@@ -85,7 +82,7 @@
 export default {
     name: "AutoScheduleAClassForm",
     inject: ['eventBus'],
-    props: [],
+    props: ['classId','markedDayOffs'],
     data() {
         return {
             class: {
@@ -140,7 +137,11 @@ export default {
             optionWeekTimeConsistent: false,
             optionWeekLocationConsistent: false,
             optionSameLocationAWeek: false,
-            totalLessons : 0
+            optionSaturday: false,
+            optionSunday: false,
+            optionIgnoreDayOff: false,
+            totalLessons: 0,
+            
 
         }
     },
@@ -207,7 +208,11 @@ export default {
         },
         calcLessons() {
             this.totalLessons = this.lessonEachWeek * this.totalWeeks;
-        }
+        },
+        handleClickDayOff() {
+            this.eventBus.emit("toggle-day-off-popup-schedule-class-age")
+        },
+        
     }
 }
 </script>

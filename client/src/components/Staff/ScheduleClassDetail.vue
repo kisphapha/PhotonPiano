@@ -24,13 +24,23 @@
             </div>
         </div>
         <div class="px-8 flex gap-4">
-            <button @click="toggleOpenAutoSchedulePopup" class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
+            <button @click="toggleOpenAutoSchedulePopup"
+                class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
             </button>
             <button @click="" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Lessons
             </button>
+            <button @click="toggleIsMarking"
+                class="p-2 bg-orange-400 rounded-lg text-white font-bold shadow-md hover:bg-orange-200">
+                {{ isMarking ? "Done Marking" : "Mark Day-offs" }}
+            </button>
+            <div v-if="markedDayOffs.length > 0" class="p-2 italic text-orange-400">
+                (Marked {{ markedDayOffs.length }} day-offs)
+                <button @click="clearAllMarking" class="font-bold underline">Clear all</button>
+            </div>
         </div>
+
         <div>
             <div class="p-8">
                 <div class="flex gap-16">
@@ -59,6 +69,10 @@
                                 <th class="py-2"></th>
                                 <th v-for="day in daysInWeek" :key="day.dayInWeek" class="py-2">
                                     {{ day.dayInWeek }}<br>{{ day.specificDay }}
+                                    <div v-if="isMarking">
+                                        <input type="checkbox" :checked="isDateMarked(day.specificDay)"
+                                            @change="toggleDateMarking(day.specificDay)" />
+                                    </div>
                                 </th>
                             </tr>
                         </thead>
@@ -66,8 +80,7 @@
                             <tr v-for="shift in shifts" :key="shift" class="py-2">
                                 <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                                 <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                    <button
-                                        class="h-16 flex flex-col items-center justify-center rounded-xl min-w-32 bg-slate-300 hover:bg-gray-50">
+                                    <button :class='getLessonDetail(shift, day, "css")'>
                                         <span class="material-icons text-3xl">
                                             add_circle
                                         </span>
@@ -85,7 +98,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleOpenAutoSchedulePopup">X</button>
-                    <AutoScheduleAClassForm :classId="this.classId" />
+                    <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs" />
                 </div>
             </div>
         </div>
@@ -101,7 +114,7 @@ export default {
     name: "ScheduleClassDetail",
     inject: ["eventBus"],
     props: ['classId'],
-    components : {AutoScheduleAClassForm},
+    components: { AutoScheduleAClassForm },
     data() {
         return {
             colors: [
@@ -161,7 +174,10 @@ export default {
                     }
                 }
             },
-            isOpenAutoSchedulePopup : false
+            isOpenAutoSchedulePopup: false,
+            isOpenDayOffPopup: false,
+            isMarking: false,
+            markedDayOffs: []
         }
     },
     methods: {
@@ -272,14 +288,13 @@ export default {
 
         },
         getLessonDetail(shift, date, information) {
-            let css = "h-16 flex flex-col items-center justify-center rounded-xl min-w-32 "
+            const css = "h-16 flex flex-col items-center justify-center rounded-xl min-w-32 "
             const inputDateParts = date.specificDay.split('/');
             const day = parseInt(inputDateParts[0], 10);
             const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
             const year = parseInt(inputDateParts[2], 10);
             const actualDate = new Date(year, month, day)
             const lesson = this.lessons.find(l => l.lesson.shift == this.shifts.indexOf(shift) + 1 && (new Date(l.lesson.date).toDateString() == actualDate.toDateString()))
-
             switch (information) {
                 case "location":
                     if (!lesson) {
@@ -288,9 +303,12 @@ export default {
                     return lesson.lesson.location.name
                 case "css":
                     if (!lesson) {
-                        return (new Date().toDateString() == actualDate.toDateString()) ? css + "bg-slate-300 hover:bg-gray-50" : css + "bg-gray-200 hover:bg-gray-50"
+                        if (this.markedDayOffs.find(d => d == date.specificDay)) {
+                            return css + "bg-orange-200 hover:bg-orange-50"
+                        }
+                        return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
-                    return lesson.lesson.examType ? css + "bg-yellow-200 hover:bg-yellow-50" : css + "bg-green-200 hover:bg-green-50"
+                    return css + (lesson.lesson.examType ? "bg-yellow-200 hover:bg-yellow-50" : "bg-green-200 hover:bg-green-50")
                 case "attending":
                     if (!lesson) {
                         return ""
@@ -313,10 +331,26 @@ export default {
         handleGoBack() {
             this.eventBus.emit("set-selected-class-id-schedule-page", 0)
         },
-        toggleOpenAutoSchedulePopup(){
+        toggleOpenAutoSchedulePopup() {
             this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
         },
-        
+        toggleIsMarking() {
+            this.isMarking = !this.isMarking
+        },
+        isDateMarked(date) {
+            return this.markedDayOffs.includes(date);
+        },
+        toggleDateMarking(date) {
+            if (this.isDateMarked(date)) {
+                const index = this.markedDayOffs.indexOf(date);
+                this.markedDayOffs.splice(index, 1);
+            } else {
+                this.markedDayOffs.push(date);
+            }
+        },
+        clearAllMarking() {
+            this.markedDayOffs = []
+        }
     },
     mounted() {
         //this.refresh();
@@ -324,7 +358,7 @@ export default {
         this.weeksInYear = this.getWeeksOfYear(2024)
         this.getYears()
 
-        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-class-age", ()=>{
+        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-class-age", () => {
             this.toggleOpenAutoSchedulePopup()
         })
     }
