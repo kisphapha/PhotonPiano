@@ -89,10 +89,10 @@ export default {
             }
         },
         toggleFilterScheduleClassPopupSchedulePage(){
-            this.eventBus.emit("toggle-filter-schedule-class-popup-schedule-page")
+            this.eventBus.emit("toggle-filter-schedule-class-popup-schedule-classes-page")
         },
         handleFilter(){
-            this.eventBus.emit("handle-filter-schedule-page",this.filterDto)
+            this.eventBus.emit("handle-filter-schedule-classes-page",this.filterDto)
         },
         presetFilter(){
             this.filterDto.id = this.id,

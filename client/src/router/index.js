@@ -12,6 +12,7 @@ import AdminStudentReClassPage from '../pages/StaffPages/AdminStudentReClassPage
 import EntranceTestArrangePage from '../pages/StaffPages/EntranceTestArrangePage.vue';
 import EntranceTestRegistrationsPage from '../pages/StaffPages/EntranceTestRegistrationsPage.vue';
 import SchedulePage from '../pages/StaffPages/SchedulePage.vue';
+import ScheduleClassesPage from '../pages/StaffPages/ScheduleClassesPage.vue';
 import SettingsPage from '../pages/StaffPages/SettingsPage.vue';
 // Define your routes
 const routes = [
@@ -86,7 +87,13 @@ const routes = [
     props: true
   },
   {
-    path: '/manage/schedule',
+    path: '/manage/schedule/classes',
+    name: 'ScheduleClasses',
+    component: ScheduleClassesPage,
+    props: true
+  },
+  {
+    path: '/manage/schedule/all',
     name: 'Schedule',
     component: SchedulePage,
     props: true

@@ -149,11 +149,8 @@ export default {
         this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
     },
     methods: {
-        toggleAutoAcceptPopupEntranceTestRegistrationPage() {
-            this.eventBus.emit("toggle-auto-accept-popup-registration-page")
-        },
         handleCancel() {
-            this.eventBus.emit("toggle-auto-schedule-class-popup-schedule-class-age")
+            this.eventBus.emit("toggle-auto-schedule-class-popup-schedule-classes-page")
         },
         toSqlDateString(date) {
             const year = date.getFullYear(); // Get the year (4 digits)

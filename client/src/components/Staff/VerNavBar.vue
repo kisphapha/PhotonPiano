@@ -17,10 +17,18 @@
                     <span class="ml-3" v-if="!isCollapsed">Arranging</span>
                 </RouterLink>
             </div>
-            <RouterLink class="px-4 py-3 flex" to="/manage/schedule">
+            <button :class="this.buttonScheduleCss" @click="expandSchedule(false)">
                 <span class="material-icons">calendar_month</span>
                 <span class="ml-3" v-if="!isCollapsed">Schedule</span>
-            </RouterLink>
+            </button>
+            <div v-if='isExpandSchedule && !isCollapsed' id="ver-child-nav" class="flex flex-col bg-slate-200">
+                <RouterLink  class="px-4 py-3 flex" to="/manage/schedule/all">
+                    <span class="ml-3" v-if="!isCollapsed">Aggregate</span>
+                </RouterLink>
+                <RouterLink class="px-4 py-3 flex" to="/manage/schedule/classes">
+                    <span class="ml-3" v-if="!isCollapsed">Classes</span>
+                </RouterLink>
+            </div>
             <RouterLink class="px-4 py-3 flex" to="/manage/class">
                 <span class="material-icons">school</span>
                 <span class="ml-3" v-if="!isCollapsed">Classes</span>
@@ -76,8 +84,10 @@ export default {
             isCollapsed: false,
             buttonEntranceCss: "px-4 py-3 flex",
             buttonStudentCss: "px-4 py-3 flex",
+            buttonScheduleCss: "px-4 py-3 flex",
             isExpandEntrance: false,
             isExpandStudent: false,
+            isExpandSchedule: false,
         }
     },
     methods: {
@@ -106,12 +116,26 @@ export default {
                 this.buttonStudentCss = "px-4 py-3 flex"
             }    
         },
+        expandSchedule(reverse) {
+            if (!reverse){
+                this.isExpandSchedule = true
+                this.buttonScheduleCss += " router-link-active"
+                if (!window.location.pathname.startsWith("/manage/schedule"))
+                    this.$router.push("/manage/schedule/all")
+            } else {
+                this.isExpandSchedule = false
+                this.buttonScheduleCss = "px-4 py-3 flex"
+            }    
+        },
         checkPath(){
             if (window.location.pathname.startsWith("/manage/entrance-test")){
                 this.expandEntrance(false)
             }
             if (window.location.pathname.startsWith("/manage/student")){
                 this.expandStudent(false)
+            }
+            if (window.location.pathname.startsWith("/manage/schedule")){
+                this.expandSchedule(false)
             }
         }
     },
@@ -122,6 +146,9 @@ export default {
             }
             if (!to.path.startsWith("/manage/student")){
                 this.expandStudent(true)
+            }
+            if (!to.path.startsWith("/manage/schedule")){
+                this.expandSchedule(true)
             }
         });
         this.checkPath()

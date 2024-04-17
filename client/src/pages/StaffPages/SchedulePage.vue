@@ -1,184 +1,273 @@
 <template>
     <div class="mt-4 ml-4 mr-4">
-        <div v-if="selectedClassId == 0">
-            <div class="text-4xl font-bold">Scheduling</div>
-            <div class="flex gap-2 place-content-between mt-6">
-                <div class="flex gap-4">
-                    <button @click=""
-                        class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
-                        Schedule All
-                    </button>
-                    <button @click=""
-                        class="p-2 bg-green-400 rounded-lg text-white font-bold shadow-md hover:bg-green-200">
-                        Announce All
-                    </button>
-                    <button @click="" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
-                        Clear All
-                    </button>
-                </div>
-
-                <div class="flex gap-2">
-                    <button @click="toggleFilterPopup"
-                        class="flex gap-2 py-2 px-6 bg-slate-900 rounded-lg text-white font-bold shadow-md hover:bg-slate-500">
-                        <span>Filter</span>
-                        <span class="material-icons">
-                            filter_list
-                        </span>
-                    </button>
-                </div>
-
-            </div>
-            <table id="staff-table" class="mt-2 w-full">
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Level</th>
-                        <th>Period</th>
-                        <th>Lessons</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-for="class_ in this.classes" :key="class_.id">
-                        <td>{{ class_.id }}</td>
-                        <td>
-                            <button class="text-blue-400 underline font-bold" @click="this.setSelectedClassId(class_.id)">
-                                {{ class_.name }}
-                            </button>
-                        </td>
-                        <td>{{ class_.level }}</td>
-                        <td>{{ class_.period }}</td>
-                        <td :class='class_.lessons == 0 ? "text-red-500 italic" : ""'>
-                            {{ class_.lessons == 0 ? "(Not Schedule Yet)" : class_.lessons }}
-                        </td>
-                        <td>
-                            <div class="flex gap-2 justify-center">
-                                <button v-if="class_.isNotified" class="material-icons text-3xl ">
-                                    notifications
-                                </button>
-                                <button v-else class="material-icons text-3xl ">
-                                    notifications_none
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-            <div class="flex gap-4 justify-center mt-4">
-                <button @click="movePage(false)">
-                    <span class="material-icons p-1">arrow_back_ios</span>
-                </button>
-                <div class="flex gap-2 ">
-                    <input class="border p-1 rounded-md w-16" type="number" v-model="currentPage" min="1"
-                        @change="handlePageChange">
-                    <div class="p-1"> / {{ this.totalPage }}</div>
-                </div>
-                <button @click="movePage(true)">
-                    <span class="material-icons p-1">arrow_forward_ios</span>
-                </button>
-            </div>
-            <div v-if="isOpenFilterPopup" class="popup-overlay">
-                <div class="overflow-y-auto flex justify-center items-center">
-                    <div class="relative">
-                        <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
-                            @click="toggleFilterPopup">X</button>
-                        <ScheduleClassFilterForm :id="filterDto.id" :name="filterDto.name" :level="filterDto.level"
-                            :period="filterDto.period" :isScheduled="filterDto.isScheduled"
-                            :isAnnounced="filterDto.isAnnounced" />
-                    </div>
-                </div>
-            </div>
+        <div class="text-4xl font-bold">Scheduling Entire Center</div>
+        <div class="px-8 flex gap-4 mt-4">
+            <button @click="toggleOpenAutoSchedulePopup"
+                class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
+                Auto Schedule All Classes
+            </button>
+            <button @click="" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
+                Clear All Not Yet Lessons
+            </button>
         </div>
-        <div v-else >
-            <ScheduleClassDetail :classId="selectedClassId" />
+        <div class="p-8">
+            <div class="flex gap-16">
+                <div class="text-2xl">Timetable:</div>
+                <div class="font-bold flex gap-8">
+                    <button @click="moveWeek(false)"
+                        class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">◄</button>
+                    <select v-model="selectedWeek" @change="handleSelectedWeekChange"
+                        class="text-xl font-normal  rouded-lg rouded-lg border">
+                        <option v-for="week in weeksInYear" :key="week.start" :value="week.start">
+                            {{ week.start + " - " + week.end }}
+                        </option>
+                    </select>
+                    <button @click="moveWeek(true)"
+                        class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">►</button>
+                </div>
+                <select v-model="selectedYear" @change="handleSelectedYearChange"
+                    class="text-xl font-normal rouded-lg border px-4">
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+            </div>
+            <div>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="py-2"></th>
+                            <th v-for="day in daysInWeek" :key="day.dayInWeek" class="py-2">
+                                {{ day.dayInWeek }}<br>{{ day.specificDay }}
+                                <div v-if="isMarking">
+                                    <input type="checkbox" :checked="isDateMarked(day.specificDay)"
+                                        @change="toggleDateMarking(day.specificDay)" />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="shift in shifts" :key="shift" class="py-2">
+                            <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
+                            <td v-for="day in daysInWeek" :key="day" class="py-2 ">
+                                <button :class='getLessonDetail(shift, day, "css")'>
+                                    <span class="text-xl font-bold text-green-600">
+                                        {{ getLessonDetail(shift, day, "number") > 0 ? getLessonDetail(shift, day, "number") + " lessons": "" }}
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
-import ScheduleClassFilterForm from '../../components/Staff/ScheduleClassFilterForm.vue'
-import ScheduleClassDetail from '../../components/Staff/ScheduleClassDetail.vue'
-
 export default {
     name: "SchedulePage",
-    components: { ScheduleClassFilterForm, ScheduleClassDetail },
     inject: ["eventBus"],
     data() {
         return {
-            classes: [
-                {
-                    id: 1,
-                    name: "BLUE_1_2024",
-                    level: 1,
-                    period: 2024,
-                    lessons: 0,
-                    isNotified: false,
-                }, {
-                    id: 2,
-                    name: "BLUE_2_2024",
-                    level: 1,
-                    period: 2024,
-                    lessons: 30,
-                    isNotified: true,
-                },
+            years: [
+
             ],
-            totalPage: 100,
-            pageSize: 10,
-            currentPage: 1,
-            isOpenFilterPopup: false,
-            filterDto: {
-                id: null,
-                name: null,
-                period: new Date().getFullYear(),
-                level: 0,
-                isScheduled: "all",
-                isAnnounced: "all"
-            },
-            selectedClassId : 0,
+            shifts: [
+                "7:00 - 8:30",
+                "8:45 - 10:15",
+                "10:30 - 12:00",
+                "12:30 - 14:00",
+                "14:15 - 15:45",
+                "16:00 - 17:30",
+                "18:00 - 19:30",
+                "19:45 - 21:15",
+            ],
+            daysInWeek: [
+                { dayInWeek: "Sunday", specificDay: "07/01" },
+                { dayInWeek: "Monday", specificDay: "01/01" },
+                { dayInWeek: "Tuesday", specificDay: "02/01" },
+                { dayInWeek: "Wednesday", specificDay: "03/01" },
+                { dayInWeek: "Thusday", specificDay: "04/01" },
+                { dayInWeek: "Friday", specificDay: "05/01" },
+                { dayInWeek: "Saturday", specificDay: "06/01" },
+            ],
+            selectedWeek: '',
+            selectedYear: new Date().getFullYear(),
+            lessons: [
+                {
+                    id : 1,
+                    shift : 1,
+                    date : "2024-01-07",
+                    class : {
+                        id : 1,
+                        name : "BLUE_69_2024"
+                    },
+                },
+                {
+                    id : 2,
+                    shift : 2,
+                    date : "2024-01-08",
+                    class : {
+                        id : 1,
+                        name : "BLUE_69_2024"
+                    },
+                },
+                {
+                    id : 3,
+                    shift : 3,
+                    date : "2024-01-09",
+                    class : {
+                        id : 1,
+                        name : "BLUE_69_2024"
+                    },
+                },
+                {
+                    id : 4,
+                    shift : 3,
+                    date : "2024-01-09",
+                    class : {
+                        id : 1,
+                        name : "PINK_96_2024"
+                    },
+                }
+            ],
+            user: null,
         }
     },
     methods: {
-        handlePageChange() {
+        getWeeksOfYear(year) {
+            const weeks = [];
 
+            const startDate = new Date(year, 0, 1);
+            const firstSunday = startDate.getDate() + (7 - startDate.getDay());
+            startDate.setDate(firstSunday);
+
+            while (startDate.getFullYear() === year) {
+                const endDate = new Date(startDate);
+                endDate.setDate(startDate.getDate() + 6);
+
+                weeks.push({
+                    start: startDate.toLocaleDateString(),
+                    end: endDate.toLocaleDateString()
+                });
+
+                startDate.setDate(startDate.getDate() + 7);
+            }
+
+            return weeks;
         },
-        movePage(forward) {
-            if (forward && this.currentPage < this.totalPage) {
-                this.currentPage++
-                this.handlePageChange()
-            } else if (!forward && this.currentPage > 1) {
-                this.currentPage--
-                this.handlePageChange()
+        getYears() {
+            let year = new Date().getFullYear()
+            this.years.push(year)
+            for (var i = 0; i < 3; i++) {
+                year -= 1
+                this.years.push(year)
             }
         },
-        toggleFilterPopup() {
-            this.isOpenFilterPopup = !this.isOpenFilterPopup
-        },
+        async handleSelectedWeekChange() {
+            const inputDateParts = this.selectedWeek.substring(0, 10).split('/');
+            const day = parseInt(inputDateParts[0], 10);
+            const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
+            const year = parseInt(inputDateParts[2], 10);
 
-        handleFilter(filterDto) {
-            //filter here
-            this.filterDto.id = filterDto.id
-            this.filterDto.name = filterDto.name
-            this.filterDto.level = filterDto.level
-            this.filterDto.period = filterDto.period
-            this.filterDto.isScheduled = filterDto.isScheduled
-            this.filterDto.isAnnounced = filterDto.isAnnounced
-            this.toggleFilterPopup()
+            const inputDate = new Date(year, month, day);
+            this.specDays = [];
+            for (let i = 0; i < 7; i++) {
+                const nextDay = new Date(inputDate);
+                nextDay.setDate(inputDate.getDate() + i);
+                this.daysInWeek[i].specificDay = nextDay.toLocaleDateString()
+            }
+            let endDate = new Date(inputDate)
+            endDate.setDate(inputDate.getDate() + 7)
+            //await this.fetchLessons(inputDate.toDateString(), endDate.toDateString())
         },
-        setSelectedClassId(id){
-            this.selectedClassId = id
-        }
+        async handleSelectedYearChange() {
+            this.weeksInYear = this.getWeeksOfYear(this.selectedYear)
+            this.selectedWeek = this.weeksInYear[0].start
+            await this.handleSelectedWeekChange()
+        },
+        getFirstDayOfWeek() {
+            const today = new Date();
+            const dayOfWeek = today.getDay();
+            const firstDay = new Date(today);
+            firstDay.setDate(today.getDate() - dayOfWeek);
+            console.log(firstDay.toLocaleDateString())
+            return firstDay.toLocaleDateString();
+        },
+        moveWeek(forward) {
+            const currentIndex = this.weeksInYear.findIndex((week) => week.start === this.selectedWeek);
+            if (forward && currentIndex < this.weeksInYear.length - 1) {
+                this.selectedWeek = this.weeksInYear[currentIndex + 1].start
+                this.handleSelectedWeekChange()
+            } else if (!forward && currentIndex > 0) {
+                this.selectedWeek = this.weeksInYear[currentIndex - 1].start
+                this.handleSelectedWeekChange()
+            }
+        },
+        async refresh() {
+            if (!localStorage.token) {
+                this.$router.push("/")
+            } else {
+                const userPromise = new Promise((resolve) => {
+                    this.eventBus.emit("get-user", resolve);
+                });
+                const user = await userPromise;
+                this.user = user;
+
+                if (this.user && this.user.role == "Student" && this.user.students[0].status == "InClass") {
+                    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
+
+                    this.class = response.data
+                    this.selectedWeek = this.getFirstDayOfWeek()
+                    await this.handleSelectedWeekChange()
+                } else {
+                    this.$router.push("/")
+                }
+            }
+        },
+        async fetchLessons(startDate, endDate) {
+            let query = "";
+            let queryCount = 0;
+            if (startDate) {
+                queryCount++;
+                query += "StartDate=" + startDate
+            }
+            if (endDate) {
+                query += (queryCount == 0 ? "" : "&") + "EndDate=" + endDate
+            }
+            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/StudentClasses/" + this.user.students[0].id + "/get-lessons/" + this.user.students[0].currentClassId + "?" + query)
+            if (response.data) {
+                this.lessons = response.data
+            }
+
+        },
+        getLessonDetail(shift, date, information) {
+            const css = "h-16 flex flex-col items-center justify-center rounded-xl min-w-32 "
+            const inputDateParts = date.specificDay.split('/');
+            const day = parseInt(inputDateParts[0], 10);
+            const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
+            const year = parseInt(inputDateParts[2], 10);
+            const actualDate = new Date(year, month, day)
+            const lessons = this.lessons.filter(l => l.shift == this.shifts.indexOf(shift) + 1 && (new Date(l.date).toDateString() == actualDate.toDateString()))
+            switch (information) {
+                case "number":
+                    return lessons.length
+                case "css":
+                    if (!lessons[0]) {
+                        return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
+                    }
+                    return css + "bg-green-200 hover:bg-green-50"
+                
+                default:
+                    return ""
+            }
+        },
     },
     mounted() {
-        this.eventBus.on("handle-filter-schedule-page", (filterDto) => {
-            this.handleFilter(filterDto)
-        })
-        this.eventBus.on("set-selected-class-id-schedule-page", (id) => {
-            this.setSelectedClassId(id)
-        })
-        this.eventBus.on("toggle-filter-schedule-class-popup-schedule-page", () => {
-            this.toggleFilterPopup()
-        })
+        //this.refresh();
+
+        this.weeksInYear = this.getWeeksOfYear(2024)
+        this.getYears()
     }
 }
 

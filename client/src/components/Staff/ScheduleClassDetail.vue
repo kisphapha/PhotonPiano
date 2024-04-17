@@ -41,56 +41,54 @@
             </div>
         </div>
 
-        <div>
-            <div class="p-8">
-                <div class="flex gap-16">
-                    <div class="text-2xl">Timetable:</div>
-                    <div class="font-bold flex gap-8">
-                        <button @click="moveWeek(false)"
-                            class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">◄</button>
-                        <select v-model="selectedWeek" @change="handleSelectedWeekChange"
-                            class="text-xl font-normal  rouded-lg rouded-lg border">
-                            <option v-for="week in weeksInYear" :key="week.start" :value="week.start">
-                                {{ week.start + " - " + week.end }}
-                            </option>
-                        </select>
-                        <button @click="moveWeek(true)"
-                            class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">►</button>
-                    </div>
-                    <select v-model="selectedYear" @change="handleSelectedYearChange"
-                        class="text-xl font-normal rouded-lg border px-4">
-                        <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+        <div class="p-8">
+            <div class="flex gap-16">
+                <div class="text-2xl">Timetable:</div>
+                <div class="font-bold flex gap-8">
+                    <button @click="moveWeek(false)"
+                        class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">◄</button>
+                    <select v-model="selectedWeek" @change="handleSelectedWeekChange"
+                        class="text-xl font-normal  rouded-lg rouded-lg border">
+                        <option v-for="week in weeksInYear" :key="week.start" :value="week.start">
+                            {{ week.start + " - " + week.end }}
+                        </option>
                     </select>
+                    <button @click="moveWeek(true)"
+                        class="bg-gray-300 rounded-xl px-2 hover:bg-slate-100  text-5xl ">►</button>
                 </div>
-                <div>
-                    <table class="w-full border-collapse">
-                        <thead>
-                            <tr>
-                                <th class="py-2"></th>
-                                <th v-for="day in daysInWeek" :key="day.dayInWeek" class="py-2">
-                                    {{ day.dayInWeek }}<br>{{ day.specificDay }}
-                                    <div v-if="isMarking">
-                                        <input type="checkbox" :checked="isDateMarked(day.specificDay)"
-                                            @change="toggleDateMarking(day.specificDay)" />
-                                    </div>
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-for="shift in shifts" :key="shift" class="py-2">
-                                <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
-                                <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                    <button :class='getLessonDetail(shift, day, "css")'>
-                                        <span class="material-icons text-3xl">
-                                            add_circle
-                                        </span>
-                                    </button>
-                                </td>
-                            </tr>
+                <select v-model="selectedYear" @change="handleSelectedYearChange"
+                    class="text-xl font-normal rouded-lg border px-4">
+                    <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
+                </select>
+            </div>
+            <div>
+                <table class="w-full border-collapse">
+                    <thead>
+                        <tr>
+                            <th class="py-2"></th>
+                            <th v-for="day in daysInWeek" :key="day.dayInWeek" class="py-2">
+                                {{ day.dayInWeek }}<br>{{ day.specificDay }}
+                                <div v-if="isMarking">
+                                    <input type="checkbox" :checked="isDateMarked(day.specificDay)"
+                                        @change="toggleDateMarking(day.specificDay)" />
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="shift in shifts" :key="shift" class="py-2">
+                            <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
+                            <td v-for="day in daysInWeek" :key="day" class="py-2 ">
+                                <button :class='getLessonDetail(shift, day, "css")'>
+                                    <span class="material-icons text-3xl">
+                                        add_circle
+                                    </span>
+                                </button>
+                            </td>
+                        </tr>
 
-                        </tbody>
-                    </table>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
         <div v-if="isOpenAutoSchedulePopup" class="popup-overlay">
@@ -329,7 +327,7 @@ export default {
             }
         },
         handleGoBack() {
-            this.eventBus.emit("set-selected-class-id-schedule-page", 0)
+            this.eventBus.emit("set-selected-class-id-schedule-classes-page", 0)
         },
         toggleOpenAutoSchedulePopup() {
             this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
@@ -350,7 +348,7 @@ export default {
         },
         clearAllMarking() {
             this.markedDayOffs = []
-        }
+        },
     },
     mounted() {
         //this.refresh();
@@ -358,7 +356,7 @@ export default {
         this.weeksInYear = this.getWeeksOfYear(2024)
         this.getYears()
 
-        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-class-age", () => {
+        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-classes-page", () => {
             this.toggleOpenAutoSchedulePopup()
         })
     }
