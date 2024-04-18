@@ -6,7 +6,7 @@
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule All Classes
             </button>
-            <button @click="" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
+            <button @click="null" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Not Yet Lessons
             </button>
         </div>
@@ -19,7 +19,7 @@
                     <select v-model="selectedWeek" @change="handleSelectedWeekChange"
                         class="text-xl font-normal  rouded-lg rouded-lg border">
                         <option v-for="week in weeksInYear" :key="week.start" :value="week.start">
-                            {{ week.start + " - " + week.end }}
+                            {{ week.start.toLocaleDateString() + " - " + week.end.toLocaleDateString() }}
                         </option>
                     </select>
                     <button @click="moveWeek(true)"
@@ -72,6 +72,12 @@ export default {
             years: [
 
             ],
+            weeksInYear: [
+                {
+                    start: new Date(),
+                    end: new Date()
+                }
+            ],
             shifts: [
                 "7:00 - 8:30",
                 "8:45 - 10:15",
@@ -91,7 +97,7 @@ export default {
                 { dayInWeek: "Friday", specificDay: "05/01" },
                 { dayInWeek: "Saturday", specificDay: "06/01" },
             ],
-            selectedWeek: '',
+            selectedWeek: null,
             selectedYear: new Date().getFullYear(),
             lessons: [
                 {
@@ -135,50 +141,16 @@ export default {
         }
     },
     methods: {
-        getWeeksOfYear(year) {
-            const weeks = [];
 
-            const startDate = new Date(year, 0, 1);
-            const firstSunday = startDate.getDate() + (7 - startDate.getDay());
-            startDate.setDate(firstSunday);
-
-            while (startDate.getFullYear() === year) {
-                const endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6);
-
-                weeks.push({
-                    start: startDate.toLocaleDateString(),
-                    end: endDate.toLocaleDateString()
-                });
-
-                startDate.setDate(startDate.getDate() + 7);
-            }
-
-            return weeks;
-        },
-        getYears() {
-            let year = new Date().getFullYear()
-            this.years.push(year)
-            for (var i = 0; i < 3; i++) {
-                year -= 1
-                this.years.push(year)
-            }
-        },
         async handleSelectedWeekChange() {
-            const inputDateParts = this.selectedWeek.substring(0, 10).split('/');
-            const day = parseInt(inputDateParts[0], 10);
-            const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
-            const year = parseInt(inputDateParts[2], 10);
-
-            const inputDate = new Date(year, month, day);
             this.specDays = [];
             for (let i = 0; i < 7; i++) {
-                const nextDay = new Date(inputDate);
-                nextDay.setDate(inputDate.getDate() + i);
+                const nextDay = new Date(this.selectedWeek);
+                nextDay.setDate(this.selectedWeek.getDate() + i);
                 this.daysInWeek[i].specificDay = nextDay.toLocaleDateString()
             }
-            let endDate = new Date(inputDate)
-            endDate.setDate(inputDate.getDate() + 7)
+            let endDate = new Date(this.selectedWeek)
+            endDate.setDate(this.selectedWeek.getDate() + 7)
             //await this.fetchLessons(inputDate.toDateString(), endDate.toDateString())
         },
         async handleSelectedYearChange() {
@@ -186,16 +158,10 @@ export default {
             this.selectedWeek = this.weeksInYear[0].start
             await this.handleSelectedWeekChange()
         },
-        getFirstDayOfWeek() {
-            const today = new Date();
-            const dayOfWeek = today.getDay();
-            const firstDay = new Date(today);
-            firstDay.setDate(today.getDate() - dayOfWeek);
-            console.log(firstDay.toLocaleDateString())
-            return firstDay.toLocaleDateString();
-        },
         moveWeek(forward) {
-            const currentIndex = this.weeksInYear.findIndex((week) => week.start === this.selectedWeek);
+            const currentIndex = this.weeksInYear.findIndex((week) => {
+                return this.compareDate(week.start, this.selectedWeek) === 0;
+            });
             if (forward && currentIndex < this.weeksInYear.length - 1) {
                 this.selectedWeek = this.weeksInYear[currentIndex + 1].start
                 this.handleSelectedWeekChange()
@@ -218,6 +184,8 @@ export default {
                     const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
 
                     this.class = response.data
+                    this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+                    this.years = this.getYears()
                     this.selectedWeek = this.getFirstDayOfWeek()
                     await this.handleSelectedWeekChange()
                 } else {
@@ -266,8 +234,11 @@ export default {
     mounted() {
         //this.refresh();
 
-        this.weeksInYear = this.getWeeksOfYear(2024)
-        this.getYears()
+         //disable later
+         this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+        this.years = this.getYears()
+        this.selectedWeek = this.getFirstDayOfWeek()
+        this.handleSelectedWeekChange()
     }
 }
 

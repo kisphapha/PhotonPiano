@@ -22,16 +22,13 @@ import StudentLayout from "./layouts/StudentLayout.vue";
 import StaffLayout from "./layouts/StaffLayout.vue";
 import InstructorLayout from "./layouts/InstructorLayout.vue";
 import UnexpectedLayout from "./layouts/UnexpectedLayout.vue";
-
 export default {
   name: "App",
   inject: ['eventBus'],
   components: { Authourization, StudentLayout, StaffLayout, InstructorLayout, UnexpectedLayout },
   data() {
     return {
-      user: {
-        role : "Staff"
-      }
+      user: null
     }
   },
   methods: {

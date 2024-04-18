@@ -13,7 +13,7 @@
             <div class="mt-2 flex gap-2">
                 <div class="p-2">Starting From</div>
                 <select class="p-2 rounded-lg border" type="date" v-model="startDate" @change="calcLessons">
-                    <option v-for="week in this.weeksInYear" :value="week.start">{{ week.start }}</option>
+                    <option v-for="week in this.weeksInYear" :key="week.start" :value="week.start">{{ week.start.toLocaleDateString() }}</option>
                 </select>
             </div>
             <div class="flex place-content-between mt-2 ">
@@ -52,17 +52,17 @@
             </div>
             <div class="mt-2">
                 <div class="p-2 text-xl font-bold">Options</div>
-                <input type="checkbox" v-model="optionWeekTimeConsistent"></input><span class="ml-2">Shift consistence
+                <input type="checkbox" v-model="optionWeekTimeConsistent"/><span class="ml-2">Shift consistence
                     between weeks</span><br>
-                <input type="checkbox" v-model="optionWeekLocationConsistent"></input><span class="ml-2">Location
+                <input type="checkbox" v-model="optionWeekLocationConsistent"/><span class="ml-2">Location
                     consistence between weeks</span><br>
-                <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Same location in a
+                <input type="checkbox" v-model="optionSameLocationAWeek"/><span class="ml-2">Same location in a
                     week</span><br>
-                <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Include
+                <input type="checkbox" v-model="optionSameLocationAWeek"/><span class="ml-2">Include
                     Saturday</span><br>
-                <input type="checkbox" v-model="optionSameLocationAWeek"></input><span class="ml-2">Include
+                <input type="checkbox" v-model="optionSameLocationAWeek"/><span class="ml-2">Include
                     Sunday</span><br>
-                <input type="checkbox" v-model="optionIgnoreDayOff"></input><span class="ml-2">Ignore Marked
+                <input type="checkbox" v-model="optionIgnoreDayOff"/><span class="ml-2">Ignore Marked
                     Day-offs <span class="text-orange-400">(Marked {{this.markedDayOffs.length}} days)</span></span>
             </div>
             <div class="mt-2 flex gap-4 justify-center">
@@ -130,8 +130,8 @@ export default {
             locationsSelected: [],
             weeksInYear: [
                 {
-                    start: '2024-01-01',
-                    end: '2024-31-12'
+                    start: new Date(),
+                    end: new Date()
                 }
             ],
             optionWeekTimeConsistent: false,
@@ -151,12 +151,6 @@ export default {
     methods: {
         handleCancel() {
             this.eventBus.emit("toggle-auto-schedule-class-popup-schedule-classes-page")
-        },
-        toSqlDateString(date) {
-            const year = date.getFullYear(); // Get the year (4 digits)
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Get the month (0-11) and pad with leading zero if needed
-            const day = String(date.getDate()).padStart(2, '0'); // Get the day of the month and pad with leading zero if needed
-            return `${year}-${month}-${day}`; // Concatenate the year, month, and day with hyphens
         },
         isShiftSelected(shiftId) {
             return this.shiftsSelected.includes(shiftId);
@@ -181,27 +175,6 @@ export default {
                 this.locationsSelected.push(locationId);
             }
             this.calculate()
-        },
-        getWeeksOfYear(year) {
-            const weeks = new Array;
-
-            const startDate = new Date(year, 0, 1);
-            const firstSunday = startDate.getDate() + (7 - startDate.getDay());
-            startDate.setDate(firstSunday);
-
-            while (startDate.getFullYear() === year) {
-                const endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6);
-
-                weeks.push({
-                    start: this.toSqlDateString(startDate),
-                    end: this.toSqlDateString(endDate)
-                });
-
-                startDate.setDate(startDate.getDate() + 7);
-            }
-
-            return weeks;
         },
         calcLessons() {
             this.totalLessons = this.lessonEachWeek * this.totalWeeks;

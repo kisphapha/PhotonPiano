@@ -9,7 +9,8 @@
             </div>
             <div class="mt-4">
                 <div class="text-2xl">
-                    LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{ this.class_level[this.class.level - 1] }}
+                    LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{ this.class_level[this.class.level -
+        1] }}
                 </div>
                 <div class="text-2xl">
                     INSTRUCTOR : <span class="font-bold">{{ this.class.instructor.user.name }}</span>
@@ -47,7 +48,7 @@
                         <select v-model="selectedWeek" @change="handleSelectedWeekChange"
                             class="text-xl font-normal  rouded-lg rouded-lg border">
                             <option v-for="week in weeksInYear" :key="week.start" :value="week.start">
-                                {{ week.start + " - " + week.end }}
+                                {{ week.start.toLocaleDateString() + " - " + week.end.toLocaleDateString() }}
                             </option>
                         </select>
                         <button @click="moveWeek(true)"
@@ -118,8 +119,8 @@ export default {
             ],
             weeksInYear: [
                 {
-                    start: '2024-01-01',
-                    end: '2024-31-12'
+                    start: null,
+                    end: null
                 }
             ],
             years: [
@@ -142,7 +143,7 @@ export default {
                 "(Advanced)",
                 "(Virtuoso)",
             ],
-            selectedWeek: '',
+            selectedWeek: null,
             thisMonthAssesments: 0,
             thisMonthLessons: 0,
             thisMonthDebts: 0,
@@ -152,68 +153,28 @@ export default {
             user: null,
         }
     },
-    methods: {
-        getWeeksOfYear(year) {
-            const weeks = [];
-
-            const startDate = new Date(year, 0, 1);
-            const firstSunday = startDate.getDate() + (7 - startDate.getDay());
-            startDate.setDate(firstSunday);
-
-            while (startDate.getFullYear() === year) {
-                const endDate = new Date(startDate);
-                endDate.setDate(startDate.getDate() + 6);
-
-                weeks.push({
-                    start: startDate.toLocaleDateString(),
-                    end: endDate.toLocaleDateString()
-                });
-
-                startDate.setDate(startDate.getDate() + 7);
-            }
-
-            return weeks;
-        },
-        getYears() {
-            let year = new Date().getFullYear()
-            this.years.push(year)
-            for (var i = 0; i < 3; i++) {
-                year -= 1
-                this.years.push(year)
-            }
-        },
+    methods: {    
         async handleSelectedWeekChange() {
-            const inputDateParts = this.selectedWeek.substring(0, 10).split('/');
-            const day = parseInt(inputDateParts[0], 10);
-            const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
-            const year = parseInt(inputDateParts[2], 10);
-
-            const inputDate = new Date(year, month, day);
             this.specDays = [];
             for (let i = 0; i < 7; i++) {
-                const nextDay = new Date(inputDate);
-                nextDay.setDate(inputDate.getDate() + i);
+                const nextDay = new Date(this.selectedWeek);
+                nextDay.setDate(this.selectedWeek.getDate() + i);
                 this.daysInWeek[i].specificDay = nextDay.toLocaleDateString()
             }
-            let endDate = new Date(inputDate)
-            endDate.setDate(inputDate.getDate() + 7)
-            await this.fetchLessons(inputDate.toDateString(), endDate.toDateString())
+            let endDate = new Date(this.selectedWeek)
+            endDate.setDate(this.selectedWeek.getDate() + 7)
+            await this.fetchLessons(this.selectedWeek, endDate)
         },
         async handleSelectedYearChange() {
             this.weeksInYear = this.getWeeksOfYear(this.selectedYear)
             this.selectedWeek = this.weeksInYear[0].start
             await this.handleSelectedWeekChange()
         },
-        getFirstDayOfWeek() {
-            const today = new Date();
-            const dayOfWeek = today.getDay();
-            const firstDay = new Date(today);
-            firstDay.setDate(today.getDate() - dayOfWeek);
-            console.log(firstDay.toLocaleDateString())
-            return firstDay.toLocaleDateString();
-        },
+
         moveWeek(forward) {
-            const currentIndex = this.weeksInYear.findIndex((week) => week.start === this.selectedWeek);
+            const currentIndex = this.weeksInYear.findIndex((week) => {
+                return this.compareDate(week.start, this.selectedWeek) === 0;
+            });
             if (forward && currentIndex < this.weeksInYear.length - 1) {
                 this.selectedWeek = this.weeksInYear[currentIndex + 1].start
                 this.handleSelectedWeekChange()
@@ -241,6 +202,8 @@ export default {
 
                     this.class = response.data
                     this.monthlyAnalzying()
+                    this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+                    this.years = this.getYears()
                     this.selectedWeek = this.getFirstDayOfWeek()
                     await this.handleSelectedWeekChange()
                     await this.fetchTuitions()
@@ -254,10 +217,10 @@ export default {
             let queryCount = 0;
             if (startDate) {
                 queryCount++;
-                query += "StartDate=" + startDate
+                query += "StartDate=" + startDate.toDateString()
             }
             if (endDate) {
-                query += (queryCount == 0 ? "" : "&") + "EndDate=" + endDate
+                query += (queryCount == 0 ? "" : "&") + "EndDate=" + endDate.toDateString()
             }
             const response = await axios.get(import.meta.env.VITE_API_URL + "/api/StudentClasses/" + this.user.students[0].id + "/get-lessons/" + this.user.students[0].currentClassId + "?" + query)
             if (response.data) {
@@ -320,11 +283,9 @@ export default {
         })
         this.refresh();
 
-        this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
-        this.getYears()
+
 
     }
 }
 </script>
-<style>
-</style>
+<style></style>
