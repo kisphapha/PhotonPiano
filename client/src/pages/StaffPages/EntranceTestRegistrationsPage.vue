@@ -2,7 +2,7 @@
     <div class="mt-4 ml-4 mr-4">
         <div class="text-4xl font-bold">Entrance Test Registrations</div>
         <div class="mt-4 flex place-content-between italic">
-            <div>Total registrations left : <span class="ml-4 font-bold">{{ totalRegistrationsLeft
+            <div>Total registrations left : <span class="ml-4 font-bold">{{ actualTotalRegistrationsLeft
                     }}</span></div>
             <div>This year accepted : <span class="ml-4 font-bold">{{ thisYearRegistration }}</span></div>
             <div>Target : <span class="ml-4 font-bold">{{ centerMaxValue }}</span></div>
@@ -28,7 +28,7 @@
             </div>
 
         </div>
-        <table id="staff-table" class="mt-2 w-full">
+        <table id="staff-table" class="mt-2 w-full" v-if="this.registrations.length > 0">
             <thead>
                 <tr>
                     <th>
@@ -69,10 +69,10 @@
                 registration.registrationDate.substring(11, 19) }}</td>
                     <td>
                         <div class="flex gap-2">
-                            <button class="material-icons text-lime-500 text-3xl">
+                            <button class="material-icons text-lime-500 text-3xl" @click="handleAccept(registration.id)">
                                 check_circle
                             </button>
-                            <button class="material-icons text-red-500 text-3xl">
+                            <button class="material-icons text-red-500 text-3xl" @click="handleReject(registration.id)">
                                 cancel
                             </button>
                         </div>
@@ -80,7 +80,7 @@
                 </tr>
             </tbody>
         </table>
-        <div class="flex gap-4 justify-center mt-4">
+        <div class="flex gap-4 justify-center mt-4" v-if="this.registrations.length > 0">
             <button @click="movePage(false)">
                 <span class="material-icons p-1">arrow_back_ios</span>
             </button>
@@ -92,6 +92,9 @@
             <button @click="movePage(true)">
                 <span class="material-icons p-1">arrow_forward_ios</span>
             </button>
+        </div>
+        <div class="italic p-2 text-center" v-if="this.registrations.length == 0">
+            There is no data
         </div>
         <div v-if="isOpenAutomaticPopup" class="popup-overlay">
             <div class="overflow-y-auto flex justify-center items-center">
@@ -124,6 +127,7 @@ export default {
             keyword_name: "",
             isOpenAutomaticPopup: false,
             totalRegistrationsLeft: 850,
+            actualTotalRegistrationsLeft : 850,
             thisYearRegistration: 1150,
             centerMaxValue: 1000,
             user: null,
@@ -142,8 +146,8 @@ export default {
                 await this.handlePageChange()
             }
         },
-        handleKeywordChange() {
-
+        async handleSearch(){
+            await this.fetchRegistration(this.currentPage, this.pageSize, this.keyword_name)
         },
         toggleAutomaticPopup() {
             this.isOpenAutomaticPopup = !this.isOpenAutomaticPopup
@@ -161,14 +165,59 @@ export default {
 
             if (response.data) {
                 this.registrations = response.data.results
+                this.registrations.sort((a,b) => a.registrationDate - b.registrationDate)
                 this.totalPage = response.data.totalPages
                 this.totalRegistrationsLeft = response.data.totalRecords
+            }
+
+            const getActualTotal = await axios.get(import.meta.env.VITE_API_URL + `/api/Student/?status=PendingRegistration&pageSize=1&pageNumber=1`)
+
+            if (getActualTotal.data){
+                this.actualTotalRegistrationsLeft = getActualTotal.data.totalRecords
             }
 
             const totalAcceptedRegistrations = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/${new Date().getFullYear()}/year`)
 
             if (totalAcceptedRegistrations.data) {
                 this.thisYearRegistration = totalAcceptedRegistrations.data.length
+            }
+        },
+        async handleAccept(id){
+            //change status
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/Student/${id}/change-status?status=Accepted`)
+                //
+                await axios.post(import.meta.env.VITE_API_URL + `/api/EntranceTest`,{
+                    studentId : id
+                })
+                this.eventBus.emit("open-result-dialog",{
+                    message : "Success!!",
+                    type : "Success"
+                })
+                this.refresh()
+            }
+            catch (e) {
+                this.eventBus.emit("open-result-dialog",{
+                    message : e.response.data.ErrorMessage,
+                    type : "Error"
+                })
+            }
+        },
+        async handleReject(id){
+            //change status
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/Student/${id}/change-status?status=Unregistered`)        
+                this.eventBus.emit("open-result-dialog",{
+                    message : "Rejected this user!!",
+                    type : "Success"
+                })
+                this.refresh()
+            }
+            catch (e) {
+                this.eventBus.emit("open-result-dialog",{
+                    message : e.response.data.ErrorMessage,
+                    type : "Error"
+                })
             }
         }
     },

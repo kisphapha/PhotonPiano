@@ -207,7 +207,7 @@ export default {
             }
         },
         async refresh() {
-            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
+            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + this.classId)
 
             this.class = response.data
             this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())

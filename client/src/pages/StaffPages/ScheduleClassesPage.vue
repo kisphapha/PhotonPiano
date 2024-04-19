@@ -105,7 +105,7 @@ export default {
         return {
             classes: [
                 {
-                    id: 1,
+                    id: 3,
                     name: "BLUE_1_2024",
                     level: 1,
                     period: 2024,

@@ -9,6 +9,14 @@
             <button @click="null" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Not Yet Lessons
             </button>
+            <button @click="toggleIsMarking"
+                class="p-2 bg-orange-400 rounded-lg text-white font-bold shadow-md hover:bg-orange-200">
+                {{ isMarking ? "Done Marking" : "Mark Day-offs" }}
+            </button>
+            <div v-if="markedDayOffs.length > 0" class="p-2 italic text-orange-400">
+                (Marked {{ markedDayOffs.length }} day-offs)
+                <button @click="clearAllMarking" class="font-bold underline">Clear all</button>
+            </div>
         </div>
         <div class="p-8">
             <div class="flex gap-16">
@@ -61,13 +69,25 @@
                 </table>
             </div>
         </div>
+        <div v-if="isOpenAutoSchedulePopup" class="popup-overlay">
+            <div class="overflow-y-auto flex justify-center items-center overflow-x-auto">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleOpenAutoSchedulePopup">X</button>
+                    <AutoScheduleAllForm :markedDayOffs="this.markedDayOffs" />
+                </div>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
+import AutoScheduleAllForm from '../../components/Staff/AutoScheduleAllForm.vue';
+
 export default {
     name: "SchedulePage",
     inject: ["eventBus"],
+    components : {AutoScheduleAllForm},
     data() {
         return {
             years: [
@@ -140,7 +160,8 @@ export default {
             ],
             user: null,
             isMarking: false,
-            markedDayOffs: []
+            markedDayOffs: [],
+            isOpenAutoSchedulePopup : false,
         }
     },
     methods: {
@@ -180,9 +201,9 @@ export default {
             const user = await userPromise;
             this.user = user
 
-            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
+            // const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
 
-            this.class = response.data
+            // this.class = response.data
             this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
             this.years = this.getYears()
             this.selectedWeek = this.getFirstDayOfWeek()
@@ -216,6 +237,9 @@ export default {
                     return lessons.length
                 case "css":
                     if (!lessons[0]) {
+                        if (this.markedDayOffs.find(d => d == date.specificDay)) {
+                            return css + "bg-orange-200 hover:bg-orange-50"
+                        }
                         return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
                     return css + "bg-green-200 hover:bg-green-50"
@@ -224,10 +248,33 @@ export default {
                     return ""
             }
         },
+        toggleIsMarking() {
+            this.isMarking = !this.isMarking
+        },
+        isDateMarked(date) {
+            return this.markedDayOffs.includes(date);
+        },
+        toggleDateMarking(date) {
+            if (this.isDateMarked(date)) {
+                const index = this.markedDayOffs.indexOf(date);
+                this.markedDayOffs.splice(index, 1);
+            } else {
+                this.markedDayOffs.push(date);
+            }
+        },
+        clearAllMarking() {
+            this.markedDayOffs = []
+        },
+        toggleOpenAutoSchedulePopup(){
+            this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
+        }
     },
     mounted() {
         this.refresh();
 
+        this.eventBus.on("toggle-auto-schedule-all-popup-schedule-page", () => {
+            this.toggleOpenAutoSchedulePopup()
+        })
     }
 }
 

@@ -65,7 +65,7 @@
       <div class="mt-8 mb-8  mr-auto ml-auto w-1/2 ">
         <div class="text-5xl font-bold text-green-600">CONGRATULATIONS!!!!!</div>
         <div class="text-3xl font-bold mt-2">Your registration has been accepted!</div>
-        <div v-if="this.entrance_test_detail?.entranceTestSlot.isAnnouced">
+        <div v-if="this.entrance_test_detail?.entranceTestSlot?.isAnnouced">
           <div class="text-xl italic mt-2">
             We kindly inform you about the location and time for you entrance test!
           </div>
@@ -262,10 +262,12 @@ export default {
         if (this.student_status == "PendingRegistration") {
           this.setEnrollingStatus("Applied")
         }
-        if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {
+        if (this.student_status == "Accepted") {
           this.setEnrollingStatus("Accepted")
+        }
+        if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {
           this.entrance_test_detail = this.student_detail.entranceTests.find(et => et.year == new Date().getFullYear())
-          const examDate = this.entrance_test_detail.entranceTestSlot?.date ?? "1999-01-01"
+          const examDate = this.entrance_test_detail.entranceTestSlot?.date ?? "2999-01-01"
           if (new Date(examDate) < new Date()) {
             this.setEnrollingStatus("Examined")
           }

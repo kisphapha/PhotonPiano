@@ -28,6 +28,15 @@
         </div>
       </div>
     </div>
+    <div v-if="isOpenResultDialog" class="popup-overlay">
+      <div class="sticky top-1/4 flex justify-center">
+        <div class="relative">
+          <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+            @click="closeResultDialog">X</button>
+          <ResultDialog :message="this.rsMesage" :type="this.rsType" />
+        </div>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -37,11 +46,12 @@ import axios from "axios";
 import LoginForm from './LoginForm.vue';
 import RegisterForm from "./RegisterForm.vue";
 import ConfirmationForm from "./ConfirmationForm.vue";
+import ResultDialog from "./ResultDialog.vue";
 
 export default {
   name: "Authourization",
   inject: ["eventBus"],
-  components: { LoginForm, RegisterForm, ConfirmationForm },
+  components: { LoginForm, RegisterForm, ConfirmationForm ,ResultDialog },
   data() {
     return {
       cfmMessage: '',
@@ -49,6 +59,9 @@ export default {
       isOpenLoginPopup: false,
       isOpenRegisterPopup: false,
       isOpenConfirmPopup: false,
+      isOpenResultDialog : false,
+      rsMesage : '',
+      rsType : ''
     };
   },
   mounted() {
@@ -60,6 +73,12 @@ export default {
     });
     this.eventBus.on("open-confirmation-popup", (request) => {
       this.toggleOpenOnfirmPopup(request.message, request.callback)
+    });
+    this.eventBus.on("open-result-dialog", (request) => {
+      this.openResultDialog(request.message, request.type)
+    });
+    this.eventBus.on("close-result-dialog", () => {
+      this.closeResultDialog()
     });
     this.eventBus.on("get-user", async (resolve) => {
       let user = null;
@@ -107,6 +126,14 @@ export default {
         this.cfmMessage = message
         this.cfmCallBack = callback
       }
+    },
+    openResultDialog(message, type){
+      this.rsMesage = message
+      this.rsType = type,
+      this.isOpenResultDialog = true
+    },
+    closeResultDialog(){
+      this.isOpenResultDialog = false
     },
     async login(loginDto) {
       try {
@@ -171,7 +198,7 @@ export default {
       if (!localStorage.token) {
         this.$router.push("/")
       } else {
-        const user = await getUser(localStorage.token)
+        const user = await this.getUser(localStorage.token)
         if (user && user.role == "Staff") {
           return user
         } else {
