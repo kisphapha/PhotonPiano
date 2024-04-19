@@ -50,7 +50,8 @@
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
                                 <button :class='getLessonDetail(shift, day, "css")'>
                                     <span class="text-xl font-bold text-green-600">
-                                        {{ getLessonDetail(shift, day, "number") > 0 ? getLessonDetail(shift, day, "number") + " lessons": "" }}
+                                        {{ getLessonDetail(shift, day, "number") > 0 ? getLessonDetail(shift, day,
+                "number") + " lessons" : "" }}
                                     </span>
                                 </button>
                             </td>
@@ -101,43 +102,45 @@ export default {
             selectedYear: new Date().getFullYear(),
             lessons: [
                 {
-                    id : 1,
-                    shift : 1,
-                    date : "2024-01-07",
-                    class : {
-                        id : 1,
-                        name : "BLUE_69_2024"
+                    id: 1,
+                    shift: 1,
+                    date: "2024-01-07",
+                    class: {
+                        id: 1,
+                        name: "BLUE_69_2024"
                     },
                 },
                 {
-                    id : 2,
-                    shift : 2,
-                    date : "2024-01-08",
-                    class : {
-                        id : 1,
-                        name : "BLUE_69_2024"
+                    id: 2,
+                    shift: 2,
+                    date: "2024-01-08",
+                    class: {
+                        id: 1,
+                        name: "BLUE_69_2024"
                     },
                 },
                 {
-                    id : 3,
-                    shift : 3,
-                    date : "2024-01-09",
-                    class : {
-                        id : 1,
-                        name : "BLUE_69_2024"
+                    id: 3,
+                    shift: 3,
+                    date: "2024-01-09",
+                    class: {
+                        id: 1,
+                        name: "BLUE_69_2024"
                     },
                 },
                 {
-                    id : 4,
-                    shift : 3,
-                    date : "2024-01-09",
-                    class : {
-                        id : 1,
-                        name : "PINK_96_2024"
+                    id: 4,
+                    shift: 3,
+                    date: "2024-01-09",
+                    class: {
+                        id: 1,
+                        name: "PINK_96_2024"
                     },
                 }
             ],
             user: null,
+            isMarking: false,
+            markedDayOffs: []
         }
     },
     methods: {
@@ -171,27 +174,19 @@ export default {
             }
         },
         async refresh() {
-            if (!localStorage.token) {
-                this.$router.push("/")
-            } else {
-                const userPromise = new Promise((resolve) => {
-                    this.eventBus.emit("get-user", resolve);
-                });
-                const user = await userPromise;
-                this.user = user;
+            const userPromise = new Promise((resolve) => {
+                this.eventBus.emit("get-staff-user", resolve);
+            });
+            const user = await userPromise;
+            this.user = user
 
-                if (this.user && this.user.role == "Student" && this.user.students[0].status == "InClass") {
-                    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
+            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
 
-                    this.class = response.data
-                    this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
-                    this.years = this.getYears()
-                    this.selectedWeek = this.getFirstDayOfWeek()
-                    await this.handleSelectedWeekChange()
-                } else {
-                    this.$router.push("/")
-                }
-            }
+            this.class = response.data
+            this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+            this.years = this.getYears()
+            this.selectedWeek = this.getFirstDayOfWeek()
+            await this.handleSelectedWeekChange()
         },
         async fetchLessons(startDate, endDate) {
             let query = "";
@@ -207,7 +202,6 @@ export default {
             if (response.data) {
                 this.lessons = response.data
             }
-
         },
         getLessonDetail(shift, date, information) {
             const css = "h-16 flex flex-col items-center justify-center rounded-xl min-w-32 "
@@ -225,20 +219,15 @@ export default {
                         return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
                     return css + "bg-green-200 hover:bg-green-50"
-                
+
                 default:
                     return ""
             }
         },
     },
     mounted() {
-        //this.refresh();
+        this.refresh();
 
-         //disable later
-         this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
-        this.years = this.getYears()
-        this.selectedWeek = this.getFirstDayOfWeek()
-        this.handleSelectedWeekChange()
     }
 }
 

@@ -111,7 +111,7 @@ import AutoScheduleAClassForm from './AutoScheduleAClassForm.vue';
 export default {
     name: "ScheduleClassDetail",
     inject: ["eventBus"],
-    props: ['classId'],
+    props: ['classId', 'user'],
     components: { AutoScheduleAClassForm },
     data() {
         return {
@@ -160,7 +160,6 @@ export default {
             selectedWeek: null,
             selectedYear: new Date().getFullYear(),
             lessons: [],
-            user: null,
             class: {
                 name: "BLUE_69_2024",
                 level: 5,
@@ -208,27 +207,13 @@ export default {
             }
         },
         async refresh() {
-            if (!localStorage.token) {
-                this.$router.push("/")
-            } else {
-                const userPromise = new Promise((resolve) => {
-                    this.eventBus.emit("get-user", resolve);
-                });
-                const user = await userPromise;
-                this.user = user;
+            const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
 
-                if (this.user && this.user.role == "Student" && this.user.students[0].status == "InClass") {
-                    const response = await axios.get(import.meta.env.VITE_API_URL + '/api/Classes/' + user.students[0].currentClassId)
-
-                    this.class = response.data
-                    this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
-                    this.years = this.getYears()
-                    this.selectedWeek = this.getFirstDayOfWeek()
-                    await this.handleSelectedWeekChange()
-                } else {
-                    this.$router.push("/")
-                }
-            }
+            this.class = response.data
+            this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+            this.years = this.getYears()
+            this.selectedWeek = this.getFirstDayOfWeek()
+            await this.handleSelectedWeekChange()
         },
         async fetchLessons(startDate, endDate) {
             let query = "";
@@ -297,13 +282,7 @@ export default {
         },
     },
     mounted() {
-        //this.refresh();
-
-        //disable later
-        this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
-        this.years = this.getYears()
-        this.selectedWeek = this.getFirstDayOfWeek()
-        this.handleSelectedWeekChange()
+        this.refresh();
 
         this.eventBus.on("toggle-auto-schedule-class-popup-schedule-classes-page", () => {
             this.toggleOpenAutoSchedulePopup()

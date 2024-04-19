@@ -31,11 +31,21 @@
         <table id="staff-table" class="mt-2 w-full">
             <thead>
                 <tr>
-                    <th><div class="w-4">ID</div></th>
-                    <th><div class="w-8">Name</div></th>
-                    <th><div class="w-32">Email</div></th>
-                    <th><div class="w-16">Phone</div></th>
-                    <th><div class="w-64">Short Desc</div></th>
+                    <th>
+                        <div class="w-4">ID</div>
+                    </th>
+                    <th>
+                        <div class="w-8">Name</div>
+                    </th>
+                    <th>
+                        <div class="w-32">Email</div>
+                    </th>
+                    <th>
+                        <div class="w-16">Phone</div>
+                    </th>
+                    <th>
+                        <div class="w-64">Short Desc</div>
+                    </th>
                     <th>Registrations Time</th>
                     <th>Action</th>
                 </tr>
@@ -43,11 +53,20 @@
             <tbody>
                 <tr v-for="registration in this.registrations" :key="registration.id">
                     <td>{{ registration.id }}</td>
-                    <td><div class="w-8">{{ registration.user.name }}</div></td>
-                    <td><div class="overflow-x-auto max-w-32">{{ registration.user.email }}</div></td>
-                    <td><div class="w-16">{{ registration.user.phone }}</div></td>
-                    <td><div class="w-64 overflow-y-auto max-h-48">{{ registration.shortDesc }}</div></td>
-                    <td>{{ registration.registrationDate.substring(0,10) + " " +   registration.registrationDate.substring(11,19)}}</td>
+                    <td>
+                        <div class="w-8">{{ registration.user.name }}</div>
+                    </td>
+                    <td>
+                        <div class="overflow-x-auto max-w-32">{{ registration.user.email }}</div>
+                    </td>
+                    <td>
+                        <div class="w-16">{{ registration.user.phone }}</div>
+                    </td>
+                    <td>
+                        <div class="w-64 overflow-y-auto max-h-48">{{ registration.shortDesc }}</div>
+                    </td>
+                    <td>{{ registration.registrationDate.substring(0, 10) + " " +
+                registration.registrationDate.substring(11, 19) }}</td>
                     <td>
                         <div class="flex gap-2">
                             <button class="material-icons text-lime-500 text-3xl">
@@ -79,7 +98,8 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutomaticPopup">X</button>
-                    <AutoAcceptPopup :totalRegistrations="totalRegistrationsLeft + thisYearRegistration" :centerMaxValue="centerMaxValue"                      :thisYearRegistration="thisYearRegistration" />
+                    <AutoAcceptPopup :totalRegistrations="totalRegistrationsLeft + thisYearRegistration"
+                        :centerMaxValue="centerMaxValue" :thisYearRegistration="thisYearRegistration" />
                 </div>
             </div>
         </div>
@@ -93,6 +113,7 @@ import axios from 'axios'
 export default {
     name: "EntranceTestRegistrationsPage",
     inject: ["eventBus"],
+    props: ['getStaffUser'],
     components: { AutoAcceptPopup },
     data() {
         return {
@@ -105,11 +126,12 @@ export default {
             totalRegistrationsLeft: 850,
             thisYearRegistration: 1150,
             centerMaxValue: 1000,
+            user: null,
         }
     },
     methods: {
         async handlePageChange() {
-            await this.fetchRegistration(this.currentPage,this.pageSize,this.keyword_name)
+            await this.fetchRegistration(this.currentPage, this.pageSize, this.keyword_name)
         },
         async movePage(forward) {
             if (forward && this.currentPage < this.totalPage) {
@@ -126,10 +148,18 @@ export default {
         toggleAutomaticPopup() {
             this.isOpenAutomaticPopup = !this.isOpenAutomaticPopup
         },
+        async refresh() {
+            const userPromise = new Promise((resolve) => {
+                this.eventBus.emit("get-staff-user", resolve);
+            });
+            const user = await userPromise;
+            this.user = user
+            await this.fetchRegistration(this.currentPage, this.pageSize, this.keyword_name)
+        },
         async fetchRegistration(pageNumber, pageSize, name) {
             const response = await axios.get(import.meta.env.VITE_API_URL + `/api/Student/?status=PendingRegistration&pageSize=${pageSize}&pageNumber=${pageNumber}&name=${name}`)
 
-            if (response.data){
+            if (response.data) {
                 this.registrations = response.data.results
                 this.totalPage = response.data.totalPages
                 this.totalRegistrationsLeft = response.data.totalRecords
@@ -137,7 +167,7 @@ export default {
 
             const totalAcceptedRegistrations = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/${new Date().getFullYear()}/year`)
 
-            if (totalAcceptedRegistrations.data){
+            if (totalAcceptedRegistrations.data) {
                 this.thisYearRegistration = totalAcceptedRegistrations.data.length
             }
         }
@@ -146,7 +176,7 @@ export default {
         this.eventBus.on("toggle-auto-accept-popup-registration-page", () => {
             this.toggleAutomaticPopup()
         })
-        this.fetchRegistration(this.currentPage,this.pageSize,this.keyword_name)
+        this.refresh()
     }
 }
 

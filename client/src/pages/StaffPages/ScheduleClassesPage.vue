@@ -8,7 +8,7 @@
                         class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                         Schedule All
                     </button>
-                    <button @click=""
+                    <button @click="null"
                         class="p-2 bg-green-400 rounded-lg text-white font-bold shadow-md hover:bg-green-200">
                         Announce All
                     </button>
@@ -88,7 +88,7 @@
             </div>
         </div>
         <div v-else >
-            <ScheduleClassDetail :classId="selectedClassId" />
+            <ScheduleClassDetail :classId="selectedClassId" :user="user"/>
         </div>
     </div>
 </template>
@@ -165,6 +165,13 @@ export default {
         setSelectedClassId(id){
             this.selectedClassId = id
         },
+        async refresh(){
+            const userPromise = new Promise((resolve) => {
+                this.eventBus.emit("get-staff-user", resolve);
+            });
+            const user = await userPromise;
+            this.user = user
+        }
         
     },
     mounted() {
@@ -177,6 +184,7 @@ export default {
         this.eventBus.on("toggle-filter-schedule-class-popup-schedule-classes-page", () => {
             this.toggleFilterPopup()
         })
+        this.refresh()
     }
 }
 
