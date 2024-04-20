@@ -2,7 +2,9 @@
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.Helper.Dtos.EntranceTests;
+using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Exceptions;
+using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Services
@@ -52,7 +54,6 @@ namespace PhotonPiano.BusinessLogic.Services
             }
             return createdEntranceTest;
         }
-
         public async Task<GetEntranceTestDto?> GetEntranceTestByStudentId(long studentId, bool isRequired)
         {
             var result = await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId);
@@ -90,6 +91,35 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task<List<GetEntranceTestDto>> GetEntranceTestsByYear(int year)
         {
             return (await _entranceTestRepository.FindAsync(et => et.Year == year)).Adapt<List<GetEntranceTestDto>>();
+        }
+
+        public async Task AutoAcceptRegistrations(int number)
+        {
+            if (number < 1)
+            {
+                throw new BadRequestException("The number must be larger than 0");
+            }
+            var registrations = (await _studentService.GetPagedStudentList(1, 1, new QueryStudentDto
+            {
+                Status = StudentStatus.PendingRegistration.ToString(),
+            }));
+            var studentIds = new List<long>();
+            for (int i = 0; i < Math.Min(number, registrations.TotalRecords); i++)
+            {
+                foreach(var studentDto in registrations.Results)
+                {
+                    studentIds.Add(studentDto.Id);
+                    await CreateEntranceTest(new CreateEntranceTestDto()
+                    {
+                        StudentId = studentDto.Id
+                    });
+                }
+            }
+            await _studentService.ChangeStatusOfStudentInBatch(new UpdateStudentStatusInBatchDto
+            {
+                StudentIds = studentIds,
+                Status = StudentStatus.Accepted.ToString(),
+            });
         }
     }
 }

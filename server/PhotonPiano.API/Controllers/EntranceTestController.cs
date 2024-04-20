@@ -61,6 +61,11 @@ namespace PhotonPiano.API.Controllers
             await _entranceTestSlotService.AnnouceEntranceTestSlot(slotId);
             return Ok();
         }
-
+        [HttpPatch("auto-accepting")]
+        public async Task<IActionResult> AutoAcceptRegistrations([FromQuery] int number )
+        {
+            await _entranceTestService.AutoAcceptRegistrations(number);
+            return Ok();
+        }
     }
 }

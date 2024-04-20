@@ -28,6 +28,7 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IEntranceTestSlotRepository, EntranceTestSlotRepository>();
             services.AddScoped<ICriteriaRepository, CriteriaRepository>();
             services.AddScoped<ILocationRepository, LocationRepository>();
+            services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<IClassRepostiory, ClassRepository>();
             return services;
         }
@@ -40,7 +41,8 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IStudentClassService, StudentClassService>();
             services.AddScoped<IStudentLessonService, StudentLessonService>();
             services.AddScoped<IStudentClassTuitionService, StudentClassTuitionService>();
-            services.AddScoped<ILocationSerivce, LocationSerivce>();
+            services.AddScoped<ILocationService, LocationSerivce>();
+            services.AddScoped<ILessonSerivce, LessonSerivce>();
             services.AddScoped<ICriteriaSerivce, CriteriaSerivce>();
             services.AddScoped<IClassService, ClassSerivce>();
             services.AddScoped<IEntranceTestService, EntranceTestSerivce>();

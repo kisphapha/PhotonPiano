@@ -2,7 +2,7 @@
 
 namespace PhotonPiano.BusinessLogic.Interfaces
 {
-    public interface ILocationSerivce
+    public interface ILocationService
     {
         Task<GetLocationDto?> GetLocationById(long id, bool isRequired);
 

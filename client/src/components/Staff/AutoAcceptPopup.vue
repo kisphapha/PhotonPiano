@@ -17,8 +17,8 @@
         </div>
         
         <div class="flex gap-4 justify-center">
-            <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
-            <button class="p-2 text-red-400 underline font-bold" @click="toggleAutoAcceptPopupEntranceTestRegistrationPage">Cancel</button>
+            <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold" @click="handleApply">Apply</button>
+            <button class="p-2 text-red-400 underline font-bold" @click="handleCancel">Cancel</button>
         </div>
         
     </div>
@@ -26,6 +26,7 @@
 
 <script>
 //import { RouterLink } from 'vue-router';
+import axios from 'axios';
 
 export default {
     name: "AutoAcceptPopup",
@@ -41,8 +42,27 @@ export default {
         this.acceptValue = (this.acceptValue < 0) ? 0 : this.acceptValue 
     },
     methods : {
-        toggleAutoAcceptPopupEntranceTestRegistrationPage(){
+        handleCancel(){
             this.eventBus.emit("toggle-auto-accept-popup-registration-page")
+        },
+        async handleApply(){
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/auto-accepting?number=${this.acceptValue}`)
+
+                this.eventBus.emit("open-result-dialog",{
+                    message : "Success!!",
+                    type : "Success"
+                })
+                await this.eventBus.emit("refresh-registration-page")
+                this.handleCancel()
+            }
+            catch (e) {
+                console.log(e)
+                this.eventBus.emit("open-result-dialog",{
+                    message : e.response?.data?.ErrorMessage ?? "Something went wrong!",
+                    type : "Error"
+                })
+            }
         }
     }
 }

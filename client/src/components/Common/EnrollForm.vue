@@ -9,7 +9,7 @@
           Email : <span class="ml-4 font-bold">{{ this.user.email }}</span><br>
           Phone : <span class="ml-4 font-bold">{{ this.user.phone }}</span><br>
           Gender : <span class="ml-4 font-bold">{{ this.user.gender }}</span><br>
-          Date Of Birth : <span class="ml-4 font-bold">{{ this.user.dob }}</span><br>
+          Date Of Birth : <span class="ml-4 font-bold">{{ this.user.doB }}</span><br>
       </div>
       <div>
         Short Description : 

@@ -17,5 +17,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task<GetEntranceTestWithResultDto> GetEntranceTestScoreOfAStudent(long studentId);
 
         Task<List<GetEntranceTestDto>> GetEntranceTestsByYear(int year);
+
+        Task AutoAcceptRegistrations(int number);
     }
 }

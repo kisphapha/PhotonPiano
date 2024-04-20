@@ -15,9 +15,9 @@ namespace PhotonPiano.API.Controllers
     [Route("api/[controller]")]
     public class LocationController : ControllerBase
     {
-        private readonly ILocationSerivce _locationService;
+        private readonly ILocationService _locationService;
 
-        public LocationController(ILocationSerivce locationService)
+        public LocationController(ILocationService locationService)
         {
             _locationService = locationService;
         }

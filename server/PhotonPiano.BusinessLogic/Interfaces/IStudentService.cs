@@ -15,7 +15,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<Student> GetRequiredStudentById(long studentId);
         Task ChangeStatusOfStudent(long studentId, string status);
-
+        Task ChangeStatusOfStudentInBatch(UpdateStudentStatusInBatchDto updateStudentStatusInBatch);
         Task UpdateStudentShortDescription(long studentId, string desc);
 
         Task<PaginatedResult<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);

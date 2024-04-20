@@ -194,7 +194,7 @@ export default {
                     message : "Success!!",
                     type : "Success"
                 })
-                this.refresh()
+                await this.refresh()
             }
             catch (e) {
                 this.eventBus.emit("open-result-dialog",{
@@ -224,6 +224,9 @@ export default {
     mounted() {
         this.eventBus.on("toggle-auto-accept-popup-registration-page", () => {
             this.toggleAutomaticPopup()
+        })
+        this.eventBus.on("refresh-registration-page", async () => {
+            await this.refresh()
         })
         this.refresh()
     }

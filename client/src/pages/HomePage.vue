@@ -43,7 +43,7 @@
             Email : <span class="ml-4 font-bold">{{ user.email }}</span><br>
             Phone : <span class="ml-4 font-bold">{{ user.phone }}</span><br>
             Gender : <span class="ml-4 font-bold">{{ user.gender }}</span><br>
-            Date Of Birth : <span class="ml-4 font-bold">{{ user.dob }}</span><br>
+            Date Of Birth : <span class="ml-4 font-bold">{{ user.doB }}</span><br>
           </div>
           <div>
             Short Description : <span class="ml-4 italic">{{ user.students[0]?.shortDesc }}</span><br>
@@ -87,7 +87,7 @@
           Email : <span class="ml-4 font-bold">{{ user.email }}</span><br>
           Phone : <span class="ml-4 font-bold">{{ user.phone }}</span><br>
           Gender : <span class="ml-4 font-bold">{{ user.gender }}</span><br>
-          Date Of Birth : <span class="ml-4 font-bold">{{ user.dob }}</span><br>
+          Date Of Birth : <span class="ml-4 font-bold">{{ user.doB }}</span><br>
           Registration time : <span class="ml-4 font-bold">{{ student_detail.registrationDate.substring(0, 10) + " " +
       student_detail.registrationDate.substring(11, 19) }}</span><br>
         </div>

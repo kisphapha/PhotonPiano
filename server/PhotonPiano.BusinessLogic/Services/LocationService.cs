@@ -7,7 +7,7 @@ using PhotonPiano.Helper.Exceptions;
 
 namespace PhotonPiano.BusinessLogic.Services
 {
-    public class LocationSerivce : ILocationSerivce
+    public class LocationSerivce : ILocationService
     {
         private readonly ILocationRepository _locationRepository;
         public LocationSerivce(ILocationRepository locationRepository)

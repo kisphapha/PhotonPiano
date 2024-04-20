@@ -13,10 +13,10 @@ namespace PhotonPiano.BusinessLogic.Services
     {
         private readonly IEntranceTestSlotRepository _entranceTestSlotRepository;
         private readonly IEntranceTestService _entranceTestService;
-        private readonly ILocationSerivce _locationService;
+        private readonly ILocationService _locationService;
 
         public EntranceTestSlotSerivce(IEntranceTestSlotRepository entranceTestSlotRepository, 
-            ILocationSerivce locationSerivce, IEntranceTestService entranceTestService)
+            ILocationService locationSerivce, IEntranceTestService entranceTestService)
         {
             _entranceTestSlotRepository = entranceTestSlotRepository;
             _locationService = locationSerivce;

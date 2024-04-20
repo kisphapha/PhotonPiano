@@ -84,6 +84,24 @@ namespace PhotonPiano.BusinessLogic.Services
             await _studentRepository.UpdateAsync(student);
         }
 
+        public async Task ChangeStatusOfStudentInBatch(UpdateStudentStatusInBatchDto updateStudentStatusInBatch)
+        {
+            var students = new List<Student>();
+
+            //if (updateStudentStatusInBatch.Status == StudentStatus.Accepted.ToString())
+            //{
+            //    throw new BadRequestException("Please use automatically accept registrations end point instead");
+            //}
+
+            foreach (var id in updateStudentStatusInBatch.StudentIds)
+            {
+                var student = await GetRequiredStudentById(id);
+                student.Status = updateStudentStatusInBatch.Status;
+                students.Add(student);
+            }         
+            await _studentRepository.UpdateRangeAsync(students);
+        }
+
         public async Task UpdateStudentShortDescription(long studentId, string desc)
         {
             var student = await GetRequiredStudentById(studentId);
