@@ -74,7 +74,7 @@ namespace PhotonPiano.BusinessLogic.Services
             return entranceTest;
         }
 
-        public async Task UpdateEntranceTestId(long id, long slotId)
+        public async Task UpdateEntranceTestId(long id, long? slotId)
         {
             var entranceTest = await GetEntranceTestByRequiredId(id);
             entranceTest.EntranceTestSlotId = slotId;
@@ -120,6 +120,11 @@ namespace PhotonPiano.BusinessLogic.Services
                 StudentIds = studentIds,
                 Status = StudentStatus.Accepted.ToString(),
             });
+        }
+
+        public async Task<EntranceTest?> GetEntranceTestByStudentIdAndYear(long studentId, int year)
+        {
+            return await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId && et.Year == year);
         }
     }
 }

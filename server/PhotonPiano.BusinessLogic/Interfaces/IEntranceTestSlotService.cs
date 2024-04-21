@@ -5,11 +5,12 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 {
     public interface IEntranceTestSlotService
     {
-        Task<List<GetEntranceTestSlotDto>> GetPagedEntranceTestSlots(int pageNumber, int pageSize);
+        Task<GetEntranceTestSlotDetailDto> GetEntranceTestSlotDetail(long id);
+        Task<List<GetEntranceTestSlotWithLocationDto>> GetEntranceTestSlotsByYear(int year);
 
         Task<GetEntranceTestSlotDto> CreateEntranceTestSlot(CreateEntranceTestSlotDto createEntranceTestSlotDto);
 
-        Task AddEntranceTestToEntranceTestSlot(AddEntranceTestToASlotDto addEntranceTestToASlotDto, long slotId);
+        Task UpsertStudentsToEntranceTestSlot(AddStudentsToASlotDto addStudentsToASlot);
 
         Task AnnouceEntranceTestSlot(long slotId);
     }

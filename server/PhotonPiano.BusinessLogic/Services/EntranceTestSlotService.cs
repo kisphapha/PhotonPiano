@@ -13,16 +13,27 @@ namespace PhotonPiano.BusinessLogic.Services
     {
         private readonly IEntranceTestSlotRepository _entranceTestSlotRepository;
         private readonly IEntranceTestService _entranceTestService;
+        private readonly IStudentService _studentService;
         private readonly ILocationService _locationService;
 
         public EntranceTestSlotSerivce(IEntranceTestSlotRepository entranceTestSlotRepository, 
-            ILocationService locationSerivce, IEntranceTestService entranceTestService)
+            ILocationService locationSerivce, IEntranceTestService entranceTestService, IStudentService studentService)
         {
             _entranceTestSlotRepository = entranceTestSlotRepository;
             _locationService = locationSerivce;
             _entranceTestService = entranceTestService;
+            _studentService = studentService;
         }
 
+        public async Task<GetEntranceTestSlotDetailDto> GetEntranceTestSlotDetail(long id)
+        {
+            var entranceTestSlot = await _entranceTestSlotRepository.GetEntranceTestSlotDetail(id);
+            if (entranceTestSlot is null)
+            {
+                throw new NotFoundException($"Entrance test slot {id} not found");
+            }
+            return entranceTestSlot.Adapt<GetEntranceTestSlotDetailDto>();
+        }
         public async Task<EntranceTestSlot> GetRequiredEntranceTestSlotById(long id)
         {
             var entranceTestSlot = await _entranceTestSlotRepository.GetByIdAsync(id);
@@ -33,10 +44,10 @@ namespace PhotonPiano.BusinessLogic.Services
             return entranceTestSlot;
         }
 
-        public async Task<List<GetEntranceTestSlotDto>> GetPagedEntranceTestSlots(int pageNumber, int pageSize)
+        public async Task<List<GetEntranceTestSlotWithLocationDto>> GetEntranceTestSlotsByYear(int year)
         {
-            var result = await _entranceTestSlotRepository.GetPagedEntranceTestSlots(pageNumber, pageSize);
-            return result.Adapt<List<GetEntranceTestSlotDto>>();
+            var result = await _entranceTestSlotRepository.GetEntranceTestSlotsByYear(year);
+            return result.Adapt<List<GetEntranceTestSlotWithLocationDto>>();
         }
 
         public async Task<GetEntranceTestSlotDto> CreateEntranceTestSlot(CreateEntranceTestSlotDto createEntranceTestSlotDto)
@@ -48,24 +59,48 @@ namespace PhotonPiano.BusinessLogic.Services
             }
 
             var mappedEntranceTestSlot = createEntranceTestSlotDto.Adapt<EntranceTestSlot>();
-            mappedEntranceTestSlot.IsAnnouced = false;
-            
-            return (await _entranceTestSlotRepository.AddAsync(mappedEntranceTestSlot)).Adapt<GetEntranceTestSlotDto>();
+            mappedEntranceTestSlot.IsAnnoucedTime = false;
+
+            var createdSlot = (await _entranceTestSlotRepository.AddAsync(mappedEntranceTestSlot)).Adapt<GetEntranceTestSlotDto>();     
+
+            return createdSlot;
         }
-    
-        public async Task AddEntranceTestToEntranceTestSlot(AddEntranceTestToASlotDto addEntranceTestToASlotDto, long slotId)
+        public async Task ClearEntranceTestInASlot(long slotId)
         {
-            await GetRequiredEntranceTestSlotById(slotId);
-            foreach(var entranceTestId in addEntranceTestToASlotDto.EntranceTestIds)
-            {              
-                await _entranceTestService.UpdateEntranceTestId(entranceTestId, slotId);               
+            var entranceTestSlot = await GetEntranceTestSlotDetail(slotId);
+            foreach (var entranceTest in entranceTestSlot.EntranceTests)
+            {
+                await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, null);
             }
         }
-    
+        public async Task UpsertEntranceTestToEntranceTestSlot(AddEntranceTestToASlotDto addEntranceTestToASlotDto)
+        {
+            await GetRequiredEntranceTestSlotById(addEntranceTestToASlotDto.SlotId);
+            await ClearEntranceTestInASlot(addEntranceTestToASlotDto.SlotId);
+            foreach (var entranceTestId in addEntranceTestToASlotDto.EntranceTestIds)
+            {              
+                await _entranceTestService.UpdateEntranceTestId(entranceTestId, addEntranceTestToASlotDto.SlotId);               
+            }
+        }
+        public async Task UpsertStudentsToEntranceTestSlot(AddStudentsToASlotDto addStudentsToASlot)
+        {
+            await GetRequiredEntranceTestSlotById(addStudentsToASlot.SlotId);
+            await ClearEntranceTestInASlot(addStudentsToASlot.SlotId);
+            foreach (var studentId in addStudentsToASlot.StudentIds)
+            {
+                var entranceTest = await _entranceTestService.GetEntranceTestByStudentIdAndYear(studentId, addStudentsToASlot.Year);
+                if (entranceTest != null)
+                {
+                    await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, addStudentsToASlot.SlotId);
+                    await _studentService.ChangeStatusOfStudent(studentId, StudentStatus.EntranceTesting.ToString());
+                }
+            }
+
+        }
         public async Task AnnouceEntranceTestSlot(long slotId)
         {
             var slot = await GetRequiredEntranceTestSlotById(slotId);
-            slot.IsAnnouced = true;
+            slot.IsAnnoucedTime = true;
             slot.AnnounceTime = DateTime.Now;
 
             await _entranceTestSlotRepository.UpdateAsync(slot);

@@ -17,6 +17,11 @@ namespace PhotonPiano.API.Controllers
             _entranceTestService = entranceTestService;
             _entranceTestSlotService = entranceTestSlotService;
         }
+        [HttpGet("{id}/slot-detail")]
+        public async Task<GetEntranceTestSlotDetailDto> GetEntranceTestByYear([FromRoute] long id)
+        {
+            return await _entranceTestSlotService.GetEntranceTestSlotDetail(id);
+        }
         [HttpGet("{year}/year")]
         public async Task<List<GetEntranceTestDto>> GetEntranceTestByYear([FromRoute] int year)
         {
@@ -28,9 +33,9 @@ namespace PhotonPiano.API.Controllers
             return await _entranceTestService.GetEntranceTestByStudentId(studentId,true);
         }
         [HttpGet("slots")]
-        public async Task<ActionResult<List<GetEntranceTestSlotDto>>> GetPagedEntranceTestSlot([FromQuery] int pageSize = 10, [FromQuery] int pageNumber = 1)
+        public async Task<ActionResult<List<GetEntranceTestSlotWithLocationDto>>> GetEntranceTestSlot([FromQuery] int year)
         {
-            return await _entranceTestSlotService.GetPagedEntranceTestSlots(pageNumber, pageSize);
+            return await _entranceTestSlotService.GetEntranceTestSlotsByYear(year);
         }
         [HttpGet("{studentId}/entrance-test-score")]
         public async Task<ActionResult<GetEntranceTestWithResultDto>> GetEntranceTestScore([FromRoute] long studentId)
@@ -48,10 +53,10 @@ namespace PhotonPiano.API.Controllers
             return await _entranceTestSlotService.CreateEntranceTestSlot(createEntranceTestSlotDto);
         }
 
-        [HttpPatch("{slotId}/add-entrance-tests")]
-        public async Task<IActionResult> AddEntranceTests([FromRoute] long slotId,[FromBody] AddEntranceTestToASlotDto addEntranceTestToASlotDto)
+        [HttpPatch("upsert-entrance-tests")]
+        public async Task<IActionResult> AddEntranceTests([FromBody] AddStudentsToASlotDto addStudentsToASlotDto)
         {
-            await _entranceTestSlotService.AddEntranceTestToEntranceTestSlot(addEntranceTestToASlotDto, slotId);
+            await _entranceTestSlotService.UpsertStudentsToEntranceTestSlot(addStudentsToASlotDto);
             return Ok();
         }
 

@@ -12,12 +12,14 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<EntranceTest> GetEntranceTestByRequiredId(long id);
 
-        Task UpdateEntranceTestId(long id, long slotId);
+        Task UpdateEntranceTestId(long id, long? slotId);
 
         Task<GetEntranceTestWithResultDto> GetEntranceTestScoreOfAStudent(long studentId);
 
         Task<List<GetEntranceTestDto>> GetEntranceTestsByYear(int year);
 
         Task AutoAcceptRegistrations(int number);
+
+        Task<EntranceTest?> GetEntranceTestByStudentIdAndYear(long studentId, int year);
     }
 }

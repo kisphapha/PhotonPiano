@@ -12,17 +12,45 @@ namespace PhotonPiano.DataAccess.Repositories
         {
             _context = context;
         }
-
-        public async Task<List<EntranceTestSlot>> GetPagedEntranceTestSlots(int pageNumber, int pageSize)
+        public async Task<EntranceTestSlot?> GetEntranceTestSlotDetail(long id)
         {
-            var query = _context.EntranceTestSlots; // Replace YourEntity with your actual entity name
+            var slot = await _context.EntranceTestSlots
+                .Include(ets => ets.Location)
+                .Include(ets => ets.EntranceTests)
+                .FirstOrDefaultAsync(ets => ets.Id == id);
 
-            var paginatedResult = await query
-                .Skip((pageNumber - 1) * pageSize)
-                .Take(pageSize)
+            if (slot is not null && slot.EntranceTests is not null)
+            {
+                foreach (var entranceTest in slot.EntranceTests)
+                {
+                    if (entranceTest.Student is not null)
+                    {
+                        // Explicitly load the User of the Student entity
+                        await _context.Entry(entranceTest.Student).Reference(s => s.User).LoadAsync();
+                    }
+                }
+            }
+            return slot;
+        }
+        public async Task<List<EntranceTestSlot>> GetEntranceTestSlotsByYear(int year)
+        {
+            var slots = await _context.EntranceTestSlots
+                .Include(ets => ets.Location)
+                .Where(ets => ets.Date.Year == year)
                 .ToListAsync();
 
-            return paginatedResult;
+            //foreach (var slot in slots)
+            //{
+            //    foreach (var entranceTest in slot.EntranceTests)
+            //    {
+            //        if (entranceTest.StudentId.HasValue && entranceTest.Student != null)
+            //        {
+            //            // Explicitly load the User of the Student entity
+            //            await _context.Entry(entranceTest.Student).Reference(s => s.User).LoadAsync();
+            //        }
+            //    }
+            //}
+            return slots;
         }
 
     }

@@ -13,9 +13,13 @@ public partial class EntranceTestSlot
 
     public DateOnly Date { get; set; }
 
-    public bool IsAnnouced { get; set; }
+    public bool IsAnnoucedTime { get; set; }
 
     public DateTime? AnnounceTime { get; set; }
+
+    public bool IsAnnoucedScore { get; set; }
+
+    public long? InstructorId { get; set; }
 
     public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();
 

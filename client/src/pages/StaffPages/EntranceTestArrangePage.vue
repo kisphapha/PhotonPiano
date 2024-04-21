@@ -1,20 +1,24 @@
 <template>
     <div class="mt-4 ml-4 mr-4">
         <div class="text-4xl font-bold">Entrance Test Arrangement</div>
-        <div class="flex gap-4 mt-4">
-            <button class=" p-4 border border-dotted w-1/2 flex gap-8" @click="toggleAddPopup">
-                <div class="material-icons text-5xl text-green-400">
-                    add_circle
-                </div>
-                <div class="mt-auto mb-auto text-2xl">
-                    New Entrance Test Slot
-                </div>
+        <div class="mt-4 flex gap-8">
+            <button class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
+                Annouce Time All
+                <span class="material-icons text-2xl">
+                    notifications_none
+                </span>
             </button>
-            <button class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl" @click="toggleAutoArrangePopup">
+            <button class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
+                Annouce Score All
+                <span class="material-icons text-2xl">
+                    notifications
+                </span>
+            </button>
+            <button class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl"
+                @click="toggleAutoArrangePopup">
                 Auto-Arrange
             </button>
         </div>
-
         <div class="mt-8">
             <select v-model="selectedYear" class="text-xl font-normal rouded-lg border px-8 py-2">
                 <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
@@ -22,6 +26,14 @@
         </div>
 
         <div class="mt-4">
+            <button class=" p-4 border border-dotted w-1/2 flex gap-8" @click="toggleAddPopup">
+                <div class="material-icons text-5xl text-green-400">
+                    add_circle
+                </div>
+                <div class="mt-auto mb-auto text-2xl">
+                    New Entrance Test Slot
+                </div>
+            </button>   
             <div v-for="slot in slots" :key="slot.id" class="flex gap-6 mt-4 ">
                 <div class="p-4 w-1/2 bg-slate-700 text-white rounded-xl">
                     <div class="mt-auto mb-auto text-2xl font-bold">
@@ -35,13 +47,13 @@
                             Time : {{ this.shifts[slot.shift - 1] }}
                         </div>
                         <div class="mt-auto mb-auto text-lg">
-                            Day : {{ slot.day }}
+                            Day : {{ slot.date }}
                         </div>
                     </div>
                 </div>
                 <div class="mt-auto mb-auto flex gap-4">
                     <div class="flex flex-col justify-center">
-                        <button @click="openEditPopup(1,2,4,[1,3])">
+                        <button @click="openEditPopup(1, 2, 4, [1, 3])">
                             <span class="material-icons">
                                 edit
                             </span>
@@ -77,20 +89,7 @@
             </div>
 
         </div>
-        <div class="mt-12 flex gap-8">
-            <button class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
-                Annouce Time All
-                <span class="material-icons text-2xl">
-                    notifications_none
-                </span>
-            </button>
-            <button class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
-                Annouce Score All
-                <span class="material-icons text-2xl">
-                    notifications
-                </span>
-            </button>
-        </div>
+        
 
         <div v-if="isOpenAddPopup" class="popup-overlay">
             <div class="flex justify-center items-center w-2/3">
@@ -107,13 +106,13 @@
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="closeEditPopup">X</button>
                     <EntranceTestSlotForm title="Edit entrance test slot" :locationId="this.editDto.locationId"
-                    :instructorId="this.editDto.instructorId" :shiftId="this.editDto.shiftId" 
-                    :selectedStudentIds="this.editDto.selectedStudentIds"/>
+                        :instructorId="this.editDto.instructorId" :shiftId="this.editDto.shiftId"
+                        :selectedStudentIds="this.editDto.selectedStudentIds" />
                 </div>
             </div>
         </div>
         <div v-if="isOpenAutoArrangePopup" class="popup-overlay">
-            <div class="flex justify-center items-center w-2/3">
+            <div class="flex justify-center items-center w-2/3 ">
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutoArrangePopup">X</button>
@@ -125,6 +124,7 @@
 </template>
 
 <script>
+import axios from 'axios'
 import EntranceTestSlotForm from '../../components/Staff/EntranceTestSlotForm.vue'
 import EntranceTestAutoArrangeForm from '../../components/Staff/EntranceTestAutoArrangeForm.vue'
 
@@ -151,7 +151,7 @@ export default {
                     isAnnouncedTime: true,
                     isAnnouncedScore: false,
                 },
-                
+
             ],
             shifts: [
                 "7:00 - 8:30",
@@ -166,16 +166,17 @@ export default {
             years: [
 
             ],
-            editDto : {
-                locationId : 0,
-                shiftId : 0,
-                instructorId : 0,
-                selectedStudentIds : []
+            editDto: {
+                locationId: 0,
+                shiftId: 0,
+                instructorId: 0,
+                selectedStudentIds: []
             },
             isOpenAddPopup: false,
             isOpenEditPopup: false,
             isOpenAutoArrangePopup: false,
-            selectedYear: new Date().getFullYear()
+            selectedYear: new Date().getFullYear(),
+            user: null
         }
     },
     methods: {
@@ -202,6 +203,22 @@ export default {
         },
         closeEditPopup() {
             this.isOpenEditPopup = false
+        },
+        async refresh() {
+            const userPromise = new Promise((resolve) => {
+                this.eventBus.emit("get-staff-user", resolve);
+            });
+            const user = await userPromise;
+            this.user = user
+
+            await this.fetchData()
+        },
+        async fetchData() {
+            const slots = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/slots`)
+
+            if (slots.data) {
+                this.slots = slots.data
+            }
         }
     },
     mounted() {
@@ -215,6 +232,7 @@ export default {
         this.eventBus.on("close-edit-entrance-test-slot-popup", () => {
             this.closeEditPopup()
         })
+        this.refresh()
     }
 }
 

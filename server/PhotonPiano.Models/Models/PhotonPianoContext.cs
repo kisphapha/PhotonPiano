@@ -230,7 +230,8 @@ public partial class PhotonPianoContext : DbContext
             entity.ToTable("EntranceTestSlot");
 
             entity.Property(e => e.AnnounceTime).HasColumnType("datetime");
-            entity.Property(e => e.IsAnnouced).HasColumnName("isAnnouced");
+            entity.Property(e => e.IsAnnoucedScore).HasColumnName("isAnnoucedScore");
+            entity.Property(e => e.IsAnnoucedTime).HasColumnName("isAnnoucedTime");
 
             entity.HasOne(d => d.Location).WithMany(p => p.EntranceTestSlots)
                 .HasForeignKey(d => d.LocationId)

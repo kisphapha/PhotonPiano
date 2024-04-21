@@ -1,6 +1,9 @@
 ﻿
 using Microsoft.EntityFrameworkCore;
 using PhotonPiano.DataAccess.Interfaces;
+using PhotonPiano.Helper.Dtos.EntranceTests;
+using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.DataAccess.Repositories
@@ -20,5 +23,6 @@ namespace PhotonPiano.DataAccess.Repositories
                 .SingleOrDefaultAsync(x => x.StudentId == studentId);
         }
         
+
     }
 }
