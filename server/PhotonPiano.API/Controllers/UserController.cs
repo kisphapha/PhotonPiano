@@ -22,9 +22,9 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetUserDto>>> GetUsers()
+        public async Task<ActionResult<List<GetUserDto>>> GetUsers([FromQuery] QueryUserDto queryUserDto)
         {
-            return await _userService.GetUsers();
+            return await _userService.GetUsers(queryUserDto);
         }
         [HttpPatch("{studentId}")]
         public async Task<IActionResult> UpdateUser([FromRoute] long studentId, [FromBody] UpdateUserDto updateUserDto)

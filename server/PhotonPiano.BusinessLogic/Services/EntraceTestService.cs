@@ -1,6 +1,7 @@
 ﻿using Mapster;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
+using PhotonPiano.Helper.Dtos.EntranceTest;
 using PhotonPiano.Helper.Dtos.EntranceTests;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Exceptions;

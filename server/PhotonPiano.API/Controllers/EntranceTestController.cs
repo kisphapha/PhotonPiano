@@ -72,5 +72,12 @@ namespace PhotonPiano.API.Controllers
             await _entranceTestService.AutoAcceptRegistrations(number);
             return Ok();
         }
+
+        [HttpDelete("{slotId}")]
+        public async Task<IActionResult> DeleteEntranceTestSlot([FromRoute] int slotId)
+        {
+            await _entranceTestSlotService.DeleteEntranceTestSlot(slotId);
+            return Ok();
+        }
     }
 }

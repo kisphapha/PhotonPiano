@@ -23,5 +23,7 @@ public partial class EntranceTestSlot
 
     public virtual ICollection<EntranceTest> EntranceTests { get; set; } = new List<EntranceTest>();
 
+    public virtual Instructor? Instructor { get; set; }
+
     public virtual Location Location { get; set; } = null!;
 }

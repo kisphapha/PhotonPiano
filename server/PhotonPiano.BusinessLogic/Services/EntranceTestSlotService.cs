@@ -71,7 +71,11 @@ namespace PhotonPiano.BusinessLogic.Services
             foreach (var entranceTest in entranceTestSlot.EntranceTests)
             {
                 await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, null);
-                await _studentService.ChangeStatusOfStudent(entranceTest.Student.Id, StudentStatus.Accepted.ToString());
+                var student = await _studentService.GetRequiredStudentById(entranceTest.Student.Id);
+                if (student.Status == StudentStatus.EntranceTesting.ToString())
+                {
+                    await _studentService.ChangeStatusOfStudent(entranceTest.Student.Id, StudentStatus.Accepted.ToString());
+                }
             }
         }
         public async Task UpsertEntranceTestToEntranceTestSlot(AddEntranceTestToASlotDto addEntranceTestToASlotDto)
@@ -93,6 +97,11 @@ namespace PhotonPiano.BusinessLogic.Services
                 if (entranceTest != null)
                 {
                     await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, addStudentsToASlot.SlotId);
+                    //var student = await _studentService.GetRequiredStudentById(entranceTest.Student.Id);
+                    //if (student.Status != StudentStatus.Accepted.ToString())
+                    //{
+                    //    throw new BadRequestException("Student must have status Accepted to proceed this function");
+                    //}
                     await _studentService.ChangeStatusOfStudent(studentId, StudentStatus.EntranceTesting.ToString());
                 }
             }
@@ -107,5 +116,10 @@ namespace PhotonPiano.BusinessLogic.Services
             await _entranceTestSlotRepository.UpdateAsync(slot);
         }
 
+        public async Task DeleteEntranceTestSlot(long slotId)
+        {
+            await ClearEntranceTestInASlot(slotId);
+            await _entranceTestSlotRepository.DeleteAsync(slotId);
+        }
     }
 }

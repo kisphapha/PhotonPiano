@@ -18,6 +18,8 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
 
         public bool IsScoreAnnounced { get; set; }
 
+        public GetEntranceTestSlotDto? EntranceTestSlot { get; set; }
+
         public ICollection<GetEntranceTestResultWithCriteriaDto> EntranceTestResults { get; set; } = new List<GetEntranceTestResultWithCriteriaDto>();
 
 

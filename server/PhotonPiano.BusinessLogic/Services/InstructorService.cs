@@ -19,6 +19,9 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             return (await _instructorRepository.GetPagedInstructors(pageNumber, pageSize, queryInstructorDto)).Adapt<PaginatedResult<GetInstructorWithUserDto>>();
         }
-
+        public async Task<List<GetInstructorDto>> GetAllSimpleInstructors()
+        {
+            return (await _instructorRepository.GetAllAsync()).Adapt<List<GetInstructorDto>>();
+        }
     }
 }

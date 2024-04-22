@@ -65,14 +65,14 @@
       <div class="mt-8 mb-8  mr-auto ml-auto w-1/2 ">
         <div class="text-5xl font-bold text-green-600">CONGRATULATIONS!!!!!</div>
         <div class="text-3xl font-bold mt-2">Your registration has been accepted!</div>
-        <div v-if="this.entrance_test_detail?.entranceTestSlot?.isAnnouced">
+        <div v-if="entrance_test_result?.entranceTestSlot?.isAnnoucedTime">
           <div class="text-xl italic mt-2">
             We kindly inform you about the location and time for you entrance test!
           </div>
           <div class="mt-8 mb-8 w-full bg-orange-100 p-8 rounded-xl font-bold">
             <ul class="list-disc">
               <li>Location : {{ this.entrance_test_detail.entranceTestSlot.location.name }}</li>
-              <li>Shift : {{ this.shifts[this.entrance_test_detail.entranceTestSlot.shift] }}</li>
+              <li>Shift : {{ this.shifts[this.entrance_test_detail.entranceTestSlot.shift - 1] }}</li>
               <li>Date : {{ this.entrance_test_detail.entranceTestSlot.date }}</li>
             </ul>
           </div>
@@ -106,7 +106,7 @@
         <div class="text-3xl font-bold text-green-600">
           Congratulations on finishing your entrance test!
         </div>
-        <div v-if="this.entrance_test_result && this.entrance_test_result.isScoreAnnounced">
+        <div v-if="entrance_test_result?.entranceTestSlot?.isAnnoucedScore">
           <div class="text-xl mt-4">
             We kindly inform you about your entrance test result as follows :
             <div class="mt-8">
@@ -141,7 +141,7 @@
             Your entrance test result should be announced within a week!
           </div>
         </div>
-        <div v-if="this.entrance_test_result && this.entrance_test_result.isScoreAnnounced">
+        <div v-if="entrance_test_result?.entranceTestSlot?.isAnnoucedScore">
           <div class="text-xl mt-4">
             Based on your result, you will be placed in a suitable class to slowly level your skills.
             The class placement result will be informed as soon as possible.
@@ -262,7 +262,7 @@ export default {
         if (this.student_status == "PendingRegistration") {
           this.setEnrollingStatus("Applied")
         }
-        if (this.student_status == "Accepted") {
+        if (this.student_status == "Accepted" || this.student_status == "EntranceTesting") {
           this.setEnrollingStatus("Accepted")
         }
         if (this.student_detail.entranceTests && this.student_detail.entranceTests.length > 0) {

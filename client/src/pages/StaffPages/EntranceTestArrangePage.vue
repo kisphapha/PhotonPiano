@@ -2,38 +2,43 @@
     <div class="mt-4 ml-4 mr-4">
         <div class="text-4xl font-bold">Entrance Test Arrangement</div>
         <div class="mt-4 flex gap-8">
-            <button class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
+            <button v-if="this.selectedYear == new Date().getFullYear()"
+                class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
                 Annouce Time All
                 <span class="material-icons text-2xl">
                     notifications_none
                 </span>
             </button>
-            <button class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
+            <button v-if="this.selectedYear == new Date().getFullYear()"
+                class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
                 Annouce Score All
                 <span class="material-icons text-2xl">
                     notifications
                 </span>
             </button>
-            <button class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl"
+            <button v-if="this.selectedYear == new Date().getFullYear()"
+                class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl"
                 @click="toggleAutoArrangePopup">
                 Auto-Arrange
             </button>
         </div>
         <div class="mt-8">
-            <select v-model="selectedYear" class="text-xl font-normal rouded-lg border px-8 py-2">
+            <select v-model="selectedYear" class="text-xl font-normal rouded-lg border px-8 py-2"
+                @change="handleSelectedYearChange">
                 <option v-for="year in years" :key="year" :value="year">{{ year }}</option>
             </select>
         </div>
 
         <div class="mt-4">
-            <button class=" p-4 border border-dotted w-1/2 flex gap-8" @click="toggleAddPopup">
+            <button v-if="this.selectedYear == new Date().getFullYear()"
+                class=" p-4 border border-dotted w-1/2 flex gap-8" @click="toggleAddPopup">
                 <div class="material-icons text-5xl text-green-400">
                     add_circle
                 </div>
                 <div class="mt-auto mb-auto text-2xl">
                     New Entrance Test Slot
                 </div>
-            </button>   
+            </button>
             <div v-for="slot in slots" :key="slot.id" class="flex gap-6 mt-4 ">
                 <div class="p-4 w-1/2 bg-slate-700 text-white rounded-xl">
                     <div class="mt-auto mb-auto text-2xl font-bold">
@@ -41,7 +46,7 @@
                     </div>
                     <div class="flex place-content-between">
                         <div class="mt-auto mb-auto text-lg">
-                            Location : {{ slot.location }}
+                            Location : {{ slot.location.name }}
                         </div>
                         <div class="mt-auto mb-auto text-lg">
                             Time : {{ this.shifts[slot.shift - 1] }}
@@ -51,9 +56,9 @@
                         </div>
                     </div>
                 </div>
-                <div class="mt-auto mb-auto flex gap-4">
+                <div class="mt-auto mb-auto flex gap-4" v-if="this.selectedYear == new Date().getFullYear()">
                     <div class="flex flex-col justify-center">
-                        <button @click="openEditPopup(1, 2, 4, [1, 3])">
+                        <button @click="openEditPopup(slot.id)">
                             <span class="material-icons">
                                 edit
                             </span>
@@ -61,22 +66,22 @@
                         <div class="text-sm italic">(Edit)</div>
                     </div>
                     <div class="flex flex-col justify-center">
-                        <button>
+                        <button @click="handleDelete(true, slot.id)">
                             <span class="material-icons">
                                 delete
                             </span>
                         </button>
                         <div class="text-sm italic">(Delete)</div>
                     </div>
-                    <div v-if="!slot.isAnnouncedTime" class="flex flex-col justify-center">
-                        <button>
+                    <div v-if="!slot.isAnnoucedTime" class="flex flex-col justify-center">
+                        <button @click="handleAnnounceTime(true,slot.id)">
                             <span class="material-icons">
                                 notifications_none
                             </span>
                         </button>
                         <div class="text-sm italic">(Announce Time)</div>
                     </div>
-                    <div v-if="!slot.isAnnouncedScore" class="flex flex-col justify-center">
+                    <div v-if="!slot.isAnnoucedScore" class="flex flex-col justify-center">
                         <button>
                             <span class="material-icons">
                                 notifications
@@ -89,7 +94,7 @@
             </div>
 
         </div>
-        
+
 
         <div v-if="isOpenAddPopup" class="popup-overlay">
             <div class="flex justify-center items-center w-2/3">
@@ -105,9 +110,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="closeEditPopup">X</button>
-                    <EntranceTestSlotForm title="Edit entrance test slot" :locationId="this.editDto.locationId"
-                        :instructorId="this.editDto.instructorId" :shiftId="this.editDto.shiftId"
-                        :selectedStudentIds="this.editDto.selectedStudentIds" />
+                    <EntranceTestSlotForm title="Edit entrance test slot" :slotId="this.selectedSlotId" />
                 </div>
             </div>
         </div>
@@ -135,23 +138,6 @@ export default {
     data() {
         return {
             slots: [
-                {
-                    id: 1,
-                    location: "Mozart_1",
-                    shift: 1,
-                    day: "2024-02-10",
-                    isAnnouncedTime: false,
-                    isAnnouncedScore: false,
-                },
-                {
-                    id: 2,
-                    location: "Mozart_2",
-                    shift: 2,
-                    day: "2024-03-10",
-                    isAnnouncedTime: true,
-                    isAnnouncedScore: false,
-                },
-
             ],
             shifts: [
                 "7:00 - 8:30",
@@ -176,6 +162,7 @@ export default {
             isOpenEditPopup: false,
             isOpenAutoArrangePopup: false,
             selectedYear: new Date().getFullYear(),
+            selectedSlotId: 0,
             user: null
         }
     },
@@ -194,12 +181,9 @@ export default {
         toggleAutoArrangePopup() {
             this.isOpenAutoArrangePopup = !this.isOpenAutoArrangePopup
         },
-        openEditPopup(locationId, instructorId, shiftId, selectedStudentIds) {
+        openEditPopup(id) {
+            this.selectedSlotId = id
             this.isOpenEditPopup = true
-            this.editDto.locationId = locationId
-            this.editDto.instructorId = instructorId
-            this.editDto.shiftId = shiftId
-            this.editDto.selectedStudentIds = selectedStudentIds
         },
         closeEditPopup() {
             this.isOpenEditPopup = false
@@ -214,10 +198,62 @@ export default {
             await this.fetchData()
         },
         async fetchData() {
-            const slots = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/slots`)
+            const slots = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/slots?year=${this.selectedYear}`)
 
             if (slots.data) {
                 this.slots = slots.data
+            }
+        },
+
+        async handleSelectedYearChange() {
+            await this.fetchData()
+        },
+
+        async handleDelete(confirmation, id) {
+            if (confirmation) {
+                this.selectedSlotId = id;
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "delete-entrance-test-slot-entrance-test-arrange-page"
+                })
+            } else {
+                try {
+                    await axios.delete(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Deleted Successfully",
+                        type: "Success"
+                    })
+                    await this.fetchData()
+                } catch (e) {
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data.ErrorMessage,
+                        type: "Error"
+                    })
+                }
+            }
+        },
+        async handleAnnounceTime(confirmation, id) {
+            if (confirmation) {
+                this.selectedSlotId = id;
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "announce-slot-time-entrance-test-arrange-page"
+                })
+            } else {
+                try {
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}/announce`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Annouced Successfully",
+                        type: "Success"
+                    })
+                    await this.fetchData()
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response?.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
             }
         }
     },
@@ -231,6 +267,15 @@ export default {
         })
         this.eventBus.on("close-edit-entrance-test-slot-popup", () => {
             this.closeEditPopup()
+        })
+        this.eventBus.on("delete-entrance-test-slot-entrance-test-arrange-page", () => {
+            this.handleDelete(false,0)
+        })
+        this.eventBus.on("announce-slot-time-entrance-test-arrange-page", () => {
+            this.handleAnnounceTime(false,0)
+        })
+        this.eventBus.on("refresh-entrance-test-arrange-page", () => {
+            this.refresh()
         })
         this.refresh()
     }

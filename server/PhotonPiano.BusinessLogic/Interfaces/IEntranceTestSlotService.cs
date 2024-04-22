@@ -13,5 +13,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task UpsertStudentsToEntranceTestSlot(AddStudentsToASlotDto addStudentsToASlot);
 
         Task AnnouceEntranceTestSlot(long slotId);
+
+        Task DeleteEntranceTestSlot(long slotId);
     }
 }

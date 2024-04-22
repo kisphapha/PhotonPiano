@@ -234,6 +234,10 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.IsAnnoucedScore).HasColumnName("isAnnoucedScore");
             entity.Property(e => e.IsAnnoucedTime).HasColumnName("isAnnoucedTime");
 
+            entity.HasOne(d => d.Instructor).WithMany(p => p.EntranceTestSlots)
+                .HasForeignKey(d => d.InstructorId)
+                .HasConstraintName("FK_EntranceTestSlot_Instructor");
+
             entity.HasOne(d => d.Location).WithMany(p => p.EntranceTestSlots)
                 .HasForeignKey(d => d.LocationId)
                 .OnDelete(DeleteBehavior.ClientSetNull)

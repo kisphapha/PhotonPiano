@@ -18,7 +18,14 @@ namespace PhotonPiano.DataAccess.Repositories
                 .Include(ets => ets.Location)
                 .Include(ets => ets.EntranceTests)
                     .ThenInclude(et => et.Student.User)
+                .Include(ets => ets.Instructor)
                 .FirstOrDefaultAsync(ets => ets.Id == id);
+
+            if (slot?.Instructor is not null)
+            {
+                await _context.Entry(slot.Instructor).Reference(s => s.User)
+                    .LoadAsync();
+            }
 
             return slot;
         }

@@ -9,6 +9,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 {
     public interface IInstructorService
     {
+        Task<List<GetInstructorDto>> GetAllSimpleInstructors();
         Task<PaginatedResult<GetInstructorWithUserDto>> GetPagedInstructors(int pageNumber, int pageSize, QueryInstructorDto queryInstructorDto);
     }
 }

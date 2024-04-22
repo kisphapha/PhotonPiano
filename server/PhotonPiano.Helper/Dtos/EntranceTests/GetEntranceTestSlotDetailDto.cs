@@ -1,5 +1,7 @@
 ﻿
+using PhotonPiano.Helper.Dtos.Instructors;
 using PhotonPiano.Helper.Dtos.Locations;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.Helper.Dtos.EntranceTests
 {
@@ -18,6 +20,8 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
         public DateTime? AnnounceTime { get; set; }
 
         public bool IsAnnoucedScore { get; set; }
+
+        public GetInstructorWithUserDto? Instructor { get; set; }
 
         public GetLocationDto Location { get; set; } = null!;
 

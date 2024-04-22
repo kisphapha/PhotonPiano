@@ -26,5 +26,11 @@ namespace PhotonPiano.API.Controllers
         {
             return await _instructorService.GetPagedInstructors(pageNumber,pageSize, queryInstructorDto);
         }
+
+        [HttpGet("all")]
+        public async Task<ActionResult<List<GetInstructorDto>>> GetAllSimpleInstructors()
+        {
+            return await _instructorService.GetAllSimpleInstructors();
+        }
     }
 }

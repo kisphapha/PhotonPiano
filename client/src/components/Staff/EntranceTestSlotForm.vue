@@ -1,5 +1,5 @@
 <template>
-    <div class="overflow-y-auto max-h-screen px-6 py-8 bg-white rounded-lg shadow-md overflow-x-auto w-[75vw]">
+    <div class="overflow-y-auto max-h-screen px-6 py-8 bg-white rounded-lg shadow-md overflow-x-auto">
         <div class="text-2xl font-bold">{{ this.title }}</div>
         <div class="mt-4">
             <div class="flex place-content-between">
@@ -38,8 +38,8 @@
                         <div class="p-2">Instructor</div>
                         <select class="p-2 rounded-lg border w-full" v-model="selectedInstructorId">
                             <option value="0">Select an instructor</option>
-                            <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">{{
-            instructor.name }}
+                            <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">
+                                {{ instructor.user.name }}
                             </option>
                         </select>
                     </div>
@@ -51,7 +51,7 @@
                 <div class="flex">
                     <div class="p-2 w-48">Students to be added :</div>
                     <div class="flex gap-2">
-                        <input class="border p-1 rounded-md w-64" type="text" v-model="keyword_name"
+                        <input class="border p-1 rounded-md max-w-64" type="text" v-model="keyword_name"
                             placeholder="Search by name">
                         <button class="p-1 bg-slate-100 rounded-lg" @click="handleSearch">
                             <span class="material-icons p-1">
@@ -63,11 +63,15 @@
                 </div>
                 <div class="flex justify-end">
                     <div class="flex gap-4">
+                        <button @click="toggleViewMode" v-if="this.slotId"
+                            class="p-2 bg-green-700 font-bold text-white rounded-lg hover:bg-green-500">
+                            {{ viewMode == 0 ? "View selected" : "View unselected" }}
+                        </button>
                         <button @click="handleClear"
                             class="p-2 bg-red-400 font-bold text-white rounded-lg hover:bg-red-200">
                             Clear Selection
                         </button>
-                        <button @click="handleAutoFill"
+                        <button @click="handleAutoFill" v-if="viewMode == 0"
                             class="p-2 bg-blue-400 font-bold text-white rounded-lg hover:bg-blue-200">
                             Auto Fill
                         </button>
@@ -121,8 +125,7 @@
                 <span class="material-icons p-1">arrow_forward_ios</span>
             </button>
         </div>
-        <div class="flex place-content-between"
-            v-if="selectedLocation && selectedInstructorId != 0 && selectedShiftId != 0 && selectedDate">
+        <div class="flex place-content-between" v-if="selectedLocation && selectedShiftId != 0 && selectedDate">
             <div
                 :class='this.studentSelected.length > this.selectedLocation.capacity ? "font-bold italic text-red-400" : "font-bold italic "'>
                 <span>Selected</span>
@@ -130,7 +133,8 @@
                 <span>/ {{ this.selectedLocation.capacity }} students</span>
             </div>
             <div class="flex gap-4 mt-4" v-if='!checkEditTitle()'>
-                <button class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
+                <button @click="handleAdd"
+                    class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
                 <button class="p-2 text-red-400 underline font-bold"
                     @click="toggleAddSlotFormEntranceTestArrangePage">Cancel</button>
             </div>
@@ -151,21 +155,13 @@ import axios from 'axios'
 export default {
     name: "EntranceTestSlotForm",
     inject: ['eventBus'],
-    props: ['title', 'locationId', 'instructorId', 'shiftId', 'selectedStudentIds', 'examDate'],
+    props: ['title', 'slotId'],
     data() {
         return {
             locations: [],
-            instructors: [
-                {
-                    id: 1,
-                    name: "Diamond",
-                },
-                {
-                    id: 2,
-                    name: "WhiteWine",
-                },
-            ],
+            instructors: [],
             students: [],
+            studentsAlreadySelected: [],
             shifts: [
                 { id: 1, detail: "7:00 - 8:30" },
                 { id: 2, detail: "8:45 - 10:15" },
@@ -186,7 +182,8 @@ export default {
             selectedLocation: null,
             selectedDate: null,
             studentSelected: [],
-            totalStudents: 0
+            totalStudents: 0,
+            viewMode: 0
         }
     },
     methods: {
@@ -224,30 +221,41 @@ export default {
         closeEditSlotFormEntranceTestArrangePage() {
             this.eventBus.emit("close-edit-entrance-test-slot-popup")
         },
-        getFromProps() {
-            this.selectedLocationId = this.locationId
-            this.selectedInstructorId = this.instructorId,
-                this.selectedShiftId = this.shiftId,
-                this.selectedDate = this.examDate
-            for (var studentId of this.selectedStudentIds) {
-                this.studentSelected.push(studentId)
+        async getFromProps() {
+            if (this.slotId) {
+                const response = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.slotId}/slot-detail`)
+                if (response.data) {
+                    this.selectedLocationId = response.data.location.id
+                    this.selectedLocation = response.data.location
+                    this.selectedInstructorId = response.data.instructor?.id ?? 0
+                    this.selectedShiftId = response.data.shift
+                    this.selectedDate = response.data.date
+                    this.studentsAlreadySelected = []
+                    for (var entranceTest of response.data.entranceTests) {
+                        this.studentSelected.push(entranceTest.studentId)
+                        this.studentsAlreadySelected.push(entranceTest.student)
+                    }
+                }
             }
-            console.log(this.selectedStudentIds)
-            console.log(this.studentSelected)
-            this.handleLocationChange()
-
         },
         checkEditTitle() {
             return (this.title == "Edit entrance test slot")
         },
         async fetchStudents() {
-            const students = await axios.get(import.meta.env.VITE_API_URL + `/api/Student?Status=Accepted&pageNumber=${this.currentPage}&pageSize=${this.pageSize}&name=${this.keyword_name}`)
-
-            if (students.data) {
-                this.students = students.data.results
-                this.totalPage = students.data.totalPages
-                this.totalStudents = students.data.totalRecords
+            if (this.viewMode == 0) {
+                const studentsResponse = await axios.get(import.meta.env.VITE_API_URL + `/api/Student?Status=Accepted&pageNumber=${this.currentPage}&pageSize=${this.pageSize}&name=${this.keyword_name}`);
+                if (studentsResponse.data) {
+                    this.students = studentsResponse.data.results;
+                    this.totalPage = studentsResponse.data.totalPages;
+                    this.totalStudents = studentsResponse.data.totalRecords;
+                }
+            } else {
+                this.totalPage = Math.ceil(this.studentsAlreadySelected.length/ this.pageSize)
+                const start = (this.currentPage - 1) * this.pageSize
+                const end = (this.currentPage - 1) * this.pageSize + this.pageSize
+                this.students = this.studentsAlreadySelected.slice(start,end).filter(s => s.user.name.includes(this.keyword_name))
             }
+
         },
         async fetchLocations() {
             const locations = await axios.get(import.meta.env.VITE_API_URL + `/api/Location`)
@@ -256,10 +264,24 @@ export default {
                 this.locations = locations.data
             }
         },
-        async refresh() {
+        async fetchInstructor() {
+            const bait = await axios.get(import.meta.env.VITE_API_URL + `/api/Instructor?pageNumber=1&pageSize=1`)
+            if (bait.data) {
+                const instructors = await axios.get(import.meta.env.VITE_API_URL + `/api/Instructor?pageNumber=1&pageSize=${bait.data.totalRecords}`)
 
+                if (instructors.data) {
+                    this.instructors = instructors.data.results
+                }
+            }
+
+        },
+        async refresh() {
+            if (this.checkEditTitle()) {
+                await this.getFromProps()
+            }
             await this.fetchStudents()
             await this.fetchLocations()
+            await this.fetchInstructor()
         },
         handleClear() {
             this.studentSelected = []
@@ -286,12 +308,42 @@ export default {
                 })
             }
 
+        },
+        async handleAdd() {
+            const request = {
+                locationId: this.selectedLocationId,
+                shift: this.selectedShiftId,
+                date: this.selectedDate,
+                instructorId : this.selectedInstructorId != 0 ? this.selectedInstructorId : null
+            }
+            try {
+                const createdSlot = await axios.post(import.meta.env.VITE_API_URL + `/api/EntranceTest/slot`, request)
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/upsert-entrance-tests`, {
+                    slotId: createdSlot.data.id,
+                    studentIds: this.studentSelected
+                })
+
+                this.eventBus.emit("open-result-dialog", {
+                    message: "Created and Added Students Successfully",
+                    type: "Success"
+                })
+                this.eventBus.emit("refresh-entrance-test-arrange-page")
+                this.toggleAddSlotFormEntranceTestArrangePage()
+            } catch (e) {
+                console.log(e)
+                this.eventBus.emit("open-result-dialog", {
+                    message: e.response?.data?.ErrorMessage ?? "Somemthing went wrong",
+                    type: "Error"
+                })
+            }
+        },
+        toggleViewMode(){
+            this.viewMode = this.viewMode == 0 ? 1 : 0
+            this.fetchStudents()
         }
     },
     mounted() {
-        if (this.checkEditTitle()) {
-            this.getFromProps()
-        }
+
         this.refresh()
     }
 }

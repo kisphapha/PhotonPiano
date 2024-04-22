@@ -15,5 +15,8 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
         [Required] 
         public required DateOnly Date { get; set; }
 
+        public long? InstructorId { get; set; }
+
+
     }
 }

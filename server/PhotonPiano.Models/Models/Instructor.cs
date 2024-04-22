@@ -15,5 +15,7 @@ public partial class Instructor
 
     public virtual ICollection<Class> Classes { get; set; } = new List<Class>();
 
+    public virtual ICollection<EntranceTestSlot> EntranceTestSlots { get; set; } = new List<EntranceTestSlot>();
+
     public virtual User User { get; set; } = null!;
 }

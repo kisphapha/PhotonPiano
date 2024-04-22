@@ -21,9 +21,9 @@ namespace PhotonPiano.BusinessLogic.Services
             _studentService = studentService;
         }
 
-        public async Task<List<GetUserDto>> GetUsers()
+        public async Task<List<GetUserDto>> GetUsers(QueryUserDto queryUserDto)
         {
-            return (await _userRepository.GetAllAsync()).Adapt<List<GetUserDto>>();
+            return (await _userRepository.GetQueriedUser(queryUserDto)).Adapt<List<GetUserDto>>();
         }
         public async Task<User?> GetUserById(long id)
         {

@@ -17,12 +17,21 @@ namespace PhotonPiano.DataAccess.Repositories
         }
         public async Task<EntranceTest?> GetEntranceTestWithResultByStudentId(long studentId)
         {
-            return await _context.EntranceTests
+            var entranceTest =  await _context.EntranceTests
                 .Include(x => x.EntranceTestResults)
                     .ThenInclude(x => x.Criteria)
+                .Include(x => x.EntranceTestSlot)
                 .SingleOrDefaultAsync(x => x.StudentId == studentId);
+
+            if (entranceTest?.EntranceTestSlot is not null)
+            {
+                await _context.Entry(entranceTest.EntranceTestSlot).Reference(s => s.Location)
+                    .LoadAsync();
+            }
+
+            return entranceTest;
         }
-        
+
 
     }
 }

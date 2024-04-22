@@ -5,7 +5,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 {
     public interface IUserService
     {
-        Task<List<GetUserDto>> GetUsers();
+        Task<List<GetUserDto>> GetUsers(QueryUserDto queryUserDto);
 
         Task<User?> GetUserById(long id);
         Task<GetUserDto> VerifyLogin(string? emailOrPhone, string? password);
