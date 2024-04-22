@@ -17,19 +17,9 @@ namespace PhotonPiano.DataAccess.Repositories
             var slot = await _context.EntranceTestSlots
                 .Include(ets => ets.Location)
                 .Include(ets => ets.EntranceTests)
+                    .ThenInclude(et => et.Student.User)
                 .FirstOrDefaultAsync(ets => ets.Id == id);
 
-            if (slot is not null && slot.EntranceTests is not null)
-            {
-                foreach (var entranceTest in slot.EntranceTests)
-                {
-                    if (entranceTest.Student is not null)
-                    {
-                        // Explicitly load the User of the Student entity
-                        await _context.Entry(entranceTest.Student).Reference(s => s.User).LoadAsync();
-                    }
-                }
-            }
             return slot;
         }
         public async Task<List<EntranceTestSlot>> GetEntranceTestSlotsByYear(int year)

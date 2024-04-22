@@ -196,6 +196,7 @@ public partial class PhotonPianoContext : DbContext
 
             entity.HasOne(d => d.Student).WithMany(p => p.EntranceTests)
                 .HasForeignKey(d => d.StudentId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_EntranceTest_Student1");
         });
 

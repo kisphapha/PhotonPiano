@@ -13,8 +13,6 @@ namespace PhotonPiano.Helper.Dtos.Students
         public string? Phone { get; set; } = string.Empty;
 
         public string? Email { get; set; } = string.Empty;
-        public string? Role { get; set; } = string.Empty;
-
         public DateOnly? FromDoB { get; set; }
         public DateOnly? ToDoB { get; set; }
 

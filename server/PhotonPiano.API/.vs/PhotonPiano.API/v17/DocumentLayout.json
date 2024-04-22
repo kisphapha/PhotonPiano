@@ -3,26 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\entrancetestslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CAACAE79-7A01-45CA-808A-004E4D979B70}|..\\PhotonPiano.DataAccess\\PhotonPiano.DataAccess.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.dataaccess\\repositories\\instructorrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{4BB235FA-ECB1-48D6-B95E-078C0A5367B1}|..\\PhotonPiano.Models\\PhotonPiano.Models.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.models\\enums\\studentstatus.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{CAACAE79-7A01-45CA-808A-004E4D979B70}|..\\PhotonPiano.DataAccess\\PhotonPiano.DataAccess.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.dataaccess\\repositories\\entrancetestslotrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\entrancetests\\addstudentstoaslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\interfaces\\ientrancetestservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.api\\controllers\\entrancetestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\entrancetestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\interfaces\\ientrancetestslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{CAACAE79-7A01-45CA-808A-004E4D979B70}|..\\PhotonPiano.DataAccess\\PhotonPiano.DataAccess.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.dataaccess\\repositories\\studentrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -32,7 +16,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 9,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -64,93 +48,28 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "StudentStatus.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Models\\Enums\\StudentStatus.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.Models\\Enums\\StudentStatus.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Models\\Enums\\StudentStatus.cs",
-              "RelativeToolTip": "..\\PhotonPiano.Models\\Enums\\StudentStatus.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAgAAAAXAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:52:10.239Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "AddStudentsToASlotDto.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AddStudentsToASlotDto.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AddStudentsToASlotDto.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AddStudentsToASlotDto.cs",
-              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AddStudentsToASlotDto.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAwAAAAxAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:34:02.167Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "EntranceTestSlotService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "ViewState": "AQIAAEAAAAAAAAAAAAAgwFsAAAApAAAA",
+              "Title": "InstructorRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\InstructorRepository.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.DataAccess\\Repositories\\InstructorRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\InstructorRepository.cs",
+              "RelativeToolTip": "..\\PhotonPiano.DataAccess\\Repositories\\InstructorRepository.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAowDIAAAB5AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:30:41.962Z",
+              "WhenOpened": "2024-04-22T06:18:59.791Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "EntranceTestController.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\EntranceTestController.cs",
-              "RelativeDocumentMoniker": "Controllers\\EntranceTestController.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\EntranceTestController.cs",
-              "RelativeToolTip": "Controllers\\EntranceTestController.cs",
-              "ViewState": "AQIAABAAAAAAAAAAAAAgwBMAAAAiAAAA",
+              "DocumentIndex": 1,
+              "Title": "StudentRepository.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\StudentRepository.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.DataAccess\\Repositories\\StudentRepository.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\StudentRepository.cs",
+              "RelativeToolTip": "..\\PhotonPiano.DataAccess\\Repositories\\StudentRepository.cs",
+              "ViewState": "AQIAAFUAAAAAAAAAAAAcwGoAAABpAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:30:05.312Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "IEntranceTestService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestService.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAABYAAABYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:27:55.318Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "EntranceTestSlotRepository.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\EntranceTestSlotRepository.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.DataAccess\\Repositories\\EntranceTestSlotRepository.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\EntranceTestSlotRepository.cs",
-              "RelativeToolTip": "..\\PhotonPiano.DataAccess\\Repositories\\EntranceTestSlotRepository.cs",
-              "ViewState": "AQIAAA0AAAAAAAAAAAAgwBkAAAAzAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:13:33.299Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "IEntranceTestSlotService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAqwAwAAABXAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-21T16:30:53.48Z",
+              "WhenOpened": "2024-04-22T06:18:33.607Z",
               "EditorCaption": ""
             }
           ]

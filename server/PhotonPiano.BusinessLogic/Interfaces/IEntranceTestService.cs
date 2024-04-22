@@ -20,6 +20,6 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task AutoAcceptRegistrations(int number);
 
-        Task<EntranceTest?> GetEntranceTestByStudentIdAndYear(long studentId, int year);
+        Task<EntranceTest?> GetUnScoreEntranceTestByStudentId(long studentId);
     }
 }

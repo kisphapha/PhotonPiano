@@ -30,6 +30,7 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<ILocationRepository, LocationRepository>();
             services.AddScoped<ILessonRepository, LessonRepository>();
             services.AddScoped<IClassRepostiory, ClassRepository>();
+            services.AddScoped<IInstructorRepository, InstructorRepository>();
             return services;
         }
 
@@ -48,6 +49,7 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IEntranceTestService, EntranceTestSerivce>();
             services.AddScoped<IEntranceTestSlotService, EntranceTestSlotSerivce>();
             services.AddScoped<IEntranceTestResultService, EntranceTestResultSerivce>();
+            services.AddScoped<IInstructorService, InstructorSerivce>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)

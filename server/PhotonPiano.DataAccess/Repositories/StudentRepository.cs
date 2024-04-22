@@ -104,17 +104,12 @@ namespace PhotonPiano.DataAccess.Repositories
 
             if (!string.IsNullOrEmpty(queryStudentDto.Gender))
             {
-                query = query.Where(s => s.User.Gender != null && s.User.Gender.Contains(queryStudentDto.Gender));
+                query = query.Where(s => s.User.Gender != null && s.User.Gender == queryStudentDto.Gender);
             }
 
             if (!string.IsNullOrEmpty(queryStudentDto.BankAccount))
             {
                 query = query.Where(s => s.User.BankAccount != null && s.User.BankAccount.Contains(queryStudentDto.BankAccount));
-            }
-
-            if (!string.IsNullOrEmpty(queryStudentDto.Role))
-            {
-                query = query.Where(s => s.User.Role.Equals(queryStudentDto.Role));
             }
 
             if (queryStudentDto.StudentId.HasValue)

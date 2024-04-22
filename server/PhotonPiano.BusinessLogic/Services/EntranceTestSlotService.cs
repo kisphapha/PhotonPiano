@@ -71,6 +71,7 @@ namespace PhotonPiano.BusinessLogic.Services
             foreach (var entranceTest in entranceTestSlot.EntranceTests)
             {
                 await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, null);
+                await _studentService.ChangeStatusOfStudent(entranceTest.Student.Id, StudentStatus.Accepted.ToString());
             }
         }
         public async Task UpsertEntranceTestToEntranceTestSlot(AddEntranceTestToASlotDto addEntranceTestToASlotDto)
@@ -88,7 +89,7 @@ namespace PhotonPiano.BusinessLogic.Services
             await ClearEntranceTestInASlot(addStudentsToASlot.SlotId);
             foreach (var studentId in addStudentsToASlot.StudentIds)
             {
-                var entranceTest = await _entranceTestService.GetEntranceTestByStudentIdAndYear(studentId, addStudentsToASlot.Year);
+                var entranceTest = await _entranceTestService.GetUnScoreEntranceTestByStudentId(studentId);
                 if (entranceTest != null)
                 {
                     await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, addStudentsToASlot.SlotId);

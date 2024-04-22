@@ -19,6 +19,6 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
         public int? Year { get; set; }
 
         public bool IsScoreAnnounced { get; set; }
-        public virtual GetStudentWithUserDto? Student { get; set; }
+        public virtual GetStudentWithUserDto Student { get; set; } = null!;
     }
 }

@@ -11,6 +11,10 @@ namespace PhotonPiano.Helper.Dtos.EntranceTests
 
         public DateOnly Date { get; set; }
 
-        public bool isAnnouced { get; set; }
+        public bool IsAnnoucedTime { get; set; }
+
+        public DateTime? AnnounceTime { get; set; }
+
+        public bool IsAnnoucedScore { get; set; }
     }
 }

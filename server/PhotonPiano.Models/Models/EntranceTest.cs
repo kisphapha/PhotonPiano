@@ -7,7 +7,7 @@ public partial class EntranceTest
 {
     public long Id { get; set; }
 
-    public long? StudentId { get; set; }
+    public long StudentId { get; set; }
 
     public decimal? BandScore { get; set; }
 
@@ -23,5 +23,5 @@ public partial class EntranceTest
 
     public virtual EntranceTestSlot? EntranceTestSlot { get; set; }
 
-    public virtual Student? Student { get; set; }
+    public virtual Student Student { get; set; } = null!;
 }

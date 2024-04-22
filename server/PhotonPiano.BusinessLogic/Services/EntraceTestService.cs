@@ -122,9 +122,9 @@ namespace PhotonPiano.BusinessLogic.Services
             });
         }
 
-        public async Task<EntranceTest?> GetEntranceTestByStudentIdAndYear(long studentId, int year)
+        public async Task<EntranceTest?> GetUnScoreEntranceTestByStudentId(long studentId)
         {
-            return await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId && et.Year == year);
+            return await _entranceTestRepository.FindOneAsync(et => et.StudentId == studentId && et.BandScore == null);
         }
     }
 }
