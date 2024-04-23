@@ -139,7 +139,7 @@
                     @click="toggleAddSlotFormEntranceTestArrangePage">Cancel</button>
             </div>
             <div class="flex gap-4 mt-4" v-else>
-                <button class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
+                <button @click="handleUpdate" class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
                 <button class="p-2 text-red-400 underline font-bold"
                     @click="closeEditSlotFormEntranceTestArrangePage">Cancel</button>
             </div>
@@ -329,6 +329,35 @@ export default {
                 })
                 this.eventBus.emit("refresh-entrance-test-arrange-page")
                 this.toggleAddSlotFormEntranceTestArrangePage()
+            } catch (e) {
+                console.log(e)
+                this.eventBus.emit("open-result-dialog", {
+                    message: e.response?.data?.ErrorMessage ?? "Somemthing went wrong",
+                    type: "Error"
+                })
+            }
+        },
+        async handleUpdate() {
+            const request = {
+                id : this.slotId,
+                locationId: this.selectedLocationId,
+                shift: this.selectedShiftId,
+                date: this.selectedDate,
+                instructorId : this.selectedInstructorId != 0 ? this.selectedInstructorId : null
+            }
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/slot`, request)
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/upsert-entrance-tests`, {
+                    slotId: this.slotId,
+                    studentIds: this.studentSelected
+                })
+
+                this.eventBus.emit("open-result-dialog", {
+                    message: "Updated Successfully",
+                    type: "Success"
+                })
+                this.eventBus.emit("refresh-entrance-test-arrange-page")
+                this.closeEditSlotFormEntranceTestArrangePage()
             } catch (e) {
                 console.log(e)
                 this.eventBus.emit("open-result-dialog", {

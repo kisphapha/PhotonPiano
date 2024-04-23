@@ -10,10 +10,17 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<GetEntranceTestSlotDto> CreateEntranceTestSlot(CreateEntranceTestSlotDto createEntranceTestSlotDto);
 
+        Task UpdateEntranceTestSlot(UpdateEntranceTestSlotDto updateEntranceTestSlotDto);
+
         Task UpsertStudentsToEntranceTestSlot(AddStudentsToASlotDto addStudentsToASlot);
 
         Task AnnouceEntranceTestSlot(long slotId);
 
+        Task AnnouceEntranceTestScoreSlot(long slotId);
+
+        Task AnnouceTimeAllEntranceTestSlot();
+
+        Task AnnouceScoreAllEntranceTestSlot();
         Task DeleteEntranceTestSlot(long slotId);
     }
 }

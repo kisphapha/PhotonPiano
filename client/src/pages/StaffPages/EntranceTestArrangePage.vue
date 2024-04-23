@@ -2,14 +2,14 @@
     <div class="mt-4 ml-4 mr-4">
         <div class="text-4xl font-bold">Entrance Test Arrangement</div>
         <div class="mt-4 flex gap-8">
-            <button v-if="this.selectedYear == new Date().getFullYear()"
+            <button v-if="this.selectedYear == new Date().getFullYear()" @click="handleAnnounceTimeAll(true)"
                 class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
                 Annouce Time All
                 <span class="material-icons text-2xl">
                     notifications_none
                 </span>
             </button>
-            <button v-if="this.selectedYear == new Date().getFullYear()"
+            <button v-if="this.selectedYear == new Date().getFullYear()" @click="handleAnnounceScoreAll(true)"
                 class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
                 Annouce Score All
                 <span class="material-icons text-2xl">
@@ -82,7 +82,7 @@
                         <div class="text-sm italic">(Announce Time)</div>
                     </div>
                     <div v-if="!slot.isAnnoucedScore" class="flex flex-col justify-center">
-                        <button>
+                        <button @click="handleAnnounceScore(true,slot.id)">
                             <span class="material-icons">
                                 notifications
                             </span>
@@ -255,7 +255,77 @@ export default {
                     })
                 }
             }
-        }
+        },
+        async handleAnnounceScore(confirmation, id) {
+            if (confirmation) {
+                this.selectedSlotId = id;
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "announce-slot-score-entrance-test-arrange-page"
+                })
+            } else {
+                try {
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}/announce-score`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Annouced Successfully",
+                        type: "Success"
+                    })
+                    await this.fetchData()
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response?.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
+            }
+        },
+        async handleAnnounceTimeAll(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "announce-slot-time-all-entrance-test-arrange-page"
+                })
+            } else {
+                try {
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/announce-time-all`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Annouced Successfully",
+                        type: "Success"
+                    })
+                    await this.fetchData()
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response?.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
+            }
+        },
+        async handleAnnounceScoreAll(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "announce-slot-score-all-entrance-test-arrange-page"
+                })
+            } else {
+                try {
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/announce-score-all`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Annouced Successfully",
+                        type: "Success"
+                    })
+                    await this.fetchData()
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response?.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
+            }
+        },
     },
     mounted() {
         this.getYears()
@@ -273,6 +343,15 @@ export default {
         })
         this.eventBus.on("announce-slot-time-entrance-test-arrange-page", () => {
             this.handleAnnounceTime(false,0)
+        })
+        this.eventBus.on("announce-slot-score-entrance-test-arrange-page", () => {
+            this.handleAnnounceScore(false,0)
+        })
+        this.eventBus.on("announce-slot-time-all-entrance-test-arrange-page", () => {
+            this.handleAnnounceTimeAll(false)
+        })
+        this.eventBus.on("announce-slot-score-all-entrance-test-arrange-page", () => {
+            this.handleAnnounceScoreAll(false)
         })
         this.eventBus.on("refresh-entrance-test-arrange-page", () => {
             this.refresh()

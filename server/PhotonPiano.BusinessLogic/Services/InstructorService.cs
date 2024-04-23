@@ -4,6 +4,8 @@ using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.Helper.Dtos.Instructors;
 using PhotonPiano.Helper.Dtos.Paginations;
 using PhotonPiano.Helper.Dtos.Students;
+using PhotonPiano.Helper.Exceptions;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Services
 {
@@ -15,13 +17,18 @@ namespace PhotonPiano.BusinessLogic.Services
             _instructorRepository = instructorRepository;
         }
 
+        public async Task<Instructor> GetRequiredInstructorById(long id)
+        {
+            var instructor = await _instructorRepository.FindOneAsync(i => i.Id == id);
+            if (instructor is null)
+            {
+                throw new NotFoundException($"Instructor {id} not found");
+            }
+            return instructor;
+        }
         public async Task<PaginatedResult<GetInstructorWithUserDto>> GetPagedInstructors(int pageNumber, int pageSize, QueryInstructorDto queryInstructorDto)
         {
             return (await _instructorRepository.GetPagedInstructors(pageNumber, pageSize, queryInstructorDto)).Adapt<PaginatedResult<GetInstructorWithUserDto>>();
-        }
-        public async Task<List<GetInstructorDto>> GetAllSimpleInstructors()
-        {
-            return (await _instructorRepository.GetAllAsync()).Adapt<List<GetInstructorDto>>();
         }
     }
 }

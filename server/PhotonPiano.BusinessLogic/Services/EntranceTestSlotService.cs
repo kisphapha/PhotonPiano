@@ -15,14 +15,17 @@ namespace PhotonPiano.BusinessLogic.Services
         private readonly IEntranceTestService _entranceTestService;
         private readonly IStudentService _studentService;
         private readonly ILocationService _locationService;
+        private readonly IInstructorService _instructorService;
 
         public EntranceTestSlotSerivce(IEntranceTestSlotRepository entranceTestSlotRepository, 
-            ILocationService locationSerivce, IEntranceTestService entranceTestService, IStudentService studentService)
+            ILocationService locationSerivce, IEntranceTestService entranceTestService, 
+            IStudentService studentService, IInstructorService instructorService)
         {
             _entranceTestSlotRepository = entranceTestSlotRepository;
             _locationService = locationSerivce;
             _entranceTestService = entranceTestService;
             _studentService = studentService;
+            _instructorService = instructorService;
         }
 
         public async Task<GetEntranceTestSlotDetailDto> GetEntranceTestSlotDetail(long id)
@@ -57,6 +60,10 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 throw new BadRequestException("This location is currently unavailable");
             }
+            if (createEntranceTestSlotDto.InstructorId.HasValue)
+            {
+                await _instructorService.GetRequiredInstructorById(createEntranceTestSlotDto.InstructorId.Value);
+            }
 
             var mappedEntranceTestSlot = createEntranceTestSlotDto.Adapt<EntranceTestSlot>();
             mappedEntranceTestSlot.IsAnnoucedTime = false;
@@ -64,6 +71,33 @@ namespace PhotonPiano.BusinessLogic.Services
             var createdSlot = (await _entranceTestSlotRepository.AddAsync(mappedEntranceTestSlot)).Adapt<GetEntranceTestSlotDto>();     
 
             return createdSlot;
+        }
+        public async Task UpdateEntranceTestSlot(UpdateEntranceTestSlotDto updateEntranceTestSlotDto)
+        {
+            var existedSlot = await GetRequiredEntranceTestSlotById(updateEntranceTestSlotDto.Id);
+            if (updateEntranceTestSlotDto.LocationId.HasValue)
+            {
+                var location = await _locationService.GetLocationById(updateEntranceTestSlotDto.LocationId.Value, true);
+                if (location!.Status == LocationStatus.Unavailable.ToString())
+                {
+                    throw new BadRequestException("This location is currently unavailable");
+                }
+                existedSlot.LocationId = updateEntranceTestSlotDto.LocationId.Value;
+            }
+            if (updateEntranceTestSlotDto.InstructorId.HasValue)
+            {
+                await _instructorService.GetRequiredInstructorById(updateEntranceTestSlotDto.InstructorId.Value);
+                existedSlot.InstructorId = updateEntranceTestSlotDto.InstructorId.Value;
+            }
+            if (updateEntranceTestSlotDto.Shift.HasValue)
+            {
+                existedSlot.Shift = updateEntranceTestSlotDto.Shift.Value;
+            }
+            if (updateEntranceTestSlotDto.Date.HasValue)
+            {
+                existedSlot.Date = updateEntranceTestSlotDto.Date.Value;
+            }
+            await _entranceTestSlotRepository.UpdateAsync(existedSlot);
         }
         public async Task ClearEntranceTestInASlot(long slotId)
         {
@@ -114,6 +148,31 @@ namespace PhotonPiano.BusinessLogic.Services
             slot.AnnounceTime = DateTime.Now;
 
             await _entranceTestSlotRepository.UpdateAsync(slot);
+        }
+
+        public async Task AnnouceEntranceTestScoreSlot(long slotId)
+        {
+            var slot = await GetRequiredEntranceTestSlotById(slotId);
+            slot.IsAnnoucedScore = true;
+            await _entranceTestSlotRepository.UpdateAsync(slot);
+        }
+        public async Task AnnouceTimeAllEntranceTestSlot()
+        {
+            var slots = await _entranceTestSlotRepository.FindAsync(s => s.IsAnnoucedTime == false);
+            foreach (var slot in slots)
+            {
+                slot.IsAnnoucedTime = true;
+            }
+            await _entranceTestSlotRepository.UpdateRangeAsync(slots);
+        }
+        public async Task AnnouceScoreAllEntranceTestSlot()
+        {
+            var slots = await _entranceTestSlotRepository.FindAsync(s => s.IsAnnoucedScore == false);
+            foreach (var slot in slots)
+            {
+                slot.IsAnnoucedScore = true;
+            }
+            await _entranceTestSlotRepository.UpdateRangeAsync(slots);
         }
 
         public async Task DeleteEntranceTestSlot(long slotId)

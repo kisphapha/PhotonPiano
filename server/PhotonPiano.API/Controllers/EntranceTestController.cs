@@ -52,7 +52,12 @@ namespace PhotonPiano.API.Controllers
         {
             return await _entranceTestSlotService.CreateEntranceTestSlot(createEntranceTestSlotDto);
         }
-
+        [HttpPatch("slot")]
+        public async Task<IActionResult> UpdateEntranceTestSlot([FromBody] UpdateEntranceTestSlotDto updateEntranceTestSlotDto)
+        {
+            await _entranceTestSlotService.UpdateEntranceTestSlot(updateEntranceTestSlotDto);
+            return Ok();
+        }
         [HttpPatch("upsert-entrance-tests")]
         public async Task<IActionResult> AddEntranceTests([FromBody] AddStudentsToASlotDto addStudentsToASlotDto)
         {
@@ -64,6 +69,24 @@ namespace PhotonPiano.API.Controllers
         public async Task<IActionResult> AnnounceEntranceTestSlot([FromRoute] long slotId)
         {
             await _entranceTestSlotService.AnnouceEntranceTestSlot(slotId);
+            return Ok();
+        }
+        [HttpPatch("{slotId}/announce-score")]
+        public async Task<IActionResult> AnnounceTimeEntranceTestSlot([FromRoute] long slotId)
+        {
+            await _entranceTestSlotService.AnnouceEntranceTestScoreSlot(slotId);
+            return Ok();
+        }
+        [HttpPatch("announce-time-all")]
+        public async Task<IActionResult> AnnounceAllTimeEntranceTestSlot()
+        {
+            await _entranceTestSlotService.AnnouceTimeAllEntranceTestSlot();
+            return Ok();
+        }
+        [HttpPatch("announce-score-all")]
+        public async Task<IActionResult> AnnounceAllScoreEntranceTestSlot()
+        {
+            await _entranceTestSlotService.AnnouceScoreAllEntranceTestSlot();
             return Ok();
         }
         [HttpPatch("auto-accepting")]
