@@ -9,7 +9,6 @@ using PhotonPiano.DataAccess.Repositories;
 using Swashbuckle.AspNetCore.Filters;
 using Newtonsoft.Json;
 using System.Text;
-using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.API.Extensions
 {
@@ -50,6 +49,7 @@ namespace PhotonPiano.API.Extensions
             services.AddScoped<IEntranceTestSlotService, EntranceTestSlotSerivce>();
             services.AddScoped<IEntranceTestResultService, EntranceTestResultSerivce>();
             services.AddScoped<IInstructorService, InstructorSerivce>();
+            services.AddScoped<IUtilities, Utilities>();
             return services;
         }
         public static IServiceCollection AddAuthenticationService(this IServiceCollection services, IConfiguration configuration)

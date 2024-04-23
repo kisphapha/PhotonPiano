@@ -95,7 +95,12 @@ namespace PhotonPiano.API.Controllers
             await _entranceTestService.AutoAcceptRegistrations(number);
             return Ok();
         }
-
+        [HttpPatch("auto-arranging")]
+        public async Task<IActionResult> AutoArrangeSlots([FromBody] AutoArrangeSlotDto autoArrangeSlotDto)
+        {
+            await _entranceTestSlotService.AutoArrangeEntranceTests(autoArrangeSlotDto);
+            return Ok();
+        }
         [HttpDelete("{slotId}")]
         public async Task<IActionResult> DeleteEntranceTestSlot([FromRoute] int slotId)
         {

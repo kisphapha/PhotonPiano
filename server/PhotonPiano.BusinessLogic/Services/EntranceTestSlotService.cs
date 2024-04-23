@@ -16,16 +16,19 @@ namespace PhotonPiano.BusinessLogic.Services
         private readonly IStudentService _studentService;
         private readonly ILocationService _locationService;
         private readonly IInstructorService _instructorService;
+        private readonly IUtilities _utilities;
 
         public EntranceTestSlotSerivce(IEntranceTestSlotRepository entranceTestSlotRepository, 
             ILocationService locationSerivce, IEntranceTestService entranceTestService, 
-            IStudentService studentService, IInstructorService instructorService)
+            IStudentService studentService, IInstructorService instructorService,
+            IUtilities utilities)
         {
             _entranceTestSlotRepository = entranceTestSlotRepository;
             _locationService = locationSerivce;
             _entranceTestService = entranceTestService;
             _studentService = studentService;
             _instructorService = instructorService;
+            _utilities = utilities;
         }
 
         public async Task<GetEntranceTestSlotDetailDto> GetEntranceTestSlotDetail(long id)
@@ -180,5 +183,60 @@ namespace PhotonPiano.BusinessLogic.Services
             await ClearEntranceTestInASlot(slotId);
             await _entranceTestSlotRepository.DeleteAsync(slotId);
         }
+
+        public async Task AutoArrangeEntranceTests(AutoArrangeSlotDto autoArrangeSlotDto)
+        {
+            //filter
+            if (!autoArrangeSlotDto.AllowedShifts.All(s => s >= 1 && s <= 8))
+            {
+                throw new BadRequestException("Shifts can only be from range 1 to 8");
+            }
+            foreach (var locationId in autoArrangeSlotDto.AllowedLocationIds)
+            {
+                await _locationService.GetLocationById(locationId, true);
+            }
+            foreach (var instructorId in autoArrangeSlotDto.AllowedInstructorIds)
+            {
+                await _instructorService.GetRequiredInstructorById(instructorId);
+            }
+            //action
+            var rand = new Random();
+            var students = await _studentService.GetAllAcceptedStudents();
+            long acceptingNumber = Math.Min(students.Count, autoArrangeSlotDto.NumberOfStudents);
+
+            
+            long capacity = -1, accepted = 0;
+            long slotId = 0;
+            for (var i = 0; i < acceptingNumber; i++)
+            {
+                if (accepted > capacity)
+                {
+                    long randomLocationId = autoArrangeSlotDto.AllowedLocationIds[rand.Next(autoArrangeSlotDto.AllowedLocationIds.Count)];
+                    long randomInstructorId = autoArrangeSlotDto.AllowedInstructorIds[rand.Next(autoArrangeSlotDto.AllowedInstructorIds.Count)];
+                    int randomShift = autoArrangeSlotDto.AllowedShifts[rand.Next(autoArrangeSlotDto.AllowedShifts.Count)];
+
+                    var createdSlot = await CreateEntranceTestSlot(new CreateEntranceTestSlotDto
+                    {
+                        Date = _utilities.GetRandomDateBetween(autoArrangeSlotDto.From, autoArrangeSlotDto.To),
+                        LocationId = randomLocationId,
+                        Shift = randomShift,
+                        InstructorId = randomInstructorId
+                    });
+
+                    var location = await _locationService.GetLocationById(randomLocationId, true);
+                    capacity = location!.Capacity;
+                    slotId = createdSlot.Id;
+                }
+                var entranceTest = await _entranceTestService.GetUnScoreEntranceTestByStudentId(students[i].Id);
+                if (entranceTest != null)
+                {
+                    await _entranceTestService.UpdateEntranceTestId(entranceTest.Id, slotId);
+                    await _studentService.ChangeStatusOfStudent(students[i].Id, StudentStatus.EntranceTesting.ToString());
+                    accepted += 1;
+                }  
+            }
+        }
+
+        
     }
 }

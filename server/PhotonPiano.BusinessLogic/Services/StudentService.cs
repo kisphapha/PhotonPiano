@@ -112,5 +112,11 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             return (await _studentRepository.GetPagedStudents(pageNumber,pageSize, queryStudentDto)).Adapt<PaginatedResult<GetStudentWithUserDto>>();
         }
+        
+        public async Task<List<Student>> GetAllAcceptedStudents()
+        {
+            return (await _studentRepository.FindAsync(s => s.Status == StudentStatus.Accepted.ToString())).ToList();
+        }
+    
     }
 }

@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PhotonPiano.DataAccess")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8ef00ca978cbac22a6f1ada0e3dfe8539d103c2f")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+e25adce7125dcbd1734270113a7b0fbfea2630e9")]
 [assembly: System.Reflection.AssemblyProductAttribute("PhotonPiano.DataAccess")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PhotonPiano.DataAccess")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

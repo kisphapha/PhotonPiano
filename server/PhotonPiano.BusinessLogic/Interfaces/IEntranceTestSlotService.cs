@@ -22,5 +22,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task AnnouceScoreAllEntranceTestSlot();
         Task DeleteEntranceTestSlot(long slotId);
+
+        Task AutoArrangeEntranceTests(AutoArrangeSlotDto autoArrangeSlotDto);
     }
 }

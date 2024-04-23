@@ -20,5 +20,6 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task<PaginatedResult<GetStudentWithUserDto>> GetPagedStudentList(int pageNumber, int pageSize, QueryStudentDto queryStudentDto);
 
+        Task<List<Student>> GetAllAcceptedStudents();
     }
 }
