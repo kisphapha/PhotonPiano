@@ -193,7 +193,11 @@ namespace PhotonPiano.BusinessLogic.Services
             }
             foreach (var locationId in autoArrangeSlotDto.AllowedLocationIds)
             {
-                await _locationService.GetLocationById(locationId, true);
+                var location = await _locationService.GetLocationById(locationId, true);
+                if (location!.Status == LocationStatus.Unavailable.ToString())
+                {
+                    throw new BadRequestException($"Location {location.Id} is unavailable");
+                }
             }
             foreach (var instructorId in autoArrangeSlotDto.AllowedInstructorIds)
             {
@@ -204,20 +208,34 @@ namespace PhotonPiano.BusinessLogic.Services
             var students = await _studentService.GetAllAcceptedStudents();
             long acceptingNumber = Math.Min(students.Count, autoArrangeSlotDto.NumberOfStudents);
 
-            
+            int maxTimeOut = 200;
             long capacity = -1, accepted = 0;
             long slotId = 0;
+            long randomLocationId, randomInstructorId;
+            DateOnly randomDate;
+            int randomShift;
             for (var i = 0; i < acceptingNumber; i++)
             {
-                if (accepted > capacity)
+                if (accepted >= capacity)
                 {
-                    long randomLocationId = autoArrangeSlotDto.AllowedLocationIds[rand.Next(autoArrangeSlotDto.AllowedLocationIds.Count)];
-                    long randomInstructorId = autoArrangeSlotDto.AllowedInstructorIds[rand.Next(autoArrangeSlotDto.AllowedInstructorIds.Count)];
-                    int randomShift = autoArrangeSlotDto.AllowedShifts[rand.Next(autoArrangeSlotDto.AllowedShifts.Count)];
-
+                    var timeOut = 0;
+                    do
+                    {
+                        randomLocationId = autoArrangeSlotDto.AllowedLocationIds[rand.Next(autoArrangeSlotDto.AllowedLocationIds.Count)];
+                        randomInstructorId = autoArrangeSlotDto.AllowedInstructorIds[rand.Next(autoArrangeSlotDto.AllowedInstructorIds.Count)];
+                        randomShift = autoArrangeSlotDto.AllowedShifts[rand.Next(autoArrangeSlotDto.AllowedShifts.Count)];
+                        randomDate = _utilities.GetRandomDateBetween(autoArrangeSlotDto.From, autoArrangeSlotDto.To);
+                        timeOut++;
+                        if (timeOut >= maxTimeOut)
+                        {
+                            throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts." +
+                                "Please extend the range to increase the chance of success!");
+                        }
+                    }
+                    while (!await CheckScheduleConflict(randomLocationId, randomInstructorId, randomShift, randomDate));
                     var createdSlot = await CreateEntranceTestSlot(new CreateEntranceTestSlotDto
                     {
-                        Date = _utilities.GetRandomDateBetween(autoArrangeSlotDto.From, autoArrangeSlotDto.To),
+                        Date = randomDate,
                         LocationId = randomLocationId,
                         Shift = randomShift,
                         InstructorId = randomInstructorId
@@ -225,6 +243,7 @@ namespace PhotonPiano.BusinessLogic.Services
 
                     var location = await _locationService.GetLocationById(randomLocationId, true);
                     capacity = location!.Capacity;
+                    accepted = 0;
                     slotId = createdSlot.Id;
                 }
                 var entranceTest = await _entranceTestService.GetUnScoreEntranceTestByStudentId(students[i].Id);
@@ -237,6 +256,21 @@ namespace PhotonPiano.BusinessLogic.Services
             }
         }
 
-        
+        public async Task<bool> CheckScheduleConflict(long locationId, long instructorId, int shift, DateOnly date)
+        {
+            var instructorConflict = await _entranceTestSlotRepository
+                .FindOneAsync(s => 
+                    s.InstructorId == instructorId && 
+                    s.Shift == shift && 
+                    s.Date == date);
+
+            var locationConflict = await _entranceTestSlotRepository
+                .FindOneAsync(s =>
+                    s.LocationId == locationId &&
+                    s.Shift == shift &&
+                    s.Date == date);
+
+            return instructorConflict is null && locationConflict is null;
+        }
     }
 }
