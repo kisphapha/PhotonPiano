@@ -71,7 +71,7 @@ namespace PhotonPiano.BusinessLogic.Services
             var mappedEntranceTestSlot = createEntranceTestSlotDto.Adapt<EntranceTestSlot>();
             mappedEntranceTestSlot.IsAnnoucedTime = false;
 
-            if (await CheckScheduleConflict(mappedEntranceTestSlot.LocationId, mappedEntranceTestSlot.InstructorId,
+            if (!await CheckScheduleConflict(mappedEntranceTestSlot.LocationId, mappedEntranceTestSlot.InstructorId,
                 mappedEntranceTestSlot.Shift, mappedEntranceTestSlot.Date))
             {
                 throw new BadRequestException("Cannot create due to schedule conflict. Please check again!");
@@ -108,7 +108,7 @@ namespace PhotonPiano.BusinessLogic.Services
                 existedSlot.Date = updateEntranceTestSlotDto.Date.Value;
             }
  
-            if (await CheckScheduleConflict(existedSlot.LocationId, existedSlot.InstructorId, existedSlot.Shift, existedSlot.Date))
+            if (!await CheckScheduleConflict(existedSlot.LocationId, existedSlot.InstructorId, existedSlot.Shift, existedSlot.Date))
             {
                 throw new BadRequestException("Cannot update due to schedule conflict. Please check again!");
             }

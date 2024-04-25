@@ -3,21 +3,21 @@
         <div class="text-4xl font-bold">Entrance Test Arrangement</div>
         <div class="mt-4 flex gap-8">
             <button v-if="this.selectedYear == new Date().getFullYear()" @click="handleAnnounceTimeAll(true)"
-                class="p-4 bg-blue-800 hover:bg-blue-400 rounded-lg text-white text-2xl flex gap-4">
-                Annouce Time All
+                class="p-2 bg-blue-800 hover:bg-blue-400 rounded-lg text-white font-bold flex gap-4">
+                <span class="p-1">Annouce Time All</span>
                 <span class="material-icons text-2xl">
                     notifications_none
                 </span>
             </button>
             <button v-if="this.selectedYear == new Date().getFullYear()" @click="handleAnnounceScoreAll(true)"
-                class="p-4 border border-cyan-400 hover:bg-cyan-200 rounded-lg text-blue-800 text-2xl flex gap-4">
-                Annouce Score All
+                class="p-2 border bg-cyan-400 hover:bg-cyan-200 rounded-lg text-white font-bold flex gap-4">
+                <span class="p-1">Annouce Score All</span>
                 <span class="material-icons text-2xl">
                     notifications
                 </span>
             </button>
             <button v-if="this.selectedYear == new Date().getFullYear()"
-                class="p-4 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold text-2xl"
+                class="p-2 bg-blue-400 hover:bg-blue-200 rounded-lg text-white font-bold"
                 @click="toggleAutoArrangePopup">
                 Auto-Arrange
             </button>
@@ -74,7 +74,7 @@
                         <div class="text-sm italic">(Delete)</div>
                     </div>
                     <div v-if="!slot.isAnnoucedTime" class="flex flex-col justify-center">
-                        <button @click="handleAnnounceTime(true,slot.id)">
+                        <button @click="handleAnnounceTime(true, slot.id)">
                             <span class="material-icons">
                                 notifications_none
                             </span>
@@ -82,7 +82,7 @@
                         <div class="text-sm italic">(Announce Time)</div>
                     </div>
                     <div v-if="!slot.isAnnoucedScore" class="flex flex-col justify-center">
-                        <button @click="handleAnnounceScore(true,slot.id)">
+                        <button @click="handleAnnounceScore(true, slot.id)">
                             <span class="material-icons">
                                 notifications
                             </span>
@@ -201,7 +201,7 @@ export default {
             const slots = await axios.get(import.meta.env.VITE_API_URL + `/api/EntranceTest/slots?year=${this.selectedYear}`)
 
             if (slots.data) {
-                this.slots = slots.data
+                this.slots = slots.data.sort(this.compareSlot)
             }
         },
 
@@ -326,6 +326,19 @@ export default {
                 }
             }
         },
+        compareSlot(a, b) {
+            if (new Date(a.date) < new Date(b.date)) {
+                return -1;
+            } else if (new Date(a.date) > new Date(b.date)) {
+                return 1;
+            }
+            if (a.shift < b.shift) {
+                return -1;
+            } else if (a.shift > b.shift) {
+                return 1;
+            }
+            return 0;
+        }
     },
     mounted() {
         this.getYears()
@@ -339,13 +352,13 @@ export default {
             this.closeEditPopup()
         })
         this.eventBus.on("delete-entrance-test-slot-entrance-test-arrange-page", () => {
-            this.handleDelete(false,0)
+            this.handleDelete(false, 0)
         })
         this.eventBus.on("announce-slot-time-entrance-test-arrange-page", () => {
-            this.handleAnnounceTime(false,0)
+            this.handleAnnounceTime(false, 0)
         })
         this.eventBus.on("announce-slot-score-entrance-test-arrange-page", () => {
-            this.handleAnnounceScore(false,0)
+            this.handleAnnounceScore(false, 0)
         })
         this.eventBus.on("announce-slot-time-all-entrance-test-arrange-page", () => {
             this.handleAnnounceTimeAll(false)

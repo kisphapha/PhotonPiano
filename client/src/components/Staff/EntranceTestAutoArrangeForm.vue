@@ -5,7 +5,7 @@
         <div class="flex gap-2 mt-4">
             <div class="p-2 w-48">Number of Students :</div>
             <input class="border p-1 rounded-md w-64" type="number" v-model="numberOfStudents"
-                min="0" :max="maxStudents">
+                min="0" :max="registrationLeft">
         </div>
         <div class="flex place-content-between mt-2">
             <div class="flex">
