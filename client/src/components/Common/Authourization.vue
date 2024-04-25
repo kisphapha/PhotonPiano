@@ -37,6 +37,11 @@
         </div>
       </div>
     </div>
+    <div v-if="isOpenLoadingPopup" class="popup-overlay">
+      <div class="sticky top-1/4 flex justify-center">
+        <LoadingPopup :message="ldMessage"/>
+      </div>
+    </div>
   </div>
 
 </template>
@@ -47,11 +52,12 @@ import LoginForm from './LoginForm.vue';
 import RegisterForm from "./RegisterForm.vue";
 import ConfirmationForm from "./ConfirmationForm.vue";
 import ResultDialog from "./ResultDialog.vue";
+import LoadingPopup from "./LoadingPopup.vue";
 
 export default {
   name: "Authourization",
   inject: ["eventBus"],
-  components: { LoginForm, RegisterForm, ConfirmationForm ,ResultDialog },
+  components: { LoginForm, RegisterForm, ConfirmationForm ,ResultDialog, LoadingPopup },
   data() {
     return {
       cfmMessage: '',
@@ -60,8 +66,10 @@ export default {
       isOpenRegisterPopup: false,
       isOpenConfirmPopup: false,
       isOpenResultDialog : false,
+      isOpenLoadingPopup : false,
       rsMesage : '',
-      rsType : ''
+      rsType : '',
+      ldMessage : ''
     };
   },
   mounted() {
@@ -79,6 +87,12 @@ export default {
     });
     this.eventBus.on("close-result-dialog", () => {
       this.closeResultDialog()
+    });
+    this.eventBus.on("open-loading-popup", (request) => {
+      this.openLoadingPopup(request.message)
+    });
+    this.eventBus.on("close-loading-popup", () => {
+      this.closeLoadingPopup()
     });
     this.eventBus.on("get-user", async (resolve) => {
       let user = null;
@@ -116,6 +130,13 @@ export default {
     },
     toggleRegsiterPopup() {
       this.isOpenRegisterPopup = !this.isOpenRegisterPopup;
+    },
+    openLoadingPopup(message) {
+      this.ldMessage = message
+      this.isOpenLoadingPopup = true;
+    },
+    closeLoadingPopup(){
+      this.isOpenLoadingPopup = false
     },
     toggleOpenOnfirmPopup(message, callback) {
       if (this.isOpenConfirmPopup) {

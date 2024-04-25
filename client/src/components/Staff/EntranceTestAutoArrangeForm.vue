@@ -5,7 +5,7 @@
         <div class="flex gap-2 mt-4">
             <div class="p-2 w-48">Number of Students :</div>
             <input class="border p-1 rounded-md w-64" type="number" v-model="numberOfStudents"
-                placeholder="Search by name" min="0" :max="maxStudents">
+                min="0" :max="maxStudents">
         </div>
         <div class="flex place-content-between mt-2">
             <div class="flex">
@@ -17,12 +17,12 @@
                 <input class="border p-1 rounded-md" type="date" v-model="endDate" @change="calculate">
             </div>
         </div>
-        <div class="mt-4 flex place-content-between gap-4 ">
+        <div class="mt-4 flex place-content-between gap-4">
             <div>
                 <div class="text-xl font-bold">Locations</div>
-                <div class="overflow-y-auto h-48">
+                <div class="overflow-y-auto h-48 overflow-x-hidden">
                     <div v-for="location in locations" :key="location.id" class="flex gap-4 ">
-                        <div class="w-24">{{ location.name }}</div>
+                        <div class="w-24">{{ location.name }} ({{ location.capacity }})</div>
                         <input type="checkbox" :checked="isLocationSelected(location.id)"
                             @change="toggleLocationSelection(location.id)" />
                     </div>
@@ -43,7 +43,7 @@
                 <div class="text-xl font-bold">Instructors</div>
                 <div class="overflow-y-auto h-48">
                     <div v-for="instructor in instructors" :key="instructor.id" class="flex gap-4">
-                        <div class="w-24">{{ instructor.name }}</div>
+                        <div class="w-24">{{ instructor.user.name }}</div>
                         <input type="checkbox" :checked="isInstructorSelected(instructor.id)"
                             @change="toggleInstructorSelection(instructor.id)" />
                     </div>
@@ -59,13 +59,14 @@
             <div class="text-2xl font-bold">{{ maxStudents }}</div>
         </div>
         <div class="flex gap-4 justify-center">
-            <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
+            <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold" @click="handleAutoArrange(true)">Apply</button>
             <button class="p-2 text-red-400 underline font-bold" @click="toggleAutoArrangeSlotForm">Cancel</button>
         </div>
     </div>
 </template>
 
 <script>
+import axios from 'axios';
 //import { RouterLink } from 'vue-router';
 
 export default {
@@ -74,35 +75,8 @@ export default {
     data() {
         return {
             locations: [
-                {
-                    id: 1,
-                    name: "Mozart",
-                    capacity: 30
-                },
-                {
-                    id: 2,
-                    name: "Beethoven",
-                    capacity: 25
-                },
-                {
-                    id: 3,
-                    name: "Lizst",
-                    capacity: 20
-                },
             ],
             instructors: [
-                {
-                    id: 1,
-                    name: "Diamond",
-                },
-                {
-                    id: 2,
-                    name: "WhiteWine",
-                },
-                {
-                    id: 3,
-                    name: "Diajobu",
-                },
             ],
             shifts: [
                 { id: 1, detail: "7:00 - 8:30" },
@@ -117,8 +91,8 @@ export default {
             shiftsSelected: [],
             locationsSelected: [],
             instructorsSelected: [],
-            startDate: null,
-            endDate: null,
+            startDate: this.toSqlDateString(new Date()),
+            endDate: this.toSqlDateString(new Date()),
             registrationLeft: 500,
             numberOfStudents: 1000,
             maxStudents: 0
@@ -189,11 +163,90 @@ export default {
                 this.maxStudents = totalStudentADay * differenceInDays
             }
 
-        }
+        },
+        async fetchStudents() {
+            const students = await axios.get(import.meta.env.VITE_API_URL + `/api/Student?Status=Accepted&pageSize=1&pageNumber=1`)
+
+            if (students.data) {
+                this.registrationLeft = students.data.totalRecords
+            }
+        },
+        async fetchLocations() {
+            const locations = await axios.get(import.meta.env.VITE_API_URL + `/api/Location`)
+
+            if (locations.data) {
+                this.locations = locations.data
+            }
+        },
+        async fetchInstructor() {
+            const bait = await axios.get(import.meta.env.VITE_API_URL + `/api/Instructor?pageNumber=1&pageSize=1`)
+            if (bait.data) {
+                const instructors = await axios.get(import.meta.env.VITE_API_URL + `/api/Instructor?pageNumber=1&pageSize=${bait.data.totalRecords}`)
+
+                if (instructors.data) {
+                    this.instructors = instructors.data.results
+                }
+            }
+
+        },
+        async refresh() {
+            await this.fetchStudents()
+            await this.fetchLocations()
+            await this.fetchInstructor()
+
+            this.numberOfStudents = this.registrationLeft
+        },
+        async handleAutoArrange(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "This would make a huge impact. Are you sure about this?",
+                    callback: "auto-arrange-slot-entrance-test-arrange-page"
+                })
+            } else {
+                if (this.numberOfStudents > this.maxStudents) {
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Nope",
+                        type: "Error"
+                    })
+                } else {
+                    this.eventBus.emit("open-loading-popup",{
+                        message : "Please wait..."
+                    })
+                    try {
+                        await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/auto-arranging`,{
+                            allowedShifts : this.shiftsSelected,
+                            allowedLocationIds : this.locationsSelected,
+                            allowedInstructorIds : this.instructorsSelected,
+                            from : this.startDate,
+                            to : this.endDate,
+                            numberOfStudents : this.numberOfStudents
+                        })
+                        this.eventBus.emit("open-result-dialog", {
+                            message: "Arranged Successfully",
+                            type: "Success"
+                        })
+                        this.eventBus.emit("refresh-entrance-test-arrange-page")
+                        this.toggleAutoArrangeSlotForm()
+                    } catch (e) {
+                        console.log(e)
+                        this.eventBus.emit("open-result-dialog", {
+                            message: e.response?.data?.ErrorMessage ?? "Something went wrong",
+                            type: "Error"
+                        })
+                    }
+                    this.eventBus.emit("close-loading-popup")
+                }
+
+            }
+        },
 
     },
     mounted() {
-        this.numberOfStudents = this.registrationLeft
+        this.refresh()
+
+        this.eventBus.on("auto-arrange-slot-entrance-test-arrange-page",() => {
+            this.handleAutoArrange(false)
+        })
     }
 }
 </script>

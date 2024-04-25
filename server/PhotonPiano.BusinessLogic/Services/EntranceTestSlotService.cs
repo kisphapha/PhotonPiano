@@ -71,6 +71,12 @@ namespace PhotonPiano.BusinessLogic.Services
             var mappedEntranceTestSlot = createEntranceTestSlotDto.Adapt<EntranceTestSlot>();
             mappedEntranceTestSlot.IsAnnoucedTime = false;
 
+            if (await CheckScheduleConflict(mappedEntranceTestSlot.LocationId, mappedEntranceTestSlot.InstructorId,
+                mappedEntranceTestSlot.Shift, mappedEntranceTestSlot.Date))
+            {
+                throw new BadRequestException("Cannot create due to schedule conflict. Please check again!");
+            }
+
             var createdSlot = (await _entranceTestSlotRepository.AddAsync(mappedEntranceTestSlot)).Adapt<GetEntranceTestSlotDto>();     
 
             return createdSlot;
@@ -78,6 +84,7 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task UpdateEntranceTestSlot(UpdateEntranceTestSlotDto updateEntranceTestSlotDto)
         {
             var existedSlot = await GetRequiredEntranceTestSlotById(updateEntranceTestSlotDto.Id);
+
             if (updateEntranceTestSlotDto.LocationId.HasValue)
             {
                 var location = await _locationService.GetLocationById(updateEntranceTestSlotDto.LocationId.Value, true);
@@ -100,6 +107,13 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 existedSlot.Date = updateEntranceTestSlotDto.Date.Value;
             }
+ 
+            if (await CheckScheduleConflict(existedSlot.LocationId, existedSlot.InstructorId, existedSlot.Shift, existedSlot.Date))
+            {
+                throw new BadRequestException("Cannot update due to schedule conflict. Please check again!");
+            }
+            
+            
             await _entranceTestSlotRepository.UpdateAsync(existedSlot);
         }
         public async Task ClearEntranceTestInASlot(long slotId)
@@ -187,6 +201,10 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task AutoArrangeEntranceTests(AutoArrangeSlotDto autoArrangeSlotDto)
         {
             //filter
+            if (autoArrangeSlotDto.From > autoArrangeSlotDto.To)
+            {
+                throw new BadRequestException("From date is not larger than To date");
+            }
             if (!autoArrangeSlotDto.AllowedShifts.All(s => s >= 1 && s <= 8))
             {
                 throw new BadRequestException("Shifts can only be from range 1 to 8");
@@ -256,7 +274,7 @@ namespace PhotonPiano.BusinessLogic.Services
             }
         }
 
-        public async Task<bool> CheckScheduleConflict(long locationId, long instructorId, int shift, DateOnly date)
+        public async Task<bool> CheckScheduleConflict(long locationId, long? instructorId, int shift, DateOnly date)
         {
             var instructorConflict = await _entranceTestSlotRepository
                 .FindOneAsync(s => 
