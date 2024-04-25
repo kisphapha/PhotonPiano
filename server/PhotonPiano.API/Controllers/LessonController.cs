@@ -22,7 +22,16 @@ namespace PhotonPiano.API.Controllers
         {
             return await _lessonService.GetQueriedLessons(queryLessonDto);
         }
-
-
+        [HttpPost]
+        public async Task<ActionResult<GetLessonDto>> CreateLesson([FromBody] CreateLessonDto createLessonDto)
+        {
+            return await _lessonService.CreateLesson(createLessonDto);
+        }
+        [HttpPatch]
+        public async Task<IActionResult> UpdateLesson([FromBody] UpdateLessonDto updateLessonDto)
+        {
+            await _lessonService.UpdateLesson(updateLessonDto);
+            return NoContent();
+        }
     }
 }

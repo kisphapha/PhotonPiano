@@ -1,24 +1,7 @@
 {
   "Version": 1,
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\",
-  "Documents": [
-    {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\entrancetestslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\entrancetests\\autoarrangeslotdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\interfaces\\ientrancetestslotservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\controllers\\entrancetestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\entrancetestcontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\studentservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    }
-  ],
+  "Documents": [],
   "DocumentGroupContainers": [
     {
       "Orientation": 0,
@@ -26,7 +9,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 11,
+          "SelectedChildIndex": -1,
           "Children": [
             {
               "$type": "Bookmark",
@@ -55,67 +38,6 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{e1b7d1f8-9b3c-49b1-8f4f-bfc63a88835d}"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "EntranceTestController.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\EntranceTestController.cs",
-              "RelativeDocumentMoniker": "Controllers\\EntranceTestController.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\EntranceTestController.cs",
-              "RelativeToolTip": "Controllers\\EntranceTestController.cs",
-              "ViewState": "AQIAAEQAAAAAAAAAAAA7wGYAAAAJAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T16:00:55.785Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "IEntranceTestSlotService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Interfaces\\IEntranceTestSlotService.cs",
-              "ViewState": "AQIAAAcAAAAAAAAAAAA1wBkAAABNAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T16:00:44.453Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "StudentService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\StudentService.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAA4AAAAxAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T15:16:23.309Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "AutoArrangeSlotDto.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AutoArrangeSlotDto.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AutoArrangeSlotDto.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AutoArrangeSlotDto.cs",
-              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\EntranceTests\\AutoArrangeSlotDto.cs",
-              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAcAAAAlAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T14:52:55.755Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "EntranceTestSlotService.cs",
-              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\EntranceTestSlotService.cs",
-              "ViewState": "AQIAADMAAAAAAAAAAAAmwG4AAAARAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-23T15:00:18.47Z",
-              "EditorCaption": ""
             }
           ]
         },

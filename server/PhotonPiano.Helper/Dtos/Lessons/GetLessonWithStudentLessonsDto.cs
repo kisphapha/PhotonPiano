@@ -15,7 +15,7 @@ namespace PhotonPiano.Helper.Dtos.Lessons
 
         public string? ExamType { get; set; }
 
-        public DateOnly? Date { get; set; }
+        public DateOnly Date { get; set; }
 
         public virtual ICollection<GetStudentLessonDto> StudentLessons { get; set; } = new List<GetStudentLessonDto>();
 

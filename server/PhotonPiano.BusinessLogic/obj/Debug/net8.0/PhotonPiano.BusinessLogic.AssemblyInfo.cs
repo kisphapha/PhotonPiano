@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PhotonPiano.BusinessLogic")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+78377506578463536ada951450497a7588c44905")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09a8fa1c88ee27a21f475c7386eabf5fa8d291fe")]
 [assembly: System.Reflection.AssemblyProductAttribute("PhotonPiano.BusinessLogic")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PhotonPiano.BusinessLogic")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

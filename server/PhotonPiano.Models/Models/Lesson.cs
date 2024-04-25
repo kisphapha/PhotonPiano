@@ -11,13 +11,13 @@ public partial class Lesson
 
     public long LocationId { get; set; }
 
-    public long? ClassId { get; set; }
+    public long ClassId { get; set; }
 
     public string? ExamType { get; set; }
 
-    public DateOnly? Date { get; set; }
+    public DateOnly Date { get; set; }
 
-    public virtual Class? Class { get; set; }
+    public virtual Class Class { get; set; } = null!;
 
     public virtual Location Location { get; set; } = null!;
 

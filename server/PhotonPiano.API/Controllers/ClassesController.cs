@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.Helper.Dtos.Classes;
+using PhotonPiano.Helper.Dtos.Paginations;
 
 namespace PhotonPiano.API.Controllers
 {
@@ -17,6 +18,15 @@ namespace PhotonPiano.API.Controllers
             _studentClassService = studentClassService;
             _classService = classService;
         }
+        [HttpGet]
+        public async Task<ActionResult<PaginatedResult<GetClassWithTotalLessonDto>>> GetPagedClasses(
+            [FromQuery] QueryClassDto queryClassDto,
+            [FromQuery] int pageNumber = 1,
+            [FromQuery] int pageSize = 10)
+        {
+            return await _classService.GetPagedClasses(pageNumber,pageSize,queryClassDto);
+        }
+
         [HttpGet("{classId}")]
         public async Task<ActionResult<GetClassWithInstructorAndLessonsDto?>> GetClassDetail(
             [FromRoute] long classId)
