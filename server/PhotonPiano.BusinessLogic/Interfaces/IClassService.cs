@@ -6,9 +6,13 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 {
     public interface IClassService
     {
-        Task<GetClassWithInstructorAndLessonsDto> GetClassDetail(long classId);
+        Task<GetClassDetailDto> GetClassDetail(long classId);
 
         Task<Class> GetRequiredClassById(long id);
         Task<PaginatedResult<GetClassWithTotalLessonDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto);
+
+        Task AnnounceAClass(long id);
+
+        Task AnnounceAllClass();
     }
 }

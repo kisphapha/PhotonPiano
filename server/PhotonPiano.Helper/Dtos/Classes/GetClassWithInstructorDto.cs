@@ -20,6 +20,8 @@ namespace PhotonPiano.Helper.Dtos.Classes
 
         public long InstructorId { get; set; }
 
+        public bool IsAnnouced { get; set; }
+
         public GetInstructorWithUserDto Instructor { get; set; } = null!;
     }
 }

@@ -11,5 +11,7 @@ namespace PhotonPiano.Helper.Dtos.Lessons
 
         public DateOnly? StartDate { get; set; }
         public DateOnly? EndDate { get; set; }
+
+        public long? ClassId { get; set; }
     }
 }

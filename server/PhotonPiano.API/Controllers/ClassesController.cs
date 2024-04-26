@@ -28,16 +28,22 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet("{classId}")]
-        public async Task<ActionResult<GetClassWithInstructorAndLessonsDto?>> GetClassDetail(
+        public async Task<ActionResult<GetClassDetailDto?>> GetClassDetail(
             [FromRoute] long classId)
         {
             return await _classService.GetClassDetail(classId);
         }
-        //[HttpGet("{classId}/student-lessons")]
-        //public async Task<ActionResult<GetStudentClassWithStudentLessonsDto?>> GetStudentLessonFromAClass(
-        //    [FromRoute] long classId, [FromQuery] long studentId)
-        //{
-        //    return await _studentClassService.GetStudentClassWithStudentLessons(classId, studentId);
-        //}
+        [HttpPatch("{classId}/announce")]
+        public async Task<IActionResult> AnnounceAClass([FromRoute] long classId)
+        {
+            await _classService.AnnounceAClass(classId);
+            return Ok();
+        }
+        [HttpPatch("announce-all")]
+        public async Task<IActionResult> AnnounceAllClass()
+        {
+            await _classService.AnnounceAllClass();
+            return Ok();
+        }
     }
 }

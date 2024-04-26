@@ -24,7 +24,7 @@
         <div class="relative">
           <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
             @click="toggleOpenOnfirmPopup">X</button>
-          <ConfirmationForm :message="this.cfmMessage" :callback="this.cfmCallBack" />
+          <ConfirmationForm :message="this.cfmMessage" :callback="this.cfmCallBack" :params="cfmParams" />
         </div>
       </div>
     </div>
@@ -62,6 +62,7 @@ export default {
     return {
       cfmMessage: '',
       cfmCallBack: '',
+      cfmParams : null,
       isOpenLoginPopup: false,
       isOpenRegisterPopup: false,
       isOpenConfirmPopup: false,
@@ -80,7 +81,7 @@ export default {
       this.toggleRegsiterPopup()
     });
     this.eventBus.on("open-confirmation-popup", (request) => {
-      this.toggleOpenOnfirmPopup(request.message, request.callback)
+      this.toggleOpenOnfirmPopup(request.message, request.callback,request.params)
     });
     this.eventBus.on("open-result-dialog", (request) => {
       this.openResultDialog(request.message, request.type)
@@ -138,14 +139,16 @@ export default {
     closeLoadingPopup(){
       this.isOpenLoadingPopup = false
     },
-    toggleOpenOnfirmPopup(message, callback) {
+    toggleOpenOnfirmPopup(message, callback, params) {
       if (this.isOpenConfirmPopup) {
         this.isOpenConfirmPopup = false;
         this.cfmMessage = ""
+        this.cfmParams = null
       } else {
         this.isOpenConfirmPopup = true;
         this.cfmMessage = message
         this.cfmCallBack = callback
+        this.cfmParams = params
       }
     },
     openResultDialog(message, type){

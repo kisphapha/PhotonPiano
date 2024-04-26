@@ -280,7 +280,7 @@ export default {
           this.entrance_test_result = entranceTestScore.data
         }
 
-        if (this.student_detail.currentClass) {
+        if (this.student_detail.status == "InClass") {
           this.setEnrollingStatus("InClass")
         }
         console.log(this.student_detail)

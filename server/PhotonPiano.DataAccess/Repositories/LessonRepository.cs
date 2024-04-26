@@ -40,6 +40,10 @@ namespace PhotonPiano.DataAccess.Repositories
             {
                 lessonQuery = lessonQuery.Where(l => l.Date <= queryLessonDto.EndDate);
             }
+            if (queryLessonDto.ClassId.HasValue)
+            {
+                lessonQuery = lessonQuery.Where(l => l.ClassId == queryLessonDto.ClassId.Value);
+            }
             var lessons = lessonQuery.ToListAsync();
             return lessons;
         }

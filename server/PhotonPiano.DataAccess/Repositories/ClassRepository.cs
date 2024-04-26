@@ -94,6 +94,8 @@ namespace PhotonPiano.DataAccess.Repositories
             var class_ = await _context.Classes
                 .Include(c => c.Instructor)
                     .ThenInclude(i => i.User)
+                .Include(c => c.Students)
+                    .ThenInclude(s => s.User)
                 .Include(c => c.Lessons)
                 .SingleOrDefaultAsync(c => c.Id == classId);
 

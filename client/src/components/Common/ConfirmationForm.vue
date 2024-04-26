@@ -16,14 +16,14 @@
 export default {
   name: "ConfirmationForm",
   inject: ["eventBus"],
-  props : ['message','callback'],
+  props : ['message','callback','params'],
   mounted() {
 
   },
   methods: {
     clickYes(){
       this.eventBus.emit("open-confirmation-popup","")
-      this.eventBus.emit(this.callback)
+      this.eventBus.emit(this.callback,this.params)
     },
     clickNo(){
       this.eventBus.emit("open-confirmation-popup","")

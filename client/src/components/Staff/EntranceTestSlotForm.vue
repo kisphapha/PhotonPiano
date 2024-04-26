@@ -188,6 +188,12 @@ export default {
     },
     methods: {
         async handlePageChange() {
+            if (this.currentPage > this.totalPage){
+                this.currentPage = this.totalPage
+            }
+            if (this.currentPage < 1){
+                this.currentPage = 1
+            }
             await this.fetchStudents()
         },
         async movePage(forward) {

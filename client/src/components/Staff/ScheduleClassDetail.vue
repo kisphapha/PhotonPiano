@@ -80,8 +80,12 @@
                             <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
                                 <button :class='getLessonDetail(shift, day, "css")'>
-                                    <span class="material-icons text-3xl">
+                                    <span class="material-icons text-3xl" v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"'>
                                         add_circle
+                                    </span>
+                                    <span v-else>
+                                        <div class="font-bold">{{ getLessonDetail(shift,day,"location") }}</div>
+                                        <div class="text-md italic">{{ getLessonDetail(shift,day,"examType") }}</div>
                                     </span>
                                 </button>
                             </td>
@@ -187,7 +191,7 @@ export default {
             }
             let endDate = new Date(this.selectedWeek)
             endDate.setDate(this.selectedWeek.getDate() + 7)
-            //await this.fetchLessons(this.selectedWeek, endDate)
+            await this.fetchLessons(this.selectedWeek, endDate)
         },
         async handleSelectedYearChange() {
             this.weeksInYear = this.getWeeksOfYear(this.selectedYear)
@@ -217,15 +221,13 @@ export default {
         },
         async fetchLessons(startDate, endDate) {
             let query = "";
-            let queryCount = 0;
             if (startDate) {
-                queryCount++;
-                query += "StartDate=" + startDate
+                query += "&StartDate=" + this.toSqlDateString(startDate)
             }
             if (endDate) {
-                query += (queryCount == 0 ? "" : "&") + "EndDate=" + endDate
+                query += "&EndDate=" + this.toSqlDateString(endDate)
             }
-            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/StudentClasses/" + this.user.students[0].id + "/get-lessons/" + this.user.students[0].currentClassId + "?" + query)
+            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/Lesson?ClassId=" + this.classId + query)
             if (response.data) {
                 this.lessons = response.data
             }
@@ -238,13 +240,18 @@ export default {
             const month = parseInt(inputDateParts[1], 10) - 1; // Months are zero-based in JavaScript
             const year = parseInt(inputDateParts[2], 10);
             const actualDate = new Date(year, month, day)
-            const lesson = this.lessons.find(l => l.lesson.shift == this.shifts.indexOf(shift) + 1 && (new Date(l.lesson.date).toDateString() == actualDate.toDateString()))
+            const lesson = this.lessons.find(l => l.shift == this.shifts.indexOf(shift) + 1 && (new Date(l.date).toDateString() == actualDate.toDateString()))
             switch (information) {
                 case "location":
                     if (!lesson) {
                         return ""
                     }
-                    return lesson.lesson.location.name
+                    return lesson.location.name
+                case "examType":
+                    if (!lesson) {
+                        return ""
+                    }
+                    return lesson.examType
                 case "css":
                     if (!lesson) {
                         if (this.markedDayOffs.find(d => d == date.specificDay)) {
@@ -252,7 +259,12 @@ export default {
                         }
                         return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
-                    return css + (lesson.lesson.examType ? "bg-yellow-200 hover:bg-yellow-50" : "bg-green-200 hover:bg-green-50")
+                    return css + (lesson.examType ? "bg-yellow-200 hover:bg-yellow-50" : "bg-green-200 hover:bg-green-50")
+                case "isOcupied" :
+                    if (!lesson) {
+                        return "false"
+                    }
+                    return "true"
                 default:
                     return ""
             }

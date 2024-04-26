@@ -27,14 +27,14 @@ namespace PhotonPiano.BusinessLogic.Services
             }
             return class_;
         }
-        public async Task<GetClassWithInstructorAndLessonsDto> GetClassDetail(long classId)
+        public async Task<GetClassDetailDto> GetClassDetail(long classId)
         {
             var class_ = await _classRepostiory.GetClassDetailAsync(classId);
             if (class_ is null)
             {
                 throw new NotFoundException("Class not found");
             }
-            return class_.Adapt<GetClassWithInstructorAndLessonsDto>();
+            return class_.Adapt<GetClassDetailDto>();
         }
 
         public async Task<PaginatedResult<GetClassWithTotalLessonDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto)
@@ -46,6 +46,23 @@ namespace PhotonPiano.BusinessLogic.Services
                 mappedClass.TotalLessons = classes.Results.FirstOrDefault(c => c.Id == mappedClass.Id)?.Lessons.Count ?? 0;
             }
             return mappedClasses;
+        }
+
+        public async Task AnnounceAClass(long id)
+        {
+            var class_ = await GetRequiredClassById(id);
+            class_.IsAnnouced = true;
+            await _classRepostiory.UpdateAsync(class_);
+        }
+
+        public async Task AnnounceAllClass()
+        {
+            var classes = await _classRepostiory.FindAsync(c => c.IsAnnouced == false);
+            foreach (var class_ in classes)
+            {
+                class_.IsAnnouced = true;
+            }
+            await _classRepostiory.UpdateRangeAsync(classes);
         }
     }
 }

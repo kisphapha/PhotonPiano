@@ -135,6 +135,12 @@ export default {
     },
     methods: {
         async handlePageChange() {
+            if (this.currentPage > this.totalPage){
+                this.currentPage = this.totalPage
+            }
+            if (this.currentPage < 1){
+                this.currentPage = 1
+            }
             await this.fetchRegistration(this.currentPage, this.pageSize, this.keyword_name)
         },
         async movePage(forward) {
