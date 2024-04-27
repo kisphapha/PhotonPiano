@@ -101,7 +101,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAddPopup">X</button>
-                    <EntranceTestSlotForm title="Add new entrance test slot" />
+                    <EntranceTestSlotForm title="Add new entrance test slot" :close="toggleAddPopup"/>
                 </div>
             </div>
         </div>
@@ -110,7 +110,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="closeEditPopup">X</button>
-                    <EntranceTestSlotForm title="Edit entrance test slot" :slotId="this.selectedSlotId" />
+                    <EntranceTestSlotForm title="Edit entrance test slot" :slotId="this.selectedSlotId" :close="closeEditPopup"/>
                 </div>
             </div>
         </div>
@@ -119,7 +119,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutoArrangePopup">X</button>
-                    <EntranceTestAutoArrangeForm />
+                    <EntranceTestAutoArrangeForm :close="toggleAutoArrangePopup"/>
                 </div>
             </div>
         </div>

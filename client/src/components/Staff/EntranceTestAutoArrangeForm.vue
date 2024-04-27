@@ -60,7 +60,7 @@
         </div>
         <div class="flex gap-4 justify-center">
             <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold" @click="handleAutoArrange(true)">Apply</button>
-            <button class="p-2 text-red-400 underline font-bold" @click="toggleAutoArrangeSlotForm">Cancel</button>
+            <button class="p-2 text-red-400 underline font-bold" @click="close">Cancel</button>
         </div>
     </div>
 </template>
@@ -72,6 +72,7 @@ import axios from 'axios';
 export default {
     name: "EntranceTestSlotForm",
     inject: ['eventBus'],
+    props : ['close'],
     data() {
         return {
             locations: [
@@ -134,9 +135,6 @@ export default {
                 this.locationsSelected.push(locationId);
             }
             this.calculate()
-        },
-        toggleAutoArrangeSlotForm() {
-            this.eventBus.emit("toggle-auto-arrange-entrance-test-slot-popup")
         },
         calculate() {
             const from = new Date(this.startDate)

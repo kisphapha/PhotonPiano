@@ -79,11 +79,13 @@
                         <tr v-for="shift in shifts" :key="shift" class="py-2">
                             <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                <button :class='getLessonDetail(shift, day, "css")'>
-                                    <span class="material-icons text-3xl" v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"'>
+                                <button v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"' :class='getLessonDetail(shift, day, "css")' @click="toggleAddLessonPopup" >
+                                    <span class="material-icons text-3xl" >
                                         add_circle
                                     </span>
-                                    <span v-else>
+                                </button >
+                                <button v-else :class='getLessonDetail(shift, day, "css")' @click='toggleEditLessonPopup(getLessonDetail(shift, day, "id"))' >
+                                    <span>
                                         <div class="font-bold">{{ getLessonDetail(shift,day,"location") }}</div>
                                         <div class="text-md italic">{{ getLessonDetail(shift,day,"examType") }}</div>
                                     </span>
@@ -100,7 +102,25 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleOpenAutoSchedulePopup">X</button>
-                    <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs" />
+                    <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs" :close="toggleOpenAutoSchedulePopup" />
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpenAddLessonPopup" class="popup-overlay">
+            <div class="flex justify-center items-center w-2/3">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleAddLessonPopup">X</button>
+                    <LessonForm title="Add new lesson" :close="this.toggleAddLessonPopup"/>
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpenEditLessonPopup" class="popup-overlay">
+            <div class="flex justify-center items-center w-2/3">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleEditLessonPopup">X</button>
+                    <LessonForm title="Edit lesson" :lessonId="this.selectedLessonId" :close="this.toggleEditLessonPopup" />
                 </div>
             </div>
         </div>
@@ -111,12 +131,13 @@
 
 import axios from 'axios';
 import AutoScheduleAClassForm from './AutoScheduleAClassForm.vue';
+import LessonForm from './LessonForm.vue';
 
 export default {
     name: "ScheduleClassDetail",
     inject: ["eventBus"],
     props: ['classId', 'user'],
-    components: { AutoScheduleAClassForm },
+    components: { AutoScheduleAClassForm, LessonForm },
     data() {
         return {
             colors: [
@@ -177,8 +198,12 @@ export default {
             },
             isOpenAutoSchedulePopup: false,
             isOpenDayOffPopup: false,
+            isOpenAddLessonPopup : false,
+            isOpenEditLessonPopup : false,
             isMarking: false,
-            markedDayOffs: []
+            markedDayOffs: [],
+            selectedLessonId : 0,
+            
         }
     },
     methods: {
@@ -242,6 +267,11 @@ export default {
             const actualDate = new Date(year, month, day)
             const lesson = this.lessons.find(l => l.shift == this.shifts.indexOf(shift) + 1 && (new Date(l.date).toDateString() == actualDate.toDateString()))
             switch (information) {
+                case "id":
+                    if (!lesson) {
+                        return 0
+                    }
+                    return lesson.id
                 case "location":
                     if (!lesson) {
                         return ""
@@ -292,13 +322,17 @@ export default {
         clearAllMarking() {
             this.markedDayOffs = []
         },
+        toggleAddLessonPopup(){
+            this.isOpenAddLessonPopup = !this.isOpenAddLessonPopup
+        },
+        toggleEditLessonPopup(id){
+            this.selectedLessonId = id
+            this.isOpenEditLessonPopup = !this.isOpenEditLessonPopup
+        },
+        
     },
     mounted() {
         this.refresh();
-
-        this.eventBus.on("toggle-auto-schedule-class-popup-schedule-classes-page", () => {
-            this.toggleOpenAutoSchedulePopup()
-        })
     }
 }
 </script>

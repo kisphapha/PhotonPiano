@@ -85,7 +85,7 @@
                             @click="toggleFilterPopup">X</button>
                         <ScheduleClassFilterForm :id="filterDto.id" :name="filterDto.name" :level="filterDto.level"
                             :period="filterDto.period" :isScheduled="filterDto.isScheduled"
-                            :isAnnounced="filterDto.isAnnounced" />
+                            :isAnnounced="filterDto.isAnnounced" :close="toggleFilterPopup" />
                     </div>
                 </div>
             </div>
@@ -254,9 +254,6 @@ export default {
         })
         this.eventBus.on("set-selected-class-id-schedule-classes-page", (id) => {
             this.setSelectedClassId(id)
-        })
-        this.eventBus.on("toggle-filter-schedule-class-popup-schedule-classes-page", () => {
-            this.toggleFilterPopup()
         })
         this.eventBus.on("announce-class-schedule-classes-page", (id) => {
             this.handleAnnounce(false,id)

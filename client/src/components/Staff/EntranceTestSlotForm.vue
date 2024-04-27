@@ -141,7 +141,7 @@
             <div class="flex gap-4 mt-4" v-else>
                 <button @click="handleUpdate" class="bg-blue-400 hover:bg-blue-200 px-6 py-2 rounded-lg text-white font-bold">OK</button>
                 <button class="p-2 text-red-400 underline font-bold"
-                    @click="closeEditSlotFormEntranceTestArrangePage">Cancel</button>
+                    @click="close">Cancel</button>
             </div>
         </div>
 
@@ -155,7 +155,7 @@ import axios from 'axios'
 export default {
     name: "EntranceTestSlotForm",
     inject: ['eventBus'],
-    props: ['title', 'slotId'],
+    props: ['title', 'slotId','close'],
     data() {
         return {
             locations: [],

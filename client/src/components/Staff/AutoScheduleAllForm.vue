@@ -84,7 +84,7 @@
             </div>
             <div class="mt-2 flex gap-4 justify-center">
                 <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
-                <button class="p-2 text-red-400 underline font-bold" @click="handleCancel">Cancel</button>
+                <button class="p-2 text-red-400 underline font-bold" @click="close">Cancel</button>
             </div>
         </div>
 
@@ -99,7 +99,7 @@
 export default {
     name: "AutoScheduleAllForm",
     inject: ['eventBus'],
-    props: ['markedDayOffs'],
+    props: ['markedDayOffs','close'],
     data() {
         return {
             lessonEachWeek: 3,
@@ -156,9 +156,6 @@ export default {
         this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
     },
     methods: {
-        handleCancel() {
-            this.eventBus.emit("toggle-auto-schedule-all-popup-schedule-page")
-        },
         isShiftSelected(shiftId) {
             return this.shiftsSelected.includes(shiftId);
         },

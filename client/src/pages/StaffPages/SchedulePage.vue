@@ -74,7 +74,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleOpenAutoSchedulePopup">X</button>
-                    <AutoScheduleAllForm :markedDayOffs="this.markedDayOffs" />
+                    <AutoScheduleAllForm :markedDayOffs="this.markedDayOffs" :close="toggleOpenAutoSchedulePopup"/>
                 </div>
             </div>
         </div>
@@ -272,9 +272,6 @@ export default {
     mounted() {
         this.refresh();
 
-        this.eventBus.on("toggle-auto-schedule-all-popup-schedule-page", () => {
-            this.toggleOpenAutoSchedulePopup()
-        })
     }
 }
 

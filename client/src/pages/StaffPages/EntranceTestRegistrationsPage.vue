@@ -102,7 +102,8 @@
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAutomaticPopup">X</button>
                     <AutoAcceptPopup :totalRegistrations="totalRegistrationsLeft + thisYearRegistration"
-                        :centerMaxValue="centerMaxValue" :thisYearRegistration="thisYearRegistration" />
+                        :centerMaxValue="centerMaxValue" :thisYearRegistration="thisYearRegistration"
+                        :close="toggleAutomaticPopup" />
                 </div>
             </div>
         </div>
@@ -228,9 +229,6 @@ export default {
         }
     },
     mounted() {
-        this.eventBus.on("toggle-auto-accept-popup-registration-page", () => {
-            this.toggleAutomaticPopup()
-        })
         this.eventBus.on("refresh-registration-page", async () => {
             await this.refresh()
         })
