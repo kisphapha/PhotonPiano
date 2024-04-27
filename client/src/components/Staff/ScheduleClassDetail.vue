@@ -79,12 +79,12 @@
                         <tr v-for="shift in shifts" :key="shift" class="py-2">
                             <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                <button v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"' :class='getLessonDetail(shift, day, "css")' @click="toggleAddLessonPopup" >
+                                <button v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"' :class='getLessonDetail(shift, day, "css")' @click="toggleAddLessonPopup(shift, day.specificDay)" >
                                     <span class="material-icons text-3xl" >
                                         add_circle
                                     </span>
                                 </button >
-                                <button v-else :class='getLessonDetail(shift, day, "css")' @click='toggleEditLessonPopup(getLessonDetail(shift, day, "id"))' >
+                                <button v-else :class='getLessonDetail(shift, day, "css")' @click='toggleEditLessonPopup(getLessonDetail(shift, day, "id"), shift, day.specificDay)' >
                                     <span>
                                         <div class="font-bold">{{ getLessonDetail(shift,day,"location") }}</div>
                                         <div class="text-md italic">{{ getLessonDetail(shift,day,"examType") }}</div>
@@ -111,7 +111,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAddLessonPopup">X</button>
-                    <LessonForm title="Add new lesson" :close="this.toggleAddLessonPopup"/>
+                    <LessonForm title="Add new lesson" :close="this.toggleAddLessonPopup" :classId="this.classId" :shift="this.selectedShift" :date="this.selectedDate"/>
                 </div>
             </div>
         </div>
@@ -120,7 +120,7 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleEditLessonPopup">X</button>
-                    <LessonForm title="Edit lesson" :lessonId="this.selectedLessonId" :close="this.toggleEditLessonPopup" />
+                    <LessonForm title="Edit lesson" :lessonId="this.selectedLessonId" :close="this.toggleEditLessonPopup" :classId="this.classId" :shift="this.selectedShift" :date="this.selectedDate" />
                 </div>
             </div>
         </div>
@@ -203,7 +203,8 @@ export default {
             isMarking: false,
             markedDayOffs: [],
             selectedLessonId : 0,
-            
+            selectedDate : null,
+            selectedShift : 1            
         }
     },
     methods: {
@@ -322,17 +323,27 @@ export default {
         clearAllMarking() {
             this.markedDayOffs = []
         },
-        toggleAddLessonPopup(){
+        toggleAddLessonPopup(shift, date){
+            this.selectedDate = date
+            this.selectedShift = shift
+            console.log(shift)
             this.isOpenAddLessonPopup = !this.isOpenAddLessonPopup
         },
-        toggleEditLessonPopup(id){
+        toggleEditLessonPopup(id, shift, date){
             this.selectedLessonId = id
+            this.selectedDate = date
+            this.selectedShift = shift
+            console.log(this.selectedDate,this.selectedShift)
             this.isOpenEditLessonPopup = !this.isOpenEditLessonPopup
         },
         
     },
     mounted() {
         this.refresh();
+
+        this.eventBus.on("refresh-lesson-schedule-class-detail", async () => {
+            await this.handleSelectedWeekChange()
+        })
     }
 }
 </script>
