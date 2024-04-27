@@ -10,5 +10,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task<Lesson> GetRequiredLessonById(long id);
         Task<GetLessonDto> CreateLesson(CreateLessonDto createLessonDto);
         Task UpdateLesson(UpdateLessonDto updateLessonDto);
+
+        Task DeleteLesson(long lessonId);
     }
 }

@@ -3,6 +3,8 @@ using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.StudentLessons;
+using PhotonPiano.Models.Enums;
+using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Services
 {
@@ -26,6 +28,28 @@ namespace PhotonPiano.BusinessLogic.Services
             var studentLessons = await _studentLessonRepository.GetQueriedStudentLessonsByClassIdAndStudentIdAsync(studentId, classId, queryLessonDto);
             var studentLessonsDto = studentLessons.Adapt<List<GetStudentLessonWithLocationDto>>();
             return studentLessonsDto;
+        }
+
+        public async Task AddStudentLesson(long studentId, long lessonId)
+        {
+            var studentLesson = new StudentLesson
+            {
+                StudentId = studentId,
+                LessonId = lessonId,
+                Attendence = AttendingStatus.NotYet.ToString(),
+            };
+            await _studentLessonRepository.AddAsync(studentLesson);
+        }
+
+        public async Task<List<StudentLesson>> GetStudentLessonsByLessonId(long lessonId)
+        {
+            return (await _studentLessonRepository.FindAsync(sl => sl.LessonId == lessonId)).ToList();
+        }
+
+        public async Task ClearStudentLessonsByLessonId(long lessonId)
+        {
+            var studentLessons = await GetStudentLessonsByLessonId(lessonId);
+            await _studentLessonRepository.DeleteRangeAsync(studentLessons);
         }
     }
 }

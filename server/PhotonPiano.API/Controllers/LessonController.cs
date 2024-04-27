@@ -33,5 +33,11 @@ namespace PhotonPiano.API.Controllers
             await _lessonService.UpdateLesson(updateLessonDto);
             return NoContent();
         }
+        [HttpDelete("{lessonId}")]
+        public async Task<IActionResult> DeleteLesson([FromRoute] long lessonId)
+        {
+            await _lessonService.DeleteLesson(lessonId);
+            return Ok();
+        }
     }
 }

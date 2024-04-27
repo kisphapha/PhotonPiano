@@ -14,11 +14,14 @@ namespace PhotonPiano.BusinessLogic.Services
         private readonly ILessonRepository _lessonRepository;
         private readonly IClassService _classService;
         private readonly ILocationService _locationService;
-        public LessonSerivce(ILessonRepository lessonRepository, ILocationService locationService, IClassService classService)
+        private readonly IStudentLessonService _studentLessonService;
+        public LessonSerivce(ILessonRepository lessonRepository, ILocationService locationService, 
+            IClassService classService, IStudentLessonService studentLessonService)
         {
             _lessonRepository = lessonRepository;
             _locationService = locationService;
             _classService = classService;
+            _studentLessonService = studentLessonService;
         }
 
         public async Task<List<GetLessonWithLocationDto>> GetQueriedLessons(QueryLessonDto queryLessonDto)
@@ -37,8 +40,15 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task<GetLessonDto> CreateLesson(CreateLessonDto createLessonDto)
         {
             await _locationService.GetLocationById(createLessonDto.LocationId, true);
-            await _classService.GetRequiredClassById(createLessonDto.ClassId);
+            var class_ = await _classService.GetClassDetail(createLessonDto.ClassId);
+
             var createLesson = await _lessonRepository.AddAsync(createLessonDto.Adapt<Lesson>());
+
+            foreach (var student in class_.Students)
+            {
+                await _studentLessonService.AddStudentLesson(student.Id, createLesson.Id);
+            }
+
             return createLesson.Adapt<GetLessonDto>();
         }
         
@@ -68,6 +78,13 @@ namespace PhotonPiano.BusinessLogic.Services
                 existedLesson.ExamType = updateLessonDto.ExamType;
             }
             await _lessonRepository.UpdateAsync(existedLesson);
+        }
+
+        public async Task DeleteLesson(long lessonId)
+        {
+            await GetRequiredLessonById(lessonId);
+            await _studentLessonService.ClearStudentLessonsByLessonId(lessonId);
+            await _lessonRepository.DeleteAsync(lessonId);
         }
     }
 }
