@@ -17,6 +17,8 @@ public partial class Lesson
 
     public DateOnly Date { get; set; }
 
+    public bool IsLocked { get; set; }
+
     public virtual Class Class { get; set; } = null!;
 
     public virtual Location Location { get; set; } = null!;

@@ -70,6 +70,7 @@ public partial class PhotonPianoContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("PhotonPiano"));
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Class>(entity =>
@@ -275,6 +276,7 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.ExamType)
                 .HasMaxLength(50)
                 .IsUnicode(false);
+            entity.Property(e => e.IsLocked).HasColumnName("isLocked");
             entity.Property(e => e.LocationId).HasColumnName("locationId");
             entity.Property(e => e.Shift).HasColumnName("shift");
 

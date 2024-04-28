@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PhotonPiano.Models")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+09a8fa1c88ee27a21f475c7386eabf5fa8d291fe")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+ae3ef025b1590a89460cf2679e9013db04dd2473")]
 [assembly: System.Reflection.AssemblyProductAttribute("PhotonPiano.Models")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PhotonPiano.Models")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
