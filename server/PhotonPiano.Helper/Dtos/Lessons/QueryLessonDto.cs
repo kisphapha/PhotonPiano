@@ -3,6 +3,7 @@ namespace PhotonPiano.Helper.Dtos.Lessons
 {
     public class QueryLessonDto
     {
+        public long? Id { get; set; }
         public int? Shift { get; set; }
 
         public long? LocationId { get; set; }

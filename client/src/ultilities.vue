@@ -60,6 +60,9 @@ export default {
         },
         slashDateFormatToSqlDateString(dateStr){
             const dateParts = dateStr.split("/")
+            if (dateParts[0].length == 1){
+                dateParts[0] = "0" + dateParts[0]
+            }
             if (dateParts[1].length == 1){
                 dateParts[1] = "0" + dateParts[1]
             }

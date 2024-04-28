@@ -19,6 +19,10 @@ namespace PhotonPiano.DataAccess.Repositories
                 .Include(l => l.Location)
                 .AsQueryable();
 
+            if (queryLessonDto.Id.HasValue)
+            {
+                lessonQuery = lessonQuery.Where(l => l.Id == queryLessonDto.Id.Value);
+            }
             if (queryLessonDto.Shift.HasValue)
             {
                 lessonQuery = lessonQuery.Where(l => l.Shift == queryLessonDto.Shift.Value);

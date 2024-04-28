@@ -17,9 +17,9 @@
             <button v-if="!lessonId" class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold"
                 @click="handleAdd">Add</button>
             <button v-else class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold"
-                @click="null">Update</button>
+                @click="handleEdit">Update</button>
             <button v-if="lessonId" class="bg-red-400 hover:bg-red-200 p-2 rounded-lg text-white font-bold"
-                @click="null">Delete</button>
+                @click="handleDelete(true)">Delete</button>
             <button class="p-2 text-red-400 underline font-bold"
                 @click="close">Cancel</button>
         </div>
@@ -81,10 +81,73 @@ export default {
                     type: "Error"
                 })
             }
+        },
+        async handleEdit(){
+            const request = {
+                id : this.lessonId,
+                locationId: this.selectedLocation,
+                examType : this.examType ?? null
+            }
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/Lesson`, request)
+
+                this.eventBus.emit("open-result-dialog", {
+                    message: "Updated Successfully",
+                    type: "Success"
+                })
+                this.eventBus.emit("refresh-lesson-schedule-class-detail")
+                this.close()
+            } catch (e) {
+                console.log(e)
+                this.eventBus.emit("open-result-dialog", {
+                    message: e.response?.data?.ErrorMessage ?? "Somemthing went wrong",
+                    type: "Error"
+                })
+            }
+        },
+        async handleDelete(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "delete-lesson-schedule-class-page"
+                })
+            } else {
+                try {
+                    await axios.delete(import.meta.env.VITE_API_URL + `/api/Lesson/${this.lessonId}`)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Deleted Successfully",
+                        type: "Success"
+                    })
+                    this.eventBus.emit("refresh-lesson-schedule-class-detail")
+                    this.close()
+                } catch (e) {
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data.ErrorMessage,
+                        type: "Error"
+                    })
+                }
+            }
+        },
+        async refresh(){
+            await this.fetchLocation()
+            if (this.lessonId){
+                await this.getFromProps()
+            }
+        },
+        async getFromProps(){
+            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/Lesson?Id=" + this.lessonId)
+            if (response.data) {
+                this.selectedLocation = response.data[0].locationId
+                this.examType = response.data[0].examType
+            }
         }
     },
     mounted(){
-        this.fetchLocation()
+        this.refresh()
+
+        this.eventBus.on("delete-lesson-schedule-class-page", async()=>{
+            await this.handleDelete(false)
+        })
     }
 }
 </script>

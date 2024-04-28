@@ -79,15 +79,20 @@
                         <tr v-for="shift in shifts" :key="shift" class="py-2">
                             <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                <button v-if='this.getLessonDetail(shift,day,"isOcupied") == "false"' :class='getLessonDetail(shift, day, "css")' @click="toggleAddLessonPopup(shift, day.specificDay)" >
-                                    <span class="material-icons text-3xl" >
+                                <button v-if='this.getLessonDetail(shift, day, "isOcupied") == "false"'
+                                    :class='getLessonDetail(shift, day, "css")'
+                                    @click="toggleAddLessonPopup(shift, day.specificDay)" @dragover.prevent
+                                    @drop="onDrop(shift, day)">
+                                    <span class="material-icons text-3xl">
                                         add_circle
                                     </span>
-                                </button >
-                                <button v-else :class='getLessonDetail(shift, day, "css")' @click='toggleEditLessonPopup(getLessonDetail(shift, day, "id"), shift, day.specificDay)' >
+                                </button>
+                                <button v-else :class='getLessonDetail(shift, day, "css")'
+                                    @click='toggleEditLessonPopup(shift, day)' @dragstart='dragSetup(shift, day)'
+                                    draggable="true" @dragover.prevent @drop="onDrop(shift, day)">
                                     <span>
-                                        <div class="font-bold">{{ getLessonDetail(shift,day,"location") }}</div>
-                                        <div class="text-md italic">{{ getLessonDetail(shift,day,"examType") }}</div>
+                                        <div class="font-bold">{{ getLessonDetail(shift, day, "location") }}</div>
+                                        <div class="text-md italic">{{ getLessonDetail(shift, day, "examType") }}</div>
                                     </span>
                                 </button>
                             </td>
@@ -102,7 +107,8 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleOpenAutoSchedulePopup">X</button>
-                    <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs" :close="toggleOpenAutoSchedulePopup" />
+                    <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs"
+                        :close="toggleOpenAutoSchedulePopup" />
                 </div>
             </div>
         </div>
@@ -111,7 +117,8 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleAddLessonPopup">X</button>
-                    <LessonForm title="Add new lesson" :close="this.toggleAddLessonPopup" :classId="this.classId" :shift="this.selectedShift" :date="this.selectedDate"/>
+                    <LessonForm title="Add new lesson" :close="this.toggleAddLessonPopup" :classId="this.classId"
+                        :shift="this.selectedShift" :date="this.selectedDate" />
                 </div>
             </div>
         </div>
@@ -120,7 +127,9 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleEditLessonPopup">X</button>
-                    <LessonForm title="Edit lesson" :lessonId="this.selectedLessonId" :close="this.toggleEditLessonPopup" :classId="this.classId" :shift="this.selectedShift" :date="this.selectedDate" />
+                    <LessonForm title="Edit lesson" :lessonId="this.selectedLessonId"
+                        :close="this.toggleEditLessonPopup" :classId="this.classId" :shift="this.selectedShift"
+                        :date="this.selectedDate" />
                 </div>
             </div>
         </div>
@@ -198,13 +207,13 @@ export default {
             },
             isOpenAutoSchedulePopup: false,
             isOpenDayOffPopup: false,
-            isOpenAddLessonPopup : false,
-            isOpenEditLessonPopup : false,
+            isOpenAddLessonPopup: false,
+            isOpenEditLessonPopup: false,
             isMarking: false,
             markedDayOffs: [],
-            selectedLessonId : 0,
-            selectedDate : null,
-            selectedShift : 1            
+            selectedLessonId: 0,
+            selectedDate: null,
+            selectedShift: 1,
         }
     },
     methods: {
@@ -291,7 +300,7 @@ export default {
                         return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
                     return css + (lesson.examType ? "bg-yellow-200 hover:bg-yellow-50" : "bg-green-200 hover:bg-green-50")
-                case "isOcupied" :
+                case "isOcupied":
                     if (!lesson) {
                         return "false"
                     }
@@ -323,20 +332,62 @@ export default {
         clearAllMarking() {
             this.markedDayOffs = []
         },
-        toggleAddLessonPopup(shift, date){
-            this.selectedDate = date
-            this.selectedShift = shift
-            console.log(shift)
-            this.isOpenAddLessonPopup = !this.isOpenAddLessonPopup
+        toggleAddLessonPopup(shift, date) {
+            if (this.selectedYear != new Date().getFullYear()) {
+                this.eventBus.emit("open-result-dialog", {
+                    message: "You can't update or add here!",
+                    type: "Other"
+                })
+            } else {
+                this.selectedDate = date
+                this.selectedShift = shift
+                console.log(shift)
+                this.isOpenAddLessonPopup = !this.isOpenAddLessonPopup
+            }
+
         },
-        toggleEditLessonPopup(id, shift, date){
-            this.selectedLessonId = id
-            this.selectedDate = date
-            this.selectedShift = shift
-            console.log(this.selectedDate,this.selectedShift)
-            this.isOpenEditLessonPopup = !this.isOpenEditLessonPopup
+        toggleEditLessonPopup(shift, date) {
+            if (this.selectedYear != new Date().getFullYear()) {
+                this.eventBus.emit("open-result-dialog", {
+                    message: "You can't update or add here!",
+                    type: "Other"
+                })
+            } else {
+                if (shift && date) {
+                    this.selectedLessonId = this.getLessonDetail(shift, date, "id")
+                    this.selectedDate = date.specificDay
+                    this.selectedShift = shift
+                }
+                this.isOpenEditLessonPopup = !this.isOpenEditLessonPopup
+            }
         },
-        
+        async onDrop(shift, day) {
+            //alert("Moving " + this.selectedLessonId + " to " + shift + " " + day.specificDay)
+            const request = {
+                id: this.selectedLessonId,
+                shift: this.shifts.indexOf(shift) + 1,
+                date: this.slashDateFormatToSqlDateString(day.specificDay),
+            }
+            try {
+                await axios.patch(import.meta.env.VITE_API_URL + `/api/Lesson`, request)
+
+                this.eventBus.emit("open-result-dialog", {
+                    message: "Updated Successfully",
+                    type: "Success"
+                })
+                await this.handleSelectedWeekChange()
+            } catch (e) {
+                console.log(e)
+                this.eventBus.emit("open-result-dialog", {
+                    message: e.response?.data?.ErrorMessage ?? "Somemthing went wrong",
+                    type: "Error"
+                })
+            }
+        },
+        dragSetup(shift, date) {
+            this.selectedLessonId = this.getLessonDetail(shift, date, "id")
+        }
+
     },
     mounted() {
         this.refresh();
