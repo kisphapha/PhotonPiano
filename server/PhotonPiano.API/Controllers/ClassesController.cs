@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.Helper.Dtos.Classes;
-using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 
 namespace PhotonPiano.API.Controllers
 {

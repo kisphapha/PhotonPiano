@@ -4,7 +4,7 @@ using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.DataAccess.Repositories;
 using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.Criteria;
-using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Helper.Exceptions;
 using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;

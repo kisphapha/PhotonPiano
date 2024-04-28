@@ -1,9 +1,13 @@
 ﻿using PhotonPiano.BusinessLogic.Interfaces;
+using PhotonPiano.Helper.Dtos.Ultilities;
 
 namespace PhotonPiano.BusinessLogic.Services
 {
     public class Utilities : IUtilities
     {
+        //This service is ABSOLUTELY not injecting other services
+
+
         public DateOnly GetRandomDateBetween(DateOnly startDate, DateOnly endDate)
         {
             // Create an instance of the Random class
@@ -19,6 +23,30 @@ namespace PhotonPiano.BusinessLogic.Services
             DateOnly randomDate = startDate.AddDays(randomDays);
 
             return randomDate;
+        }
+
+        public List<WeekDto> GetAllWeeksInYear(int year)
+        {
+            List<WeekDto> weeks = new List<WeekDto>();
+
+            DateOnly startDate = new DateOnly(year, 1, 1);
+            DateOnly endDate = startDate.AddDays(6 - (int)startDate.DayOfWeek);
+
+            while (startDate.Year == year)
+            {
+                WeekDto week = new WeekDto
+                {
+                    StartDate = startDate,
+                    EndDate = endDate
+                };
+
+                weeks.Add(week);
+
+                startDate = endDate.AddDays(1);
+                endDate = startDate.AddDays(6 - (int)startDate.DayOfWeek);
+            }
+
+            return weeks;
         }
     }
 }

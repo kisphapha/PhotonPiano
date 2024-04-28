@@ -3,9 +3,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.DataAccess.Repositories;
+using PhotonPiano.Helper.Dtos.EntranceTests;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.Locations;
 using PhotonPiano.Helper.Exceptions;
+using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
 
 
@@ -17,13 +19,16 @@ namespace PhotonPiano.BusinessLogic.Services
         private readonly IClassService _classService;
         private readonly ILocationService _locationService;
         private readonly IStudentLessonService _studentLessonService;
+        private readonly IUtilities _ultilities;
         public LessonSerivce(ILessonRepository lessonRepository, ILocationService locationService, 
-            IClassService classService, IStudentLessonService studentLessonService)
+            IClassService classService, IStudentLessonService studentLessonService, 
+            IUtilities utilities)
         {
             _lessonRepository = lessonRepository;
             _locationService = locationService;
             _classService = classService;
             _studentLessonService = studentLessonService;
+            _ultilities = utilities;
         }
 
         public async Task<List<GetLessonWithLocationDto>> GetQueriedLessons(QueryLessonDto queryLessonDto)
@@ -138,6 +143,67 @@ namespace PhotonPiano.BusinessLogic.Services
                     l.Date == date);
 
             return classConflict is null && locationConflict is null;
+        }
+    
+        public async Task AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
+        {
+            //filter
+            var class_ = _classService.GetRequiredClassById(autoArrangeLessonAClassDto.ClassId);
+            if (!autoArrangeLessonAClassDto.AllowedShift.All(s => s >= 1 && s <= 8))
+            {
+                throw new BadRequestException("Shifts can only be from range 1 to 8");
+            }
+            foreach (var locationId in autoArrangeLessonAClassDto.AllowedLocationIds)
+            {
+                var location = await _locationService.GetLocationById(locationId, true);
+                if (location!.Status == LocationStatus.Unavailable.ToString())
+                {
+                    throw new BadRequestException($"Location {location.Id} is unavailable");
+                }
+            }
+
+            var weeks = _ultilities.GetAllWeeksInYear(autoArrangeLessonAClassDto.StartingFrom.Year);
+            var startWeek = weeks.FirstOrDefault(w => w.StartDate <= autoArrangeLessonAClassDto.StartingFrom
+                && w.EndDate >= autoArrangeLessonAClassDto.StartingFrom) ?? weeks[0];
+            var weekIndex = weeks.IndexOf(startWeek);
+            //Action
+            var rand = new Random();
+            long randomLocationId;
+            int randomShift;
+            DateOnly randomDate;
+            for (var i = 0; i < autoArrangeLessonAClassDto.TotalWeeks; i++)
+            {
+                for (var j = 0; j < autoArrangeLessonAClassDto.LessonEachWeek; j++)
+                {
+                    do
+                    {
+                        randomLocationId = autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)];
+                        randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
+                        randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                    }
+                    while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate));
+
+                    await CreateLesson(new CreateLessonDto
+                    {
+                        ClassId = autoArrangeLessonAClassDto.ClassId,
+                        Date = randomDate,
+                        LocationId = randomLocationId,
+                        Shift = randomShift,
+                    });
+                }
+                if (i < autoArrangeLessonAClassDto.TotalWeeks - 1)
+                {
+                    weekIndex++;
+                    if (weekIndex >= weeks.Count)
+                    {
+                        throw new BadRequestException("Cannot complete due to not having enough weeks");
+                    }
+                    startWeek = weeks[weekIndex];
+                }
+                
+            }
+            
+            
         }
     }
 }

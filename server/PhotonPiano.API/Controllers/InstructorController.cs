@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.Helper.Dtos.Instructors;
-using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Models.Models;
 

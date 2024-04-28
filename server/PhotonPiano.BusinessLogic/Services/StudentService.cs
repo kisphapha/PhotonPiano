@@ -3,7 +3,7 @@ using Mapster;
 using Microsoft.IdentityModel.Tokens;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
-using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Helper.Dtos.Students;
 using PhotonPiano.Helper.Dtos.Users;
 using PhotonPiano.Helper.Exceptions;

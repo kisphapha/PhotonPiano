@@ -1,5 +1,5 @@
 ﻿using PhotonPiano.Helper.Dtos.Classes;
-using PhotonPiano.Helper.Dtos.Paginations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Interfaces
