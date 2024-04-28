@@ -39,5 +39,17 @@ namespace PhotonPiano.API.Controllers
             await _lessonService.DeleteLesson(lessonId);
             return Ok();
         }
+        [HttpDelete("{classId}/clear")]
+        public async Task<IActionResult> ClearNotStartedLessonOfAClass([FromRoute] long classId)
+        {
+            await _lessonService.ClearAllNotStartedLessonOfAClass(classId);
+            return Ok();
+        }
+        [HttpDelete("clear-all")]
+        public async Task<IActionResult> ClearNotStartedLessonOfAllClass()
+        {
+            await _lessonService.ClearAllNotStartedLessonOfAllClass();
+            return Ok();
+        }
     }
 }

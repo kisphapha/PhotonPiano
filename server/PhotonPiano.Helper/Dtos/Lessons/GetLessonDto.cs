@@ -13,5 +13,7 @@
         public string? ExamType { get; set; }
 
         public DateOnly Date { get; set; }
+
+        public bool IsLocked { get; set; }
     }
 }

@@ -97,6 +97,7 @@ namespace PhotonPiano.DataAccess.Repositories
                 .Include(c => c.Students)
                     .ThenInclude(s => s.User)
                 .Include(c => c.Lessons)
+                .AsNoTracking()
                 .SingleOrDefaultAsync(c => c.Id == classId);
 
             return class_;

@@ -28,7 +28,7 @@
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
             </button>
-            <button @click="null" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
+            <button @click="handleClear(true)" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Lessons
             </button>
             <button @click="toggleIsMarking"
@@ -386,12 +386,44 @@ export default {
         },
         dragSetup(shift, date) {
             this.selectedLessonId = this.getLessonDetail(shift, date, "id")
+        },
+        async handleClear(confirmation){
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "This action will delete all not started lessons (not taken attendence) of this class. Willing to continue?",
+                    callback: "clear-all-lesson-schedule-class-page"
+                })
+            } else {
+                try {
+                    this.eventBus.emit("open-loading-popup",{
+                        message : "Deleteing... Please don't quit!"
+                    })
+                    await axios.delete(import.meta.env.VITE_API_URL + `/api/Lesson/${this.classId}/clear`)
+                    this.eventBus.emit("close-loading-popup")
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Deleted Successfully",
+                        type: "Success"
+                    })
+                    
+                    this.eventBus.emit("refresh-lesson-schedule-class-detail")
+                    this.close()
+                } catch (e) {
+                    this.eventBus.emit("close-loading-popup")
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data.ErrorMessage,
+                        type: "Error"
+                    })
+                }
+            }
         }
 
     },
     mounted() {
         this.refresh();
 
+        this.eventBus.on("clear-all-lesson-schedule-class-page", async () => {
+            await this.handleClear(false)
+        })
         this.eventBus.on("refresh-lesson-schedule-class-detail", async () => {
             await this.handleSelectedWeekChange()
         })

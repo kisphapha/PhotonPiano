@@ -25,7 +25,7 @@ namespace PhotonPiano.Helper.Dtos.Classes
         public GetInstructorWithUserDto Instructor { get; set; } = null!;
 
         public virtual ICollection<GetStudentWithUserDto> Students { get; set; } = new List<GetStudentWithUserDto>();
-        public virtual ICollection<GetLessonWithStudentLessonsDto> Lessons { get; set; } = new List<GetLessonWithStudentLessonsDto>();
+        public virtual ICollection<GetLessonDto> Lessons { get; set; } = new List<GetLessonDto>();
 
     }
 }

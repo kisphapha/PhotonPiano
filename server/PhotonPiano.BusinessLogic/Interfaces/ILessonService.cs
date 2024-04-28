@@ -12,5 +12,9 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task UpdateLesson(UpdateLessonDto updateLessonDto);
 
         Task DeleteLesson(long lessonId);
+
+        Task ClearAllNotStartedLessonOfAClass(long classId);
+
+        Task ClearAllNotStartedLessonOfAllClass();
     }
 }

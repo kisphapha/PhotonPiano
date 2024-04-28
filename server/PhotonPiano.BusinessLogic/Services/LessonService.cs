@@ -1,6 +1,8 @@
 ﻿using Mapster;
+using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
+using PhotonPiano.DataAccess.Repositories;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.Locations;
 using PhotonPiano.Helper.Exceptions;
@@ -41,7 +43,10 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             await _locationService.GetLocationById(createLessonDto.LocationId, true);
             var class_ = await _classService.GetClassDetail(createLessonDto.ClassId);
-
+            if (!await CheckLessonConflict(createLessonDto.Shift, createLessonDto.LocationId, createLessonDto.ClassId, createLessonDto.Date))
+            {
+                throw new BadRequestException("Cannot create due to schedule conflict. Please check again!");
+            }
             var createLesson = await _lessonRepository.AddAsync(createLessonDto.Adapt<Lesson>());
 
             foreach (var student in class_.Students)
@@ -55,6 +60,10 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task UpdateLesson(UpdateLessonDto updateLessonDto)
         {
             var existedLesson = await GetRequiredLessonById(updateLessonDto.Id);
+            if (existedLesson.IsLocked)
+            {
+                throw new BadRequestException("This lesson has been finished and unable to change");
+            }
             if (updateLessonDto.ClassId.HasValue)
             {
                 await _classService.GetRequiredClassById(updateLessonDto.ClassId.Value);
@@ -77,14 +86,58 @@ namespace PhotonPiano.BusinessLogic.Services
             {
                 existedLesson.ExamType = updateLessonDto.ExamType;
             }
+            if (!await CheckLessonConflict(existedLesson.Shift, existedLesson.LocationId, existedLesson.ClassId, existedLesson.Date))
+            {
+                throw new BadRequestException("Cannot update due to schedule conflict. Please check again!");
+            }
             await _lessonRepository.UpdateAsync(existedLesson);
         }
 
         public async Task DeleteLesson(long lessonId)
         {
-            await GetRequiredLessonById(lessonId);
+            var lesson = await GetRequiredLessonById(lessonId);
+            if (lesson.IsLocked)
+            {
+                throw new BadRequestException("This lesson has been finished and unable to change");
+            }
             await _studentLessonService.ClearStudentLessonsByLessonId(lessonId);
             await _lessonRepository.DeleteAsync(lessonId);
+        }
+
+        public async Task ClearAllNotStartedLessonOfAClass(long classId)
+        {
+            var class_ = await _classService.GetClassDetail(classId);
+            var unlockedLessons = class_.Lessons.Where(l => !l.IsLocked).ToList();
+            foreach (var lesson in unlockedLessons)
+            {
+                await _studentLessonService.ClearStudentLessonsByLessonId(lesson.Id);
+            }
+            await _lessonRepository.DeleteRangeAsync(unlockedLessons.Adapt<List<Lesson>>());
+        }
+        public async Task ClearAllNotStartedLessonOfAllClass()
+        {
+            var unlockedLessons = await _lessonRepository.FindAsync(l => !l.IsLocked);
+            foreach (var lesson in unlockedLessons)
+            {
+                await _studentLessonService.ClearStudentLessonsByLessonId(lesson.Id);
+            }
+            await _lessonRepository.DeleteRangeAsync(unlockedLessons);
+        }
+        public async Task<bool> CheckLessonConflict(int shift, long locationId, long classId, DateOnly date)
+        {
+            var classConflict = await _lessonRepository
+                .FindOneAsync(l =>
+                    l.ClassId == classId &&
+                    l.Shift == shift &&
+                    l.Date == date);
+
+            var locationConflict = await _lessonRepository
+                .FindOneAsync(l =>
+                    l.LocationId == locationId &&
+                    l.Shift == shift &&
+                    l.Date == date);
+
+            return classConflict is null && locationConflict is null;
         }
     }
 }
