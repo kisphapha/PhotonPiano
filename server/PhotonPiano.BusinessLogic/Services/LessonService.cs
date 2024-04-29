@@ -6,6 +6,7 @@ using PhotonPiano.DataAccess.Repositories;
 using PhotonPiano.Helper.Dtos.EntranceTests;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.Locations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Helper.Exceptions;
 using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
@@ -148,7 +149,7 @@ namespace PhotonPiano.BusinessLogic.Services
         public async Task AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
         {
             //filter
-            var class_ = _classService.GetRequiredClassById(autoArrangeLessonAClassDto.ClassId);
+            var class_ = await _classService.GetRequiredClassById(autoArrangeLessonAClassDto.ClassId);
             if (!autoArrangeLessonAClassDto.AllowedShift.All(s => s >= 1 && s <= 8))
             {
                 throw new BadRequestException("Shifts can only be from range 1 to 8");
@@ -166,22 +167,86 @@ namespace PhotonPiano.BusinessLogic.Services
             var startWeek = weeks.FirstOrDefault(w => w.StartDate <= autoArrangeLessonAClassDto.StartingFrom
                 && w.EndDate >= autoArrangeLessonAClassDto.StartingFrom) ?? weeks[0];
             var weekIndex = weeks.IndexOf(startWeek);
-            //Action
+            //Arrange
+            long randomLocationId = 0;
+            int randomShift = 0;
+            DateOnly randomDate = new DateOnly();
+            var lessonFrames = new List<GetLessonDto>();
             var rand = new Random();
-            long randomLocationId;
-            int randomShift;
-            DateOnly randomDate;
+            //Action
             for (var i = 0; i < autoArrangeLessonAClassDto.TotalWeeks; i++)
             {
+                long locationThisWeek = 0;
                 for (var j = 0; j < autoArrangeLessonAClassDto.LessonEachWeek; j++)
                 {
-                    do
+                    var attempt = 0;
+                    //Arrange first week
+                    if ((i == 0 && autoArrangeLessonAClassDto.OptionShiftConsistency) ||
+                        (i == 0 && autoArrangeLessonAClassDto.OptionLocationConsistency) ||
+                        !(autoArrangeLessonAClassDto.OptionShiftConsistency &&
+                        autoArrangeLessonAClassDto.OptionLocationConsistency))
                     {
-                        randomLocationId = autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)];
-                        randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
-                        randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                        do
+                        {
+                            randomLocationId = (locationThisWeek == 0 ) ? 
+                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)]
+                                : locationThisWeek;
+                            randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
+                            randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                            attempt++;
+                            if (attempt > 100)
+                            {
+                                throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
+                                    "Please extend the range to increase the chance of success!");
+                            }
+                        }
+                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate));
+                        if (autoArrangeLessonAClassDto.OptionLocationSimilar)
+                        {
+                            locationThisWeek = randomLocationId;
+                        }                        
+                        lessonFrames.Add(new GetLessonDto
+                        {
+                            Id = j,
+                            LocationId = randomLocationId,
+                            Shift = randomShift,
+                            Date = randomDate
+                        }); ;
                     }
-                    while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate));
+                    //Arrange remaining weeks
+                    if (i > 0 &&
+                        autoArrangeLessonAClassDto.OptionShiftConsistency || autoArrangeLessonAClassDto.OptionLocationConsistency)
+                    {
+                        if (autoArrangeLessonAClassDto.OptionShiftConsistency)
+                        {
+                            randomLocationId = (locationThisWeek == 0) ?
+                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)]
+                                : locationThisWeek;
+                            randomShift = lessonFrames[j].Shift;
+                            randomDate = lessonFrames[j].Date.AddDays(i * 7);
+                        }
+                        if (autoArrangeLessonAClassDto.OptionLocationConsistency)
+                        {
+                            randomLocationId = lessonFrames[j].LocationId;
+                        }
+                        
+                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate))
+                        {
+                            randomLocationId = autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)];
+                            randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
+                            randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                            attempt++;
+                            if (attempt > 100)
+                            {
+                                throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
+                                    "Please extend the range to increase the chance of success!");
+                            }
+                        }
+                        if (autoArrangeLessonAClassDto.OptionLocationSimilar)
+                        {
+                            locationThisWeek = randomLocationId;
+                        }
+                    }
 
                     await CreateLesson(new CreateLessonDto
                     {
@@ -201,9 +266,7 @@ namespace PhotonPiano.BusinessLogic.Services
                     startWeek = weeks[weekIndex];
                 }
                 
-            }
-            
-            
+            }          
         }
     }
 }
