@@ -109,7 +109,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "delete-lesson-schedule-class-page"
+                    method : this.handleDelete,
+                    params : false
                 })
             } else {
                 try {
@@ -145,9 +146,6 @@ export default {
     mounted(){
         this.refresh()
 
-        this.eventBus.on("delete-lesson-schedule-class-page", async()=>{
-            await this.handleDelete(false)
-        })
     }
 }
 </script>

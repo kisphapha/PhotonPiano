@@ -24,9 +24,7 @@ export default {
     clickYes(){
       this.eventBus.emit("open-confirmation-popup","")
       this.eventBus.emit(this.callback,this.params)
-      if (this.method){
-        this.method()
-      }
+      this.method(this.params)
     },
     clickNo(){
       this.eventBus.emit("open-confirmation-popup","")

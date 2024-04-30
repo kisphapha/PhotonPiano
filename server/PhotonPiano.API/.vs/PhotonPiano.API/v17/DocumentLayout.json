@@ -3,7 +3,7 @@
   "WorkspaceRootPath": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.api\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
@@ -60,8 +60,7 @@
               "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\LessonService.cs",
               "ViewState": "AQIAAAIAAAAAAAAAAAAAABEAAAAvAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-28T16:17:12.094Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-04-28T16:17:12.094Z"
             },
             {
               "$type": "Document",
@@ -71,7 +70,7 @@
               "RelativeDocumentMoniker": "Controllers\\LessonController.cs",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\LessonController.cs",
               "RelativeToolTip": "Controllers\\LessonController.cs",
-              "ViewState": "AQIAABYAAAAAAAAAAAA5wC4AAAAAAAAA",
+              "ViewState": "AQIAABcAAAAAAAAAAAAgwCUAAABFAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-04-28T16:10:40.67Z",
               "EditorCaption": ""

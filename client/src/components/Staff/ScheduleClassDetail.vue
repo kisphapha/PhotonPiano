@@ -394,7 +394,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "This action will delete all not started lessons (not taken attendence) of this class. Willing to continue?",
-                    callback: "clear-all-lesson-schedule-class-page"
+                    method : this.handleClear,
+                    params : false
                 })
             } else {
                 try {
@@ -424,9 +425,6 @@ export default {
     mounted() {
         this.refresh();
 
-        this.eventBus.on("clear-all-lesson-schedule-class-page", async () => {
-            await this.handleClear(false)
-        })
         this.eventBus.on("refresh-lesson-schedule-class-detail", async () => {
             await this.handleSelectedWeekChange()
         })

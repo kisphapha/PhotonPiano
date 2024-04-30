@@ -66,7 +66,7 @@
                         <div class="text-sm italic">(Edit)</div>
                     </div>
                     <div class="flex flex-col justify-center">
-                        <button @click="handleDelete(true, slot.id)">
+                        <button @click="handleDelete({confirmation : true, id : slot.id})">
                             <span class="material-icons">
                                 delete
                             </span>
@@ -74,7 +74,7 @@
                         <div class="text-sm italic">(Delete)</div>
                     </div>
                     <div v-if="!slot.isAnnoucedTime" class="flex flex-col justify-center">
-                        <button @click="handleAnnounceTime(true, slot.id)">
+                        <button @click="handleAnnounceTime({confirmation : true, id : slot.id})">
                             <span class="material-icons">
                                 notifications_none
                             </span>
@@ -82,7 +82,7 @@
                         <div class="text-sm italic">(Announce Time)</div>
                     </div>
                     <div v-if="!slot.isAnnoucedScore" class="flex flex-col justify-center">
-                        <button @click="handleAnnounceScore(true, slot.id)">
+                        <button @click="handleAnnounceScore({confirmation : true, id : slot.id})">
                             <span class="material-icons">
                                 notifications
                             </span>
@@ -209,16 +209,19 @@ export default {
             await this.fetchData()
         },
 
-        async handleDelete(confirmation, id) {
-            if (confirmation) {
-                this.selectedSlotId = id;
+        async handleDelete(request) {
+            if (request.confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "delete-entrance-test-slot-entrance-test-arrange-page"
+                    method : this.handleDelete,
+                    params : {
+                        confirmation : false,
+                        id : request.id
+                    }
                 })
             } else {
                 try {
-                    await axios.delete(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}`)
+                    await axios.delete(import.meta.env.VITE_API_URL + `/api/EntranceTest/${request.id}`)
                     this.eventBus.emit("open-result-dialog", {
                         message: "Deleted Successfully",
                         type: "Success"
@@ -232,16 +235,19 @@ export default {
                 }
             }
         },
-        async handleAnnounceTime(confirmation, id) {
-            if (confirmation) {
-                this.selectedSlotId = id;
+        async handleAnnounceTime(request) {
+            if (request.confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-slot-time-entrance-test-arrange-page"
+                    method : this.handleAnnounceTime,
+                    params : {
+                        confirmation : false,
+                        id : request.id
+                    }
                 })
             } else {
                 try {
-                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}/announce`)
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${request.id}/announce`)
                     this.eventBus.emit("open-result-dialog", {
                         message: "Annouced Successfully",
                         type: "Success"
@@ -256,16 +262,19 @@ export default {
                 }
             }
         },
-        async handleAnnounceScore(confirmation, id) {
-            if (confirmation) {
-                this.selectedSlotId = id;
+        async handleAnnounceScore(request) {
+            if (request.confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-slot-score-entrance-test-arrange-page"
+                    method : this.handleAnnounceScore,
+                    params : {
+                        confirmation : false,
+                        id : request.id
+                    }
                 })
             } else {
                 try {
-                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${this.selectedSlotId}/announce-score`)
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/EntranceTest/${request.id}/announce-score`)
                     this.eventBus.emit("open-result-dialog", {
                         message: "Annouced Successfully",
                         type: "Success"
@@ -284,7 +293,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-slot-time-all-entrance-test-arrange-page"
+                    method : this.handleAnnounceTimeAll,
+                    params : false
                 })
             } else {
                 try {
@@ -307,7 +317,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-slot-score-all-entrance-test-arrange-page"
+                    method : this.handleAnnounceScoreAll,
+                    params : false
                 })
             } else {
                 try {
@@ -350,22 +361,7 @@ export default {
         })
         this.eventBus.on("close-edit-entrance-test-slot-popup", () => {
             this.closeEditPopup()
-        })
-        this.eventBus.on("delete-entrance-test-slot-entrance-test-arrange-page", () => {
-            this.handleDelete(false, 0)
-        })
-        this.eventBus.on("announce-slot-time-entrance-test-arrange-page", () => {
-            this.handleAnnounceTime(false, 0)
-        })
-        this.eventBus.on("announce-slot-score-entrance-test-arrange-page", () => {
-            this.handleAnnounceScore(false, 0)
-        })
-        this.eventBus.on("announce-slot-time-all-entrance-test-arrange-page", () => {
-            this.handleAnnounceTimeAll(false)
-        })
-        this.eventBus.on("announce-slot-score-all-entrance-test-arrange-page", () => {
-            this.handleAnnounceScoreAll(false)
-        })
+        })      
         this.eventBus.on("refresh-entrance-test-arrange-page", () => {
             this.refresh()
         })

@@ -51,7 +51,7 @@
                         </td>
                         <td>
                             <div class="flex gap-2 justify-center">
-                                <button @click="handleAnnounce(true,class_.id)" v-if="!class_.isAnnouced" class="material-icons text-3xl ">
+                                <button @click="handleAnnounce({confirmation : true, id : class_.id})" v-if="!class_.isAnnouced" class="material-icons text-3xl ">
                                     notifications
                                 </button>
                                 <span v-else class="material-icons text-3xl ">
@@ -201,16 +201,19 @@ export default {
                 this.totalRegistrationsLeft = response.data.totalRecords
             }
         },
-        async handleAnnounce(confirmation,id){
-            if (confirmation) {
+        async handleAnnounce(request){
+            if (request.confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-class-schedule-classes-page",
-                    params : id
+                    method : this.handleAnnounce,
+                    params : {
+                        confirmation : false,
+                        id : request.id
+                    }
                 })
             } else {
                 try {
-                    await axios.patch(import.meta.env.VITE_API_URL + `/api/Classes/${id}/announce`)
+                    await axios.patch(import.meta.env.VITE_API_URL + `/api/Classes/${request.id}/announce`)
 
                     this.eventBus.emit("open-result-dialog", {
                         message: "Announced Successfully",
@@ -229,7 +232,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "announce-class-all-schedule-classes-page",
+                    method : this.handleClear,
+                    params : false
                 })
             } else {
                 try {
@@ -255,12 +259,6 @@ export default {
         })
         this.eventBus.on("set-selected-class-id-schedule-classes-page", async (id) => {
             await this.setSelectedClassId(id)
-        })
-        this.eventBus.on("announce-class-schedule-classes-page", (id) => {
-            this.handleAnnounce(false,id)
-        })
-        this.eventBus.on("announce-class-all-schedule-classes-page", () => {
-            this.handleAnnounceAll(false)
         })
         this.refresh()
     }

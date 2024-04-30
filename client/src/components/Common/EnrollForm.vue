@@ -61,15 +61,13 @@ export default {
       } else {
         this.eventBus.emit("open-confirmation-popup",{
           message : "Are you sure about this?",
-          callback : "confirm-enroll"
+          method : this.enroll,
+          params : true
         })
       }
     }
   },
   mounted() {
-    this.eventBus.on("confirm-enroll", async () => {
-      this.enroll(true)
-    })
     if (localStorage.token) {
       this.refresh()
     }

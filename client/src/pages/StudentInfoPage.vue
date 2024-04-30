@@ -304,11 +304,6 @@ export default {
         } else {
             this.$router.push("/")
         }
-        this.eventBus.on("handle-update-information-student-profile-page", async () => {
-            this.editMode = false;
-            await this.updateInformation(false)
-            await this.fetchData(localStorage.token)
-        })
     },
     methods: {
         statisticizeActiveness() {
@@ -404,7 +399,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "handle-update-information-student-profile-page"
+                    method : this.updateInformation,
+                    params : false
                 })
             } else {
                 await axios.patch(import.meta.env.VITE_API_URL + '/api/User/' + this.student.user.id, {
@@ -414,6 +410,8 @@ export default {
                     bankAccount: this.editDto.bankAccount,
                     gender: this.editDto.gender
                 })
+                this.editMode = false;
+                await this.fetchData(localStorage.token)
             }
         }
     }

@@ -187,8 +187,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    callback: "",
-                    method : this.handleApply(false)
+                    params : false,
+                    method : this.handleApply
                 })
             } else {
                 try {               

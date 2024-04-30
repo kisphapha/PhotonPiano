@@ -198,7 +198,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "This would make a huge impact. Are you sure about this?",
-                    callback: "auto-arrange-slot-entrance-test-arrange-page"
+                    method : this.handleAutoArrange,
+                    params : false
                 })
             } else {
                 if (this.numberOfStudents > this.maxStudents) {
@@ -224,7 +225,7 @@ export default {
                             type: "Success"
                         })
                         this.eventBus.emit("refresh-entrance-test-arrange-page")
-                        this.toggleAutoArrangeSlotForm()
+                        this.close()
                     } catch (e) {
                         console.log(e)
                         this.eventBus.emit("open-result-dialog", {
@@ -242,9 +243,6 @@ export default {
     mounted() {
         this.refresh()
 
-        this.eventBus.on("auto-arrange-slot-entrance-test-arrange-page",() => {
-            this.handleAutoArrange(false)
-        })
     }
 }
 </script>

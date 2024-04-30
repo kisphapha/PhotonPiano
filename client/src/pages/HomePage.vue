@@ -294,7 +294,8 @@ export default {
       if (confirmation) {
         this.eventBus.emit("open-confirmation-popup", {
           message: "Are you sure about this?",
-          callback: "handle-withdraw-registration-home-page"
+          method : this.handleCancelRegistration,
+          params : false
         })
       } else {
         await axios.patch(import.meta.env.VITE_API_URL + '/api/Student/' + this.user.students[0].id + '/change-status?status=Unregistered')
@@ -312,9 +313,6 @@ export default {
     })
     this.eventBus.on("update-home-page-enrolling-status", async (status) => {
       this.setEnrollingStatus(status)
-    })
-    this.eventBus.on("handle-withdraw-registration-home-page", async () => {
-      this.handleCancelRegistration(false)
     })
     if (localStorage.token) {
       this.refresh()
