@@ -10,6 +10,7 @@ using PhotonPiano.Helper.Dtos.Ultilities;
 using PhotonPiano.Helper.Exceptions;
 using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
+using System.Net.WebSockets;
 
 
 namespace PhotonPiano.BusinessLogic.Services
@@ -148,7 +149,7 @@ namespace PhotonPiano.BusinessLogic.Services
     
         public async Task AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
         {
-            //filter
+            //=================== filter =================== 
             var class_ = await _classService.GetRequiredClassById(autoArrangeLessonAClassDto.ClassId);
             if (!autoArrangeLessonAClassDto.AllowedShift.All(s => s >= 1 && s <= 8))
             {
@@ -162,23 +163,42 @@ namespace PhotonPiano.BusinessLogic.Services
                     throw new BadRequestException($"Location {location.Id} is unavailable");
                 }
             }
-
+            //=================== Arrange =================== 
+            //This list for all week of the year containing first and last day of that week. This is 
+            //used to set the date for different weeks of the lessons
             var weeks = _ultilities.GetAllWeeksInYear(autoArrangeLessonAClassDto.StartingFrom.Year);
+            //This is the pointer of the current week
             var startWeek = weeks.FirstOrDefault(w => w.StartDate <= autoArrangeLessonAClassDto.StartingFrom
                 && w.EndDate >= autoArrangeLessonAClassDto.StartingFrom) ?? weeks[0];
+            //Determine where the current week are in the weeks array
             var weekIndex = weeks.IndexOf(startWeek);
-            //Arrange
+
             long randomLocationId = 0;
             int randomShift = 0;
             DateOnly randomDate = new DateOnly();
+            //The frame that contain lessons of the first week and scaffold the remaining weeks
+            //if shift consistency option is turn on
             var lessonFrames = new List<GetLessonDto>();
             var rand = new Random();
-            //Action
+            //Sunday is the first day, saturday is the last day 😏
+            int includeSaturday = autoArrangeLessonAClassDto.OptionIncludeSaturday ? 0 : -1;
+            int includeSunday = autoArrangeLessonAClassDto.OptionIncludeSunday ? 0 : 1;
+            //=================== Action =================== 
+
+            //Loop per week
             for (var i = 0; i < autoArrangeLessonAClassDto.TotalWeeks; i++)
             {
+                //If this full week is day offs, go to next week
+                if (IsThisWeekOff(startWeek.StartDate,autoArrangeLessonAClassDto.DayOffs,
+                    autoArrangeLessonAClassDto.OptionIncludeSaturday, autoArrangeLessonAClassDto.OptionIncludeSunday))
+                {
+                    goto GotoNextWeek;
+                }
                 long locationThisWeek = 0;
+                //Low per lesson per week
                 for (var j = 0; j < autoArrangeLessonAClassDto.LessonEachWeek; j++)
                 {
+                    var isNew = true;
                     var attempt = 0;
                     //Arrange first week
                     if ((i == 0 && autoArrangeLessonAClassDto.OptionShiftConsistency) ||
@@ -186,68 +206,99 @@ namespace PhotonPiano.BusinessLogic.Services
                         !(autoArrangeLessonAClassDto.OptionShiftConsistency &&
                         autoArrangeLessonAClassDto.OptionLocationConsistency))
                     {
+                        //Randomly assign shift, date and location for a lesson
                         do
                         {
+                            //The location can be random or assign to locationThisWeek
+                            //if it is determined
                             randomLocationId = (locationThisWeek == 0 ) ? 
-                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)]
-                                : locationThisWeek;
+                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)] :
+                                locationThisWeek;
                             randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
-                            randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                            //If not includeSunday, plus one day; if not include saturday, minus one day
+                            randomDate = _ultilities.GetRandomDateBetween(
+                                startWeek.StartDate.AddDays(includeSunday), startWeek.EndDate.AddDays(includeSaturday));
+                            //Avoid infinite loop since there can be no possible combination that not
+                            //causing any conflicts
                             attempt++;
                             if (attempt > 100)
                             {
-                                throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
-                                    "Please extend the range to increase the chance of success!");
+                                goto GotoNextWeek;
+                                //throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
+                                //    "Please extend the range to increase the chance of success!");
                             }
                         }
-                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate));
+                        //This will ensure the the combination won't cause any conflict. If it does,
+                        //shuffle again
+                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate)
+                         || autoArrangeLessonAClassDto.DayOffs.Contains(randomDate));
+                        
+                        //If option location similar is true, proceed to set locationThisWeek to the first
+                        //location selected so that remaining location in this week is the same.
                         if (autoArrangeLessonAClassDto.OptionLocationSimilar)
                         {
                             locationThisWeek = randomLocationId;
-                        }                        
-                        lessonFrames.Add(new GetLessonDto
-                        {
-                            Id = j,
-                            LocationId = randomLocationId,
-                            Shift = randomShift,
-                            Date = randomDate
-                        }); ;
+                        } 
+                        
                     }
                     //Arrange remaining weeks
                     if (i > 0 &&
                         autoArrangeLessonAClassDto.OptionShiftConsistency || autoArrangeLessonAClassDto.OptionLocationConsistency)
                     {
-                        if (autoArrangeLessonAClassDto.OptionShiftConsistency)
+                        if (lessonFrames.Count > j)
                         {
+                            //If option lcoation consistency is true, locations is the same as first week
+                            if (autoArrangeLessonAClassDto.OptionLocationConsistency)
+                            {
+                                randomLocationId = lessonFrames[j].LocationId;
+                            }
+                            else
+                            {
+                                randomLocationId = (locationThisWeek == 0) ?
+                                    autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)] :
+                                    locationThisWeek;
+                            }
+                            //Assign shift,date & location if option shift consistency is set to true
+                            if (autoArrangeLessonAClassDto.OptionShiftConsistency)
+                            {
+                                //Set shift & date to the same as the lessons in the first week
+                                randomShift = lessonFrames[j].Shift;
+                                randomDate = lessonFrames[j].Date.AddDays(i * 7);
+                                isNew = false;
+
+                            }
+                        }
+                        bool isNotFramed = !(lessonFrames.Count > j);
+                        //If conflict happens, the rule of shift & location consistency will not be applied
+                        //and will be shuffle again (for this lesson only)
+                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate)
+                        || autoArrangeLessonAClassDto.DayOffs.Contains(randomDate) || isNotFramed) 
+                        {
+                            isNotFramed = false;
                             randomLocationId = (locationThisWeek == 0) ?
-                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)]
-                                : locationThisWeek;
-                            randomShift = lessonFrames[j].Shift;
-                            randomDate = lessonFrames[j].Date.AddDays(i * 7);
-                        }
-                        if (autoArrangeLessonAClassDto.OptionLocationConsistency)
-                        {
-                            randomLocationId = lessonFrames[j].LocationId;
-                        }
-                        
-                        while (!await CheckLessonConflict(randomShift, randomLocationId, autoArrangeLessonAClassDto.ClassId, randomDate))
-                        {
-                            randomLocationId = autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)];
+                                autoArrangeLessonAClassDto.AllowedLocationIds[rand.Next(autoArrangeLessonAClassDto.AllowedLocationIds.Count)] :
+                                locationThisWeek;
                             randomShift = autoArrangeLessonAClassDto.AllowedShift[rand.Next(autoArrangeLessonAClassDto.AllowedShift.Count)];
-                            randomDate = _ultilities.GetRandomDateBetween(startWeek.StartDate, startWeek.EndDate);
+                            randomDate = _ultilities.GetRandomDateBetween(
+                                startWeek.StartDate.AddDays(includeSunday), startWeek.EndDate.AddDays(includeSaturday));
+                                                           
                             attempt++;
                             if (attempt > 100)
                             {
-                                throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
-                                    "Please extend the range to increase the chance of success!");
-                            }
-                        }
-                        if (autoArrangeLessonAClassDto.OptionLocationSimilar)
-                        {
-                            locationThisWeek = randomLocationId;
-                        }
+                                goto GotoNextWeek;
+                                //throw new BadRequestException("Unable to continue arranging due to unavoidable conflicts. " +
+                                //    "Please extend the range to increase the chance of success!");
+                            }                                                 
+                        }                                           
+                        
                     }
-
+                    //If option location similar is true, proceed to set locationThisWeek to the first
+                    //location selected so that remaining location in this week is the same.
+                    if (autoArrangeLessonAClassDto.OptionLocationSimilar)
+                    {
+                        locationThisWeek = randomLocationId;
+                    }
+                    //Create lesson after checking all conflicts
                     await CreateLesson(new CreateLessonDto
                     {
                         ClassId = autoArrangeLessonAClassDto.ClassId,
@@ -255,10 +306,26 @@ namespace PhotonPiano.BusinessLogic.Services
                         LocationId = randomLocationId,
                         Shift = randomShift,
                     });
+                    //Create the frame to use for assigning lessons of remaining weeks
+                    if (isNew)
+                    {
+                        lessonFrames.Add(new GetLessonDto
+                        {
+                            Id = j,
+                            LocationId = randomLocationId,
+                            Shift = randomShift,
+                            //Back to the first week
+                            Date = randomDate.AddDays(- (i * 7))
+                        });
+                    }             
                 }
+                //After everything, increase week index to calculate date for the next iteration
+                //based on the weekInYear list
+                GotoNextWeek:
                 if (i < autoArrangeLessonAClassDto.TotalWeeks - 1)
                 {
                     weekIndex++;
+                    //Check for index out of bound
                     if (weekIndex >= weeks.Count)
                     {
                         throw new BadRequestException("Cannot complete due to not having enough weeks");
@@ -267,6 +334,14 @@ namespace PhotonPiano.BusinessLogic.Services
                 }
                 
             }          
+        }
+
+        private bool IsThisWeekOff(DateOnly startDate, List<DateOnly> dayOffs, bool includeSaturday,
+            bool includeSunday)
+        {
+            var dayOffsThisWeek = dayOffs.Where(d => d >= startDate && d <= startDate.AddDays(6)).ToList();
+            var daysExpected = 5 + (includeSaturday ? 1 : 0) + (includeSunday ? 1 : 0);
+            return dayOffsThisWeek.Count == daysExpected;
         }
     }
 }

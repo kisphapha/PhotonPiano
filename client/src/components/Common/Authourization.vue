@@ -39,7 +39,7 @@
     </div>
     <div v-if="isOpenLoadingPopup" class="popup-overlay">
       <div class="sticky top-1/4 flex justify-center">
-        <LoadingPopup :message="ldMessage"/>
+        <LoadingPopup :message="ldMessage" />
       </div>
     </div>
   </div>
@@ -57,20 +57,20 @@ import LoadingPopup from "./LoadingPopup.vue";
 export default {
   name: "Authourization",
   inject: ["eventBus"],
-  components: { LoginForm, RegisterForm, ConfirmationForm ,ResultDialog, LoadingPopup },
+  components: { LoginForm, RegisterForm, ConfirmationForm, ResultDialog, LoadingPopup },
   data() {
     return {
       cfmMessage: '',
       cfmCallBack: '',
-      cfmParams : null,
+      cfmParams: null,
       isOpenLoginPopup: false,
       isOpenRegisterPopup: false,
       isOpenConfirmPopup: false,
-      isOpenResultDialog : false,
-      isOpenLoadingPopup : false,
-      rsMesage : '',
-      rsType : '',
-      ldMessage : ''
+      isOpenResultDialog: false,
+      isOpenLoadingPopup: false,
+      rsMesage: '',
+      rsType: '',
+      ldMessage: ''
     };
   },
   mounted() {
@@ -81,7 +81,7 @@ export default {
       this.toggleRegsiterPopup()
     });
     this.eventBus.on("open-confirmation-popup", (request) => {
-      this.toggleOpenOnfirmPopup(request.message, request.callback,request.params)
+      this.toggleOpenOnfirmPopup(request.message, request.callback, request.params)
     });
     this.eventBus.on("open-result-dialog", (request) => {
       this.openResultDialog(request.message, request.type)
@@ -136,7 +136,7 @@ export default {
       this.ldMessage = message
       this.isOpenLoadingPopup = true;
     },
-    closeLoadingPopup(){
+    closeLoadingPopup() {
       this.isOpenLoadingPopup = false
     },
     toggleOpenOnfirmPopup(message, callback, params) {
@@ -151,12 +151,12 @@ export default {
         this.cfmParams = params
       }
     },
-    openResultDialog(message, type){
+    openResultDialog(message, type) {
       this.rsMesage = message
       this.rsType = type,
-      this.isOpenResultDialog = true
+        this.isOpenResultDialog = true
     },
-    closeResultDialog(){
+    closeResultDialog() {
       this.isOpenResultDialog = false
     },
     async login(loginDto) {
@@ -207,11 +207,15 @@ export default {
       }
     },
     async getUser(token) {
+      // this.eventBus.emit("open-loading-popup", {
+      //   message: "Loading......"
+      // })
       const response = await axios.get(import.meta.env.VITE_API_URL + '/api/auth/who-am-i', {
         headers: {
           'Authorization': 'Bearer ' + token,
         }
       })
+      //this.eventBus.emit("close-loading-popup")
       if (response.data) {
         return response.data
       }

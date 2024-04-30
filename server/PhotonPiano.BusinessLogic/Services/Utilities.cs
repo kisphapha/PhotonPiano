@@ -29,8 +29,8 @@ namespace PhotonPiano.BusinessLogic.Services
         {
             List<WeekDto> weeks = new List<WeekDto>();
 
-            DateOnly startDate = new DateOnly(year, 1, 1);
-            DateOnly endDate = startDate.AddDays(6 - (int)startDate.DayOfWeek);
+            DateOnly startDate = GetFirstSundayOfYear(year);
+            DateOnly endDate = startDate.AddDays(6);
 
             while (startDate.Year == year)
             {
@@ -43,10 +43,25 @@ namespace PhotonPiano.BusinessLogic.Services
                 weeks.Add(week);
 
                 startDate = endDate.AddDays(1);
-                endDate = startDate.AddDays(6 - (int)startDate.DayOfWeek);
+                endDate = startDate.AddDays(6);
             }
 
             return weeks;
+        }
+
+        private DateOnly GetFirstSundayOfYear(int year)
+        {
+            DateOnly januaryFirst = new DateOnly(year, 1, 1);
+            int daysUntilSunday = (7 - (int)januaryFirst.DayOfWeek) % 7;
+
+            if (daysUntilSunday == 0) // January 1st is already a Sunday
+            {
+                return januaryFirst;
+            }
+            else
+            {
+                return januaryFirst.AddDays(daysUntilSunday);
+            }
         }
     }
 }

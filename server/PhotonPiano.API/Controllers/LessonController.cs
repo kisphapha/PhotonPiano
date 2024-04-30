@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.Locations;
+using PhotonPiano.Helper.Dtos.Ultilities;
 
 namespace PhotonPiano.API.Controllers
 {
@@ -11,12 +12,18 @@ namespace PhotonPiano.API.Controllers
     public class LessonController : ControllerBase
     {
         private readonly ILessonSerivce _lessonService;
+        private readonly IUtilities _utilities;
 
-        public LessonController(ILessonSerivce lessonSerivce)
+        public LessonController(ILessonSerivce lessonSerivce, IUtilities utilities)
         {
             _lessonService = lessonSerivce;
+            _utilities = utilities;
         }
-
+        [HttpGet("{year}/test")]
+        public ActionResult<List<WeekDto>> GetLessons([FromRoute] int year)
+        {
+            return _utilities.GetAllWeeksInYear(year);
+        }
         [HttpGet]
         public async Task<ActionResult<List<GetLessonWithLocationDto>>> GetLessons([FromQuery] QueryLessonDto queryLessonDto)
         {
