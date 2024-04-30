@@ -24,7 +24,7 @@
             </div>
         </div>
         <div class="px-8 flex gap-4">
-            <button @click="toggleOpenAutoSchedulePopup"
+            <button @click="openAutoSchedulePopup"
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
             </button>
@@ -106,9 +106,9 @@
             <div class="overflow-y-auto flex justify-center items-center overflow-x-auto">
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
-                        @click="toggleOpenAutoSchedulePopup">X</button>
+                        @click="closeAutoSchedulePopup">X</button>
                     <AutoScheduleAClassForm :classId="this.classId" :markedDayOffs="this.markedDayOffs"
-                        :close="toggleOpenAutoSchedulePopup" />
+                        :close="closeAutoSchedulePopup" />
                 </div>
             </div>
         </div>
@@ -312,8 +312,11 @@ export default {
         handleGoBack() {
             this.eventBus.emit("set-selected-class-id-schedule-classes-page", 0)
         },
-        toggleOpenAutoSchedulePopup() {
-            this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
+        openAutoSchedulePopup() {
+            this.isOpenAutoSchedulePopup = true
+        },
+        closeAutoSchedulePopup() {
+            this.isOpenAutoSchedulePopup = false
         },
         toggleIsMarking() {
             this.isMarking = !this.isMarking

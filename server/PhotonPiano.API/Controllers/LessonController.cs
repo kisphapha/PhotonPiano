@@ -41,10 +41,9 @@ namespace PhotonPiano.API.Controllers
             return NoContent();
         }
         [HttpPatch("auto-schedule")]
-        public async Task<IActionResult> AutoScheduleAClass([FromBody] AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
+        public async Task<ActionResult<AutoArrangeResultDto>> AutoScheduleAClass([FromBody] AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
         {
-            await _lessonService.AutoScheduleAClass(autoArrangeLessonAClassDto);
-            return Ok();
+            return await _lessonService.AutoScheduleAClass(autoArrangeLessonAClassDto);
         }
         [HttpDelete("{lessonId}")]
         public async Task<IActionResult> DeleteLesson([FromRoute] long lessonId)

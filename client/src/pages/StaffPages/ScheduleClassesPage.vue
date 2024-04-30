@@ -159,8 +159,9 @@ export default {
             await this.fetchClasses(this.pageSize, this.currentPage,this.filterDto)  
             this.toggleFilterPopup()
         },
-        setSelectedClassId(id){
+        async setSelectedClassId(id){
             this.selectedClassId = id
+            await this.fetchClasses(this.pageSize, this.currentPage,this.filterDto)
         },
         async refresh(){
             const userPromise = new Promise((resolve) => {
@@ -252,8 +253,8 @@ export default {
         this.eventBus.on("handle-filter-schedule-classes-page", async (filterDto) => {
             await this.handleFilter(filterDto)
         })
-        this.eventBus.on("set-selected-class-id-schedule-classes-page", (id) => {
-            this.setSelectedClassId(id)
+        this.eventBus.on("set-selected-class-id-schedule-classes-page", async (id) => {
+            await this.setSelectedClassId(id)
         })
         this.eventBus.on("announce-class-schedule-classes-page", (id) => {
             this.handleAnnounce(false,id)

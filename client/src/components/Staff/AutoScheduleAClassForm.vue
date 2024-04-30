@@ -59,15 +59,15 @@
                     consistence between weeks</span><br>
                 <input type="checkbox" v-model="optionSameLocationAWeek" /><span class="ml-2">Same location in a
                     week</span><br>
-                <input type="checkbox" v-model="optionSameLocationAWeek" /><span class="ml-2">Include
+                <input type="checkbox" v-model="optionSaturday" /><span class="ml-2">Include
                     Saturday</span><br>
-                <input type="checkbox" v-model="optionSameLocationAWeek" /><span class="ml-2">Include
+                <input type="checkbox" v-model="optionSunday" /><span class="ml-2">Include
                     Sunday</span><br>
                 <input type="checkbox" v-model="optionIgnoreDayOff" /><span class="ml-2">Ignore Marked
                     Day-offs <span class="text-orange-400">(Marked {{ this.markedDayOffs.length}} days)</span></span>
             </div>
             <div class="mt-2 flex gap-4 justify-center">
-                <button @click="handleApply" class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
+                <button @click="handleApply(true)" class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
                 <button class="p-2 text-red-400 underline font-bold" @click="close">Cancel</button>
             </div>
         </div>
@@ -146,7 +146,7 @@ export default {
             } else {
                 this.shiftsSelected.push(shiftId);
             }
-            this.calculate()
+            this.calcLessons()
         },
         isLocationSelected(locationId) {
             return this.locationsSelected.includes(locationId);
@@ -158,13 +158,20 @@ export default {
             } else {
                 this.locationsSelected.push(locationId);
             }
-            this.calculate()
+            this.calcLessons()
         },
         calcLessons() {
             this.totalLessons = this.lessonEachWeek * this.totalWeeks;
         },
         handleClickDayOff() {
             this.eventBus.emit("toggle-day-off-popup-schedule-class-age")
+        },
+        covertMarkedDayOffs(){
+            const suitableArray = []
+            for (var day of this.markedDayOffs){
+                suitableArray.push(this.slashDateFormatToSqlDateString(day))
+            }
+            return suitableArray
         },
         async fetchLocations() {
             const locations = await axios.get(import.meta.env.VITE_API_URL + `/api/Location?Status=Available`)
@@ -176,17 +183,59 @@ export default {
         async refresh() {
             await this.fetchLocations()
         },
-        async handleApply() {
-            const dateIndex = this.weeksInYear.findIndex(w => w.start == this.startDate)
-            console.log(this.weeksInYear.length,dateIndex,this.totalWeeks)
-            if (dateIndex == -1 || this.weeksInYear.length - (dateIndex) < this.totalWeeks) {
-                this.eventBus.emit("open-result-dialog", {
-                    message: "Can't proceed because there are not enough weeks to meet the constrain",
-                    type: "Error"
+        async handleApply(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    callback: "",
+                    method : this.handleApply(false)
                 })
             } else {
+                try {               
+                    const dateIndex = this.weeksInYear.findIndex(w => w.start == this.startDate)
+                    if (dateIndex == -1 || this.weeksInYear.length - (dateIndex) < this.totalWeeks) {
+                        this.eventBus.emit("open-result-dialog", {
+                            message: "Can't proceed because there are not enough weeks to meet the constrain",
+                            type: "Error"
+                        })
+                    } else {
+                        this.eventBus.emit("open-loading-popup",{
+                            message : "Arranging... This could take a few minutes. Please don't quit"
+                        })
+                        const request = {
+                            classId : this.classId,
+                            lessonEachWeek : this.lessonEachWeek,
+                            startingFrom : this.toSqlDateString(this.startDate),
+                            totalWeeks : this.totalWeeks,
+                            allowedLocationIds : this.locationsSelected,
+                            allowedShift : this.shiftsSelected,
+                            dayOffs : this.optionIgnoreDayOff ? [] : this.covertMarkedDayOffs(),
+                            optionShiftConsistency : this.optionWeekTimeConsistent,
+                            optionLocationConsistency : this.optionWeekLocationConsistent,
+                            optionLocationSimilar : this.optionSameLocationAWeek,
+                            optionIncludeSaturday : this.optionSaturday,
+                            optionIncludeSunday : this.optionSunday
+                        }
+                        console.log(request)
+                        const response = await axios.patch(import.meta.env.VITE_API_URL + `/api/Lesson/auto-schedule`,request)
 
+                        this.eventBus.emit("open-result-dialog", {
+                            message: `Successfully arrange this class. Added ${response.data?.lessonsAdded} in the total of ${this.totalLessons} estimated!`,
+                            type: "Success"
+                        })
+                        this.eventBus.emit("refresh-lesson-schedule-class-detail")
+                        this.close()
+                    }
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
+                this.eventBus.emit("close-loading-popup")             
             }
+            
         }
     }
 }

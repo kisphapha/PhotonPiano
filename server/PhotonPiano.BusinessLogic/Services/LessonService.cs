@@ -147,7 +147,7 @@ namespace PhotonPiano.BusinessLogic.Services
             return classConflict is null && locationConflict is null;
         }
     
-        public async Task AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
+        public async Task<AutoArrangeResultDto> AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
         {
             //=================== filter =================== 
             var class_ = await _classService.GetRequiredClassById(autoArrangeLessonAClassDto.ClassId);
@@ -183,6 +183,7 @@ namespace PhotonPiano.BusinessLogic.Services
             //Sunday is the first day, saturday is the last day 😏
             int includeSaturday = autoArrangeLessonAClassDto.OptionIncludeSaturday ? 0 : -1;
             int includeSunday = autoArrangeLessonAClassDto.OptionIncludeSunday ? 0 : 1;
+            int lessonCount = 0;
             //=================== Action =================== 
 
             //Loop per week
@@ -306,6 +307,7 @@ namespace PhotonPiano.BusinessLogic.Services
                         LocationId = randomLocationId,
                         Shift = randomShift,
                     });
+                    lessonCount++;
                     //Create the frame to use for assigning lessons of remaining weeks
                     if (isNew)
                     {
@@ -333,7 +335,12 @@ namespace PhotonPiano.BusinessLogic.Services
                     startWeek = weeks[weekIndex];
                 }
                 
-            }          
+            }
+            return new AutoArrangeResultDto
+            {
+                LessonsAdded = lessonCount,
+                LessonsEstimated = autoArrangeLessonAClassDto.TotalWeeks * autoArrangeLessonAClassDto.LessonEachWeek
+            };
         }
 
         private bool IsThisWeekOff(DateOnly startDate, List<DateOnly> dayOffs, bool includeSaturday,

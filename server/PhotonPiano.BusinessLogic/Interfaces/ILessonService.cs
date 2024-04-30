@@ -17,6 +17,6 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 
         Task ClearAllNotStartedLessonOfAllClass();
 
-        Task AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto);
+        Task<AutoArrangeResultDto> AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto);
     }
 }
