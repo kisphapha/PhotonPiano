@@ -28,7 +28,9 @@ export default {
   components: { Authourization, StudentLayout, StaffLayout, InstructorLayout, UnexpectedLayout },
   data() {
     return {
-      user: null
+      user: {
+        role : "Staff"
+      }
     }
   },
   methods: {
