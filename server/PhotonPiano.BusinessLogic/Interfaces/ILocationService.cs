@@ -6,6 +6,6 @@ namespace PhotonPiano.BusinessLogic.Interfaces
     {
         Task<GetLocationDto?> GetLocationById(long id, bool isRequired);
 
-        Task<List<GetLocationDto>> GetLocations();
+        Task<List<GetLocationDto>> GetLocations(QueryLocationDto queryLocationDto);
     }
 }

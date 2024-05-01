@@ -32,7 +32,7 @@
                     <div class="text-xl font-bold">Locations</div>
                     <div class="overflow-y-auto h-32">
                         <div v-for="location in locations" :key="location.id" class="flex gap-8 ">
-                            <div class="w-24">{{ location.name }}</div>
+                            <div class="w-32">{{ location.name }} ({{ location.capacity }})</div>
                             <input type="checkbox" :checked="isLocationSelected(location.id)"
                                 @change="toggleLocationSelection(location.id)" />
                         </div>
@@ -94,6 +94,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 //import { RouterLink } from 'vue-router';
 
 export default {
@@ -154,6 +155,7 @@ export default {
     },
     mounted() {
         this.weeksInYear = this.getWeeksOfYear(new Date().getFullYear())
+        this.refresh()
     },
     methods: {
         isShiftSelected(shiftId) {
@@ -186,7 +188,16 @@ export default {
         handleClickDayOff() {
             this.eventBus.emit("toggle-day-off-popup-schedule-class-age")
         },
+        async refresh() {
+            await this.fetchLocations()
+        },
+        async fetchLocations() {
+            const locations = await axios.get(import.meta.env.VITE_API_URL + `/api/Location?Status=Available`)
 
+            if (locations.data) {
+                this.locations = locations.data
+            }
+        },
     }
 }
 </script>

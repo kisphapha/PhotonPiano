@@ -15,9 +15,9 @@ namespace PhotonPiano.BusinessLogic.Services
             _locationRepository = locationRepository;
         }
 
-        public async Task<List<GetLocationDto>> GetLocations()
+        public async Task<List<GetLocationDto>> GetLocations(QueryLocationDto queryLocationDto)
         {
-            return (await _locationRepository.GetAllAsync()).Adapt<List<GetLocationDto>>();
+            return (await _locationRepository.GetQueriedLocationAsync(queryLocationDto)).Adapt<List<GetLocationDto>>();
         }
         public async Task<GetLocationDto?> GetLocationById(long id, bool isRequired)
         {

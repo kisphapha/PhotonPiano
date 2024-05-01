@@ -17,6 +17,8 @@ namespace PhotonPiano.Helper.Dtos.Lessons
 
         public DateOnly Date { get; set; }
 
+        public bool IsLocked { get; set; }
+
         public GetLocationDto Location { get; set; } = null!;
 
     }

@@ -23,9 +23,9 @@ namespace PhotonPiano.API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<GetLocationDto>>> GetLocations()
+        public async Task<ActionResult<List<GetLocationDto>>> GetLocations([FromQuery] QueryLocationDto queryLocationDto)
         {
-            return await _locationService.GetLocations();
+            return await _locationService.GetLocations(queryLocationDto);
         }
 
         [HttpGet("{locationId}")]

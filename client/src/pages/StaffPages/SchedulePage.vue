@@ -6,7 +6,7 @@
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule All Classes
             </button>
-            <button @click="null" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
+            <button @click="handleClear(true)" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Not Yet Lessons
             </button>
             <button @click="toggleIsMarking"
@@ -56,7 +56,8 @@
                         <tr v-for="shift in shifts" :key="shift" class="py-2">
                             <td class="py-2">Shift {{ shifts.indexOf(shift) + 1 }}<br>({{ shift }})</td>
                             <td v-for="day in daysInWeek" :key="day" class="py-2 ">
-                                <button :class='getLessonDetail(shift, day, "css")'>
+                                <button :class='getLessonDetail(shift, day, "css")'
+                                    @click="handleOpenLesson(shift, day)">
                                     <span class="text-xl font-bold text-green-600">
                                         {{ getLessonDetail(shift, day, "number") > 0 ? getLessonDetail(shift, day,
                 "number") + " lessons" : "" }}
@@ -74,7 +75,17 @@
                 <div class="relative">
                     <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
                         @click="toggleOpenAutoSchedulePopup">X</button>
-                    <AutoScheduleAllForm :markedDayOffs="this.markedDayOffs" :close="toggleOpenAutoSchedulePopup"/>
+                    <AutoScheduleAllForm :markedDayOffs="this.markedDayOffs" :close="toggleOpenAutoSchedulePopup" />
+                </div>
+            </div>
+        </div>
+        <div v-if="isOpenLessonDetailPopup" class="popup-overlay">
+            <div class="overflow-y-auto flex justify-center items-center overflow-x-auto">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleIsOpenLessonDetailPopup">X</button>
+                    <LessonsDetailForm :shift="this.selectedShift" :date="this.selectedDate"
+                        :close="toggleIsOpenLessonDetailPopup" />
                 </div>
             </div>
         </div>
@@ -82,12 +93,14 @@
 </template>
 
 <script>
+import axios from 'axios';
 import AutoScheduleAllForm from '../../components/Staff/AutoScheduleAllForm.vue';
+import LessonsDetailForm from '../../components/Staff/LessonsDetailForm.vue';
 
 export default {
     name: "SchedulePage",
     inject: ["eventBus"],
-    components : {AutoScheduleAllForm},
+    components: { AutoScheduleAllForm, LessonsDetailForm },
     data() {
         return {
             years: [
@@ -120,52 +133,18 @@ export default {
             ],
             selectedWeek: null,
             selectedYear: new Date().getFullYear(),
+            selectedShift: 1,
+            selectedDate: null,
             lessons: [
-                {
-                    id: 1,
-                    shift: 1,
-                    date: "2024-01-07",
-                    class: {
-                        id: 1,
-                        name: "BLUE_69_2024"
-                    },
-                },
-                {
-                    id: 2,
-                    shift: 2,
-                    date: "2024-01-08",
-                    class: {
-                        id: 1,
-                        name: "BLUE_69_2024"
-                    },
-                },
-                {
-                    id: 3,
-                    shift: 3,
-                    date: "2024-01-09",
-                    class: {
-                        id: 1,
-                        name: "BLUE_69_2024"
-                    },
-                },
-                {
-                    id: 4,
-                    shift: 3,
-                    date: "2024-01-09",
-                    class: {
-                        id: 1,
-                        name: "PINK_96_2024"
-                    },
-                }
             ],
             user: null,
             isMarking: false,
             markedDayOffs: [],
-            isOpenAutoSchedulePopup : false,
+            isOpenAutoSchedulePopup: false,
+            isOpenLessonDetailPopup: false,
         }
     },
     methods: {
-
         async handleSelectedWeekChange() {
             this.specDays = [];
             for (let i = 0; i < 7; i++) {
@@ -175,7 +154,7 @@ export default {
             }
             let endDate = new Date(this.selectedWeek)
             endDate.setDate(this.selectedWeek.getDate() + 7)
-            //await this.fetchLessons(inputDate.toDateString(), endDate.toDateString())
+            await this.fetchLessons(this.toSqlDateString(this.selectedWeek), this.toSqlDateString(endDate))
         },
         async handleSelectedYearChange() {
             this.weeksInYear = this.getWeeksOfYear(this.selectedYear)
@@ -219,7 +198,7 @@ export default {
             if (endDate) {
                 query += (queryCount == 0 ? "" : "&") + "EndDate=" + endDate
             }
-            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/StudentClasses/" + this.user.students[0].id + "/get-lessons/" + this.user.students[0].currentClassId + "?" + query)
+            const response = await axios.get(import.meta.env.VITE_API_URL + "/api/Lesson?" + query)
             if (response.data) {
                 this.lessons = response.data
             }
@@ -265,13 +244,56 @@ export default {
         clearAllMarking() {
             this.markedDayOffs = []
         },
-        toggleOpenAutoSchedulePopup(){
+        toggleOpenAutoSchedulePopup() {
             this.isOpenAutoSchedulePopup = !this.isOpenAutoSchedulePopup
+        },
+        toggleIsOpenLessonDetailPopup() {
+            this.isOpenLessonDetailPopup = !this.isOpenLessonDetailPopup
+        },
+        handleOpenLesson(shift, date) {
+            const number = this.getLessonDetail(shift, date, "number")
+            if (number > 0) {
+                this.selectedShift = this.shifts.indexOf(shift) + 1
+                this.selectedDate = this.slashDateFormatToSqlDateString(date.specificDay)
+                this.toggleIsOpenLessonDetailPopup()
+            }
+        },
+        async handleClear(confirmation){
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "This action will delete all not started lessons (not taken attendence) of all class. Willing to continue?",
+                    method : this.handleClear,
+                    params : false
+                })
+            } else {
+                try {
+                    this.eventBus.emit("open-loading-popup",{
+                        message : "Deleteing... Please don't quit!"
+                    })
+                    await axios.delete(import.meta.env.VITE_API_URL + `/api/Lesson/clear-all`)
+                    this.eventBus.emit("close-loading-popup")
+                    this.eventBus.emit("open-result-dialog", {
+                        message: "Deleted Successfully",
+                        type: "Success"
+                    })
+                    
+                    await this.handleSelectedWeekChange()
+                } catch (e) {
+                    this.eventBus.emit("close-loading-popup")
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data.ErrorMessage,
+                        type: "Error"
+                    })
+                }
+            }
         }
+
     },
     mounted() {
         this.refresh();
-
+        this.eventBus.on("refresh-lessons-schedule-page", async() => {
+            await this.handleSelectedWeekChange()
+        })
     }
 }
 
