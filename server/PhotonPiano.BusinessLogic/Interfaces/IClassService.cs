@@ -1,5 +1,6 @@
 ﻿using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.Ultilities;
+using PhotonPiano.Models.Enums;
 using PhotonPiano.Models.Models;
 
 namespace PhotonPiano.BusinessLogic.Interfaces
@@ -14,5 +15,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task AnnounceAClass(long id);
 
         Task AnnounceAllClass();
+
+        Task<List<Class>> GetClassesBasedOnOption(ScheduleClassesOption option);
     }
 }

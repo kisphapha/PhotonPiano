@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Mapster;
+using Microsoft.AspNetCore.Mvc;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.Ultilities;
+using PhotonPiano.Models.Enums;
 
 namespace PhotonPiano.API.Controllers
 {
@@ -18,6 +20,11 @@ namespace PhotonPiano.API.Controllers
             _studentClassService = studentClassService;
             _classService = classService;
         }
+        //[HttpGet("test")]
+        //public async Task<ActionResult<List<GetClassDto>>> Test1([FromQuery] ScheduleClassesOption option) 
+        //{
+        //    return (await _classService.GetClassesBasedOnOption(option)).Adapt<List<GetClassDto>>();
+        //}
         [HttpGet]
         public async Task<ActionResult<PaginatedResult<GetClassWithTotalLessonDto>>> GetPagedClasses(
             [FromQuery] QueryClassDto queryClassDto,

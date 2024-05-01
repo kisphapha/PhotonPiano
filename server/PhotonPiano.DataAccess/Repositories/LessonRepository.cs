@@ -17,6 +17,7 @@ namespace PhotonPiano.DataAccess.Repositories
         {
             var lessonQuery = _context.Lessons
                 .Include(l => l.Location)
+                .Include(l => l.Class)
                 .AsQueryable();
 
             if (queryLessonDto.Id.HasValue)

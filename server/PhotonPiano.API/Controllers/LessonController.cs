@@ -19,13 +19,8 @@ namespace PhotonPiano.API.Controllers
             _lessonService = lessonSerivce;
             _utilities = utilities;
         }
-        [HttpGet("{year}/test")]
-        public ActionResult<List<WeekDto>> GetLessons([FromRoute] int year)
-        {
-            return _utilities.GetAllWeeksInYear(year);
-        }
         [HttpGet]
-        public async Task<ActionResult<List<GetLessonWithLocationDto>>> GetLessons([FromQuery] QueryLessonDto queryLessonDto)
+        public async Task<ActionResult<List<GetLessonDetailDto>>> GetLessons([FromQuery] QueryLessonDto queryLessonDto)
         {
             return await _lessonService.GetQueriedLessons(queryLessonDto);
         }
@@ -44,6 +39,11 @@ namespace PhotonPiano.API.Controllers
         public async Task<ActionResult<AutoArrangeResultDto>> AutoScheduleAClass([FromBody] AutoArrangeLessonAClassDto autoArrangeLessonAClassDto)
         {
             return await _lessonService.AutoScheduleAClass(autoArrangeLessonAClassDto);
+        }
+        [HttpPatch("auto-schedule-all")]
+        public async Task<ActionResult<AutoArrangeResultDto>> AutoScheduleAllClass([FromBody] AutoArrangeLessonAllClassDto autoArrangeLessonAllClassDto)
+        {
+            return await _lessonService.AutoScheduleAllClass(autoArrangeLessonAllClassDto);
         }
         [HttpDelete("{lessonId}")]
         public async Task<IActionResult> DeleteLesson([FromRoute] long lessonId)

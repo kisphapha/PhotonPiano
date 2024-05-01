@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using PhotonPiano.BusinessLogic.Interfaces;
 using PhotonPiano.DataAccess.Interfaces;
 using PhotonPiano.DataAccess.Repositories;
+using PhotonPiano.Helper.Dtos.Classes;
 using PhotonPiano.Helper.Dtos.EntranceTests;
 using PhotonPiano.Helper.Dtos.Lessons;
 using PhotonPiano.Helper.Dtos.Locations;
@@ -33,9 +34,9 @@ namespace PhotonPiano.BusinessLogic.Services
             _ultilities = utilities;
         }
 
-        public async Task<List<GetLessonWithLocationDto>> GetQueriedLessons(QueryLessonDto queryLessonDto)
+        public async Task<List<GetLessonDetailDto>> GetQueriedLessons(QueryLessonDto queryLessonDto)
         {
-            return (await _lessonRepository.GetQueriedLessonsAsync(queryLessonDto)).Adapt<List<GetLessonWithLocationDto>>();
+            return (await _lessonRepository.GetQueriedLessonsAsync(queryLessonDto)).Adapt<List<GetLessonDetailDto>>();
         }
         public async Task<Lesson> GetRequiredLessonById(long id)
         {
@@ -349,6 +350,25 @@ namespace PhotonPiano.BusinessLogic.Services
             var dayOffsThisWeek = dayOffs.Where(d => d >= startDate && d <= startDate.AddDays(6)).ToList();
             var daysExpected = 5 + (includeSaturday ? 1 : 0) + (includeSunday ? 1 : 0);
             return dayOffsThisWeek.Count == daysExpected;
+        }
+
+        public async Task<AutoArrangeResultDto> AutoScheduleAllClass(AutoArrangeLessonAllClassDto autoArrangeLessonAllClassDto)
+        {
+            var classes = await _classService.GetClassesBasedOnOption(autoArrangeLessonAllClassDto.ClassesOption);
+            var resultDto = new AutoArrangeResultDto
+            {
+                LessonsAdded = 0,
+                LessonsEstimated = 0
+            };
+            foreach (var class_ in classes)
+            {
+                var dto = autoArrangeLessonAllClassDto.Adapt<AutoArrangeLessonAClassDto>();
+                dto.ClassId = class_.Id;
+                var result = await AutoScheduleAClass(dto);
+                resultDto.LessonsAdded += result.LessonsAdded;
+                resultDto.LessonsEstimated += result.LessonsEstimated;
+            }
+            return resultDto;
         }
     }
 }

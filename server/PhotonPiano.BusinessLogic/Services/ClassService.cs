@@ -64,5 +64,18 @@ namespace PhotonPiano.BusinessLogic.Services
             }
             await _classRepostiory.UpdateRangeAsync(classes);
         }
+
+        public async Task<List<Class>> GetClassesBasedOnOption(ScheduleClassesOption option)
+        {
+            if (option == ScheduleClassesOption.All)
+            {
+                return await _classRepostiory.GetClassesWithLessons(null, null);
+            }
+            if (option == ScheduleClassesOption.Unscheduled)
+            {
+                return await _classRepostiory.GetClassesWithLessons(0, 0);
+            }
+            return new List<Class>();
+        }
     }
 }

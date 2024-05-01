@@ -6,7 +6,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
 {
     public interface ILessonSerivce
     {
-        Task<List<GetLessonWithLocationDto>> GetQueriedLessons(QueryLessonDto queryLessonDto);
+        Task<List<GetLessonDetailDto>> GetQueriedLessons(QueryLessonDto queryLessonDto);
         Task<Lesson> GetRequiredLessonById(long id);
         Task<GetLessonDto> CreateLesson(CreateLessonDto createLessonDto);
         Task UpdateLesson(UpdateLessonDto updateLessonDto);
@@ -18,5 +18,7 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task ClearAllNotStartedLessonOfAllClass();
 
         Task<AutoArrangeResultDto> AutoScheduleAClass(AutoArrangeLessonAClassDto autoArrangeLessonAClassDto);
+
+        Task<AutoArrangeResultDto> AutoScheduleAllClass(AutoArrangeLessonAllClassDto autoArrangeLessonAllClassDto);
     }
 }

@@ -39,7 +39,7 @@ namespace PhotonPiano.DataAccess.Repositories
             }
             if (queryClassDto.Period.HasValue)
             {
-                classQuery = classQuery.Where(c => c.StartDate.Year == queryClassDto.Period.Value 
+                classQuery = classQuery.Where(c => c.StartDate.Year == queryClassDto.Period.Value
                     || c.EndDate.Year == queryClassDto.Period.Value);
             }
             if (queryClassDto.Status != null)
@@ -101,7 +101,25 @@ namespace PhotonPiano.DataAccess.Repositories
                 .SingleOrDefaultAsync(c => c.Id == classId);
 
             return class_;
-                
+
+        }
+
+        public async Task<List<Class>> GetClassesWithLessons(int? from, int? to)
+        {
+            var query = _context.Classes
+                .Include(c => c.Lessons)
+                .AsQueryable();
+
+            if (from.HasValue)
+            {
+                query = query.Where(c => c.Lessons.Count >= from.Value);
+            }
+            if (to.HasValue)
+            {
+                query = query.Where(c => c.Lessons.Count <= to.Value);
+            }
+            return await query.ToListAsync();
+
         }
 
     }

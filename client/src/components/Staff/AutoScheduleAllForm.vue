@@ -68,22 +68,22 @@
             <div class="mt-2 flex place-content-between gap-4">
                 <div>
                     <div class="p-2 text-xl font-bold">Classes Options</div>
-                    <input type="radio" v-model="classOption" name="class_options" value="1" /><span class="ml-2">All
+                    <input type="radio" v-model="classOption" name="class_options" value="0" /><span class="ml-2">All
                         Classes this year</span><br>
-                    <input type="radio" v-model="classOption" name="class_options" value="2" /><span
+                    <input type="radio" v-model="classOption" name="class_options" value="1" /><span
                         class="ml-2">Unscheduled Classes Only</span><br>
                 </div>
-                <div v-if="this.classOption == 1">
+                <div v-if="this.classOption == 0">
                     <div class="p-2 text-xl font-bold">Handle Existed Lessons </div>
+                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="0" /><span
+                        class="ml-2">Keep</span><br>
                     <input type="radio" v-model="handleLessonOption" name="lessons_options" value="1" /><span class="ml-2">Delete All</span><br>
-                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="2" /><span
-                        class="ml-2">Skip (if duplicate)</span><br>
-                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="3" /><span
-                        class="ml-2">Replace (if duplicate)</span><br>
+                    
+
                 </div>
             </div>
             <div class="mt-2 flex gap-4 justify-center">
-                <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
+                <button @click="handleApply(true)" class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold">Apply</button>
                 <button class="p-2 text-red-400 underline font-bold" @click="close">Cancel</button>
             </div>
         </div>
@@ -107,21 +107,7 @@ export default {
             totalWeeks: 35,
             startDate: this.toSqlDateString(new Date()),
             locations: [
-                {
-                    id: 1,
-                    name: "Mozart",
-                    capacity: 30
-                },
-                {
-                    id: 2,
-                    name: "Beethoven",
-                    capacity: 25
-                },
-                {
-                    id: 3,
-                    name: "Lizst",
-                    capacity: 20
-                },
+                
             ],
             shifts: [
                 { id: 1, detail: "7:00 - 8:30" },
@@ -168,7 +154,7 @@ export default {
             } else {
                 this.shiftsSelected.push(shiftId);
             }
-            this.calculate()
+            this.calcLessons()
         },
         isLocationSelected(locationId) {
             return this.locationsSelected.includes(locationId);
@@ -180,7 +166,7 @@ export default {
             } else {
                 this.locationsSelected.push(locationId);
             }
-            this.calculate()
+            this.calcLessons()
         },
         calcLessons() {
             this.totalLessons = this.lessonEachWeek * this.totalWeeks;
@@ -198,6 +184,67 @@ export default {
                 this.locations = locations.data
             }
         },
+        covertMarkedDayOffs(){
+            const suitableArray = []
+            for (var day of this.markedDayOffs){
+                suitableArray.push(this.slashDateFormatToSqlDateString(day))
+            }
+            return suitableArray
+        },
+        async handleApply(confirmation) {
+            if (confirmation) {
+                this.eventBus.emit("open-confirmation-popup", {
+                    message: "Are you sure about this?",
+                    params : false,
+                    method : this.handleApply
+                })
+            } else {
+                try {               
+                    const dateIndex = this.weeksInYear.findIndex(w => w.start == this.startDate)
+                    if (dateIndex == -1 || this.weeksInYear.length - (dateIndex) < this.totalWeeks) {
+                        this.eventBus.emit("open-result-dialog", {
+                            message: "Can't proceed because there are not enough weeks to meet the constrain",
+                            type: "Error"
+                        })
+                    } else {
+                        this.eventBus.emit("open-loading-popup",{
+                            message : "Arranging... This could take a long while. Please don't quit"
+                        })
+                        const request = {
+                            lessonEachWeek : this.lessonEachWeek,
+                            startingFrom : this.toSqlDateString(this.startDate),
+                            totalWeeks : this.totalWeeks,
+                            allowedLocationIds : this.locationsSelected,
+                            allowedShift : this.shiftsSelected,
+                            dayOffs : this.optionIgnoreDayOff ? [] : this.covertMarkedDayOffs(),
+                            optionShiftConsistency : this.optionWeekTimeConsistent,
+                            optionLocationConsistency : this.optionWeekLocationConsistent,
+                            optionLocationSimilar : this.optionSameLocationAWeek,
+                            optionIncludeSaturday : this.optionSaturday,
+                            optionIncludeSunday : this.optionSunday,
+                            classesOption : this.classOption,
+                            lessonsOption : this.handleLessonOption
+                        }
+                        console.log(request)
+                        const response = await axios.patch(import.meta.env.VITE_API_URL + `/api/Lesson/auto-schedule-all`,request)
+
+                        this.eventBus.emit("open-result-dialog", {
+                            message: `Successfully arrange this class. Added ${response.data?.lessonsAdded} in the total of ${this.totalLessons} estimated!`,
+                            type: "Success"
+                        })
+                        this.eventBus.emit("refresh-lessons-schedule-page")
+                        this.close()
+                    }
+                } catch (e) {
+                    console.log(e)
+                    this.eventBus.emit("open-result-dialog", {
+                        message: e.response.data?.ErrorMessage ?? "Something went wrong",
+                        type: "Error"
+                    })
+                }
+                this.eventBus.emit("close-loading-popup")             
+            }           
+        }
     }
 }
 </script>

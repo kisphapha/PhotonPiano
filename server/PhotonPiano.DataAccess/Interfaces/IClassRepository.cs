@@ -10,5 +10,7 @@ namespace PhotonPiano.DataAccess.Interfaces
         Task<Class?> GetClassDetailAsync(long classId);
 
         Task<PaginatedResult<Class>> GetPagedClass(int pageNumber, int pageSize, QueryClassDto queryClassDto);
+
+        Task<List<Class>> GetClassesWithLessons(int? from, int? to);
     }
 }
