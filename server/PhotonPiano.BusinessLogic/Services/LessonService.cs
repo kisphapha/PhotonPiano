@@ -362,6 +362,11 @@ namespace PhotonPiano.BusinessLogic.Services
             };
             foreach (var class_ in classes)
             {
+                if (autoArrangeLessonAllClassDto.HandleLessonOption.HasValue && 
+                    autoArrangeLessonAllClassDto.HandleLessonOption == ScheduleHandleLessonOption.Delete)
+                {
+                    await ClearAllNotStartedLessonOfAClass(class_.Id);
+                }
                 var dto = autoArrangeLessonAllClassDto.Adapt<AutoArrangeLessonAClassDto>();
                 dto.ClassId = class_.Id;
                 var result = await AutoScheduleAClass(dto);

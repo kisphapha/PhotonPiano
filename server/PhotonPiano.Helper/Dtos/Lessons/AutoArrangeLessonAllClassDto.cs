@@ -21,8 +21,8 @@ namespace PhotonPiano.Helper.Dtos.Lessons
         public List<DateOnly> DayOffs { get; set; } = new List<DateOnly>();
 
         [Required]
-        [EnumDataType(typeof(ScheduleClassesOption))]
         public ScheduleClassesOption ClassesOption { get; set; }
+        public ScheduleHandleLessonOption? HandleLessonOption { get; set; }
         //Options
         public bool OptionShiftConsistency { get; set; } = false;
         public bool OptionLocationConsistency { get; set; } = false;

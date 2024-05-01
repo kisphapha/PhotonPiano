@@ -75,9 +75,9 @@
                 </div>
                 <div v-if="this.classOption == 0">
                     <div class="p-2 text-xl font-bold">Handle Existed Lessons </div>
-                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="0" /><span
+                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="1" /><span
                         class="ml-2">Keep</span><br>
-                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="1" /><span class="ml-2">Delete All</span><br>
+                    <input type="radio" v-model="handleLessonOption" name="lessons_options" value="0" /><span class="ml-2">Delete All</span><br>
                     
 
                 </div>
@@ -223,13 +223,13 @@ export default {
                             optionIncludeSaturday : this.optionSaturday,
                             optionIncludeSunday : this.optionSunday,
                             classesOption : this.classOption,
-                            lessonsOption : this.handleLessonOption
+                            handleLessonOption : this.handleLessonOption
                         }
                         console.log(request)
                         const response = await axios.patch(import.meta.env.VITE_API_URL + `/api/Lesson/auto-schedule-all`,request)
 
                         this.eventBus.emit("open-result-dialog", {
-                            message: `Successfully arrange this class. Added ${response.data?.lessonsAdded} in the total of ${this.totalLessons} estimated!`,
+                            message: `Successfully arrange this class. Added ${response.data?.lessonsAdded} in the total of ${response.data?.lessonsEstimated} estimated!`,
                             type: "Success"
                         })
                         this.eventBus.emit("refresh-lessons-schedule-page")

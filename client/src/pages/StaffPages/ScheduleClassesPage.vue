@@ -2,6 +2,7 @@
     <div class="mt-4 ml-4 mr-4">
         <div v-if="selectedClassId == 0">
             <div class="text-4xl font-bold">Scheduling Each Class</div>
+            <div class="text-xl italic">All class need to be meet the requirement at {{ this.targetLesson }} lessons</div>
             <div class="flex gap-2 place-content-between mt-6">
                 <div class="flex gap-4">
                     <button @click='this.$router.push("/manage/schedule/all")'
@@ -46,7 +47,7 @@
                         </td>
                         <td>{{ class_.level }}</td>
                         <td>{{ class_.startDate.substring(0,4) }}</td>
-                        <td :class='class_.totalLessons == 0 ? "text-red-500 italic" : ""'>
+                        <td :class='class_.totalLessons != this.targetLesson ? "text-red-500 italic" : ""'>
                             {{ class_.totalLessons == 0 ? "(Not Schedule Yet)" : class_.totalLessons }}
                         </td>
                         <td>
@@ -114,6 +115,7 @@ export default {
             pageSize: 10,
             currentPage: 1,
             isOpenFilterPopup: false,
+            targetLesson : 90,
             filterDto: {
                 id: null,
                 name: null,

@@ -23,7 +23,16 @@
                 {{ "(" + this.class.startDate + " - " + this.class.endDate + ")" }}
             </div>
         </div>
-        <div class="px-8 flex gap-4">
+        <div class="px-8 text-lg">
+            Lessons Finished : 
+            <span class="font-bold">{{ this.countFinsihedLessons() }} / {{ this.class.lessons.length }}</span>
+        </div>
+        <div class="px-8 text-lg text-red-500" v-if=" this.targetLessons - this.class.lessons.length > 0">
+            This class is not meeting requirement about lessons number. Please add more
+            <span class="font-bold">{{ this.targetLessons - this.class.lessons.length }} </span>
+            lessons to meet center requirement.
+        </div>
+        <div class="px-8 flex gap-4 mt-4">
             <button @click="openAutoSchedulePopup"
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
@@ -203,7 +212,8 @@ export default {
                     user: {
                         name: "Diamondzz"
                     }
-                }
+                },
+                lessons : []
             },
             isOpenAutoSchedulePopup: false,
             isOpenDayOffPopup: false,
@@ -214,6 +224,7 @@ export default {
             selectedLessonId: 0,
             selectedDate: null,
             selectedShift: 1,
+            targetLessons : 90
         }
     },
     methods: {
@@ -419,6 +430,10 @@ export default {
                     })
                 }
             }
+        },
+        countFinsihedLessons(){
+            console.log(this.class)
+            return this.class?.lessons.filter(l => l.isLocked).length ?? 0
         }
 
     },

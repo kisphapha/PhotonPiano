@@ -215,13 +215,14 @@ export default {
                 case "number":
                     return lessons.length
                 case "css":
+                    var boldness = Math.min(900, 200 + Math.floor(lessons.length / 2) * 100)
                     if (!lessons[0]) {
                         if (this.markedDayOffs.find(d => d == date.specificDay)) {
                             return css + "bg-orange-200 hover:bg-orange-50"
                         }
                         return css + ((new Date().toDateString() == actualDate.toDateString()) ? "bg-slate-300 hover:bg-gray-50" : "bg-gray-200 hover:bg-gray-50")
                     }
-                    return css + "bg-green-200 hover:bg-green-50"
+                    return css +  `bg-green-${boldness} hover:bg-green-${Math.max(50,boldness - 100)}`
 
                 default:
                     return ""

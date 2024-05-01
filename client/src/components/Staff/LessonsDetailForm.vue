@@ -15,7 +15,7 @@
                 <tbody>
                     <tr v-for="lesson in this.lessons" :key="lesson.id">
                         <td>{{ lesson.id }}</td>
-                        <td>{{ lesson.classId }}</td>
+                        <td>{{ lesson.class.name }}</td>
                         <td>{{ lesson.location.name }}</td>
                         <td>{{ lesson.isLocked ? "Finished" : "Not Yet" }}</td>
                         <td v-if="!lesson.isLocked">

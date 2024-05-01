@@ -6,15 +6,18 @@
       "AbsoluteMoniker": "D:0:0:{2F1627C4-6700-480A-AD7E-8D7FD27E7340}|..\\PhotonPiano.BusinessLogic\\PhotonPiano.BusinessLogic.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.businesslogic\\services\\lessonservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.api\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.api\\controllers\\classescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\classescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{81DFB66C-5CA3-4CA9-AE01-ED0EE119F275}|..\\PhotonPiano.Helper\\PhotonPiano.Helper.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.helper\\dtos\\lessons\\autoarrangelessonallclassdto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{CAACAE79-7A01-45CA-808A-004E4D979B70}|..\\PhotonPiano.DataAccess\\PhotonPiano.DataAccess.csproj|c:\\users\\administrator\\desktop\\studyfpt\\my projects\\photonpiano\\server\\photonpiano.dataaccess\\repositories\\classrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\lessoncontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\controllers\\classescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{30345DAA-5C54-4344-9BB7-6940D5F06273}|PhotonPiano.API.csproj|solutionrelative:controllers\\classescontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -24,7 +27,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 7,
+          "SelectedChildIndex": 8,
           "Children": [
             {
               "$type": "Bookmark",
@@ -56,33 +59,46 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "AutoArrangeLessonAllClassDto.cs",
+              "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Lessons\\AutoArrangeLessonAllClassDto.cs",
+              "RelativeDocumentMoniker": "..\\PhotonPiano.Helper\\Dtos\\Lessons\\AutoArrangeLessonAllClassDto.cs",
+              "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.Helper\\Dtos\\Lessons\\AutoArrangeLessonAllClassDto.cs",
+              "RelativeToolTip": "..\\PhotonPiano.Helper\\Dtos\\Lessons\\AutoArrangeLessonAllClassDto.cs",
+              "ViewState": "AQIAABEAAAAAAAAAAAAwwBgAAAAqAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-01T12:29:53.738Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 0,
               "Title": "LessonService.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\LessonService.cs",
               "RelativeDocumentMoniker": "..\\PhotonPiano.BusinessLogic\\Services\\LessonService.cs",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.BusinessLogic\\Services\\LessonService.cs",
               "RelativeToolTip": "..\\PhotonPiano.BusinessLogic\\Services\\LessonService.cs",
-              "ViewState": "AQIAAEMAAAAAAAAAAAAzwAAAAAAAAAAA",
+              "ViewState": "AQIAAFoBAAAAAAAAAAA7wG8BAAAHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-01T07:04:40.876Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
+              "DocumentIndex": 2,
               "Title": "ClassRepository.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\ClassRepository.cs",
               "RelativeDocumentMoniker": "..\\PhotonPiano.DataAccess\\Repositories\\ClassRepository.cs",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.DataAccess\\Repositories\\ClassRepository.cs",
               "RelativeToolTip": "..\\PhotonPiano.DataAccess\\Repositories\\ClassRepository.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAHYAAAA6AAAA",
+              "ViewState": "AQIAAFsAAAAAAAAAAAAgwA8AAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-01T06:48:38.011Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
+              "DocumentIndex": 4,
               "Title": "ClassesController.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\ClassesController.cs",
               "RelativeDocumentMoniker": "Controllers\\ClassesController.cs",
@@ -95,13 +111,13 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 3,
               "Title": "LessonController.cs",
               "DocumentMoniker": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\LessonController.cs",
               "RelativeDocumentMoniker": "Controllers\\LessonController.cs",
               "ToolTip": "C:\\Users\\Administrator\\Desktop\\studyFPT\\My projects\\PhotonPiano\\server\\PhotonPiano.API\\Controllers\\LessonController.cs",
               "RelativeToolTip": "Controllers\\LessonController.cs",
-              "ViewState": "AQIAAAsAAAAAAAAAAAAxwBQAAAAJAAAA",
+              "ViewState": "AQIAABkAAAAAAAAAAAAgwBQAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-05-01T06:43:49.632Z",
               "EditorCaption": ""
