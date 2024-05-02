@@ -4,40 +4,81 @@
     </button>
     <div v-if="this.class">
         <div>
-            <div class="flex place-content-between">
-                <div class="text-4xl flex">
-                    CLASS NAME :
-                    <div class="font-bold flex ml-4">{{ this.class.name }}
+            <div class="flex place-content-between ">
+                <div class="flex text-4xl ">
+                    <span>CLASS NAME :</span>
+                    <div class="font-bold flex ml-4" v-if="!editMode">
+                        {{ this.class.name }}
                         <img :src="this.colors[this.class.level - 1]" class="w-16 ml-4">
                     </div>
+                    <input v-else class="ml-4 rounded-lg border" maxlength="20" v-model="editDto.className
+        ">
                 </div>
                 <div class="font-bold flex gap-2">
-                    <button v-if="!editMode" class="bg-slate-800 hover:bg-slate-600 font-bold text-white px-4 py-2 rounded-lg" @click="toggleEditMode">
+                    <button v-if="!editMode"
+                        class="bg-slate-800 hover:bg-slate-600 font-bold text-white px-4 py-2 rounded-lg"
+                        @click="toggleEditMode">
                         Edit
-                    </button> 
-                    <button v-if="editMode" class="bg-green-400 hover:bg-green-200 font-bold text-white px-4 py-2 rounded-lg" @click="toggleEditMode">
+                    </button>
+                    <button v-if="editMode"
+                        class="bg-green-400 hover:bg-green-200 font-bold text-white px-4 py-2 rounded-lg"
+                        @click="toggleEditMode">
                         Save Change
-                    </button> 
-                    <button v-if="editMode" class="bg-red-400 hover:bg-red-200 font-bold text-white px-4 py-2 rounded-lg" @click="toggleEditMode">
+                    </button>
+                    <button v-if="editMode"
+                        class="bg-red-400 hover:bg-red-200 font-bold text-white px-4 py-2 rounded-lg"
+                        @click="toggleEditMode">
                         Cancel
-                    </button>               
+                    </button>
                 </div>
-                
+
             </div>
             <div class="mt-4">
                 <div class="text-2xl">
-                    LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{ this.class_level[this.class.level -
-        1] }}
+                    <div v-if="!editMode">
+                        LEVEL : <span class="font-bold">{{ this.class.level }}</span> {{
+        this.class_level[this.class.level - 1] }}
+                    </div>
+                    <div v-else>
+                        LEVEL :
+                        <select class="rounded-lg border" v-model="editDto.level">
+                            <option value="1">1 {{ this.class_level[0] }}</option>
+                            <option value="2">2 {{ this.class_level[1] }}</option>
+                            <option value="3">3 {{ this.class_level[2] }}</option>
+                            <option value="4">4 {{ this.class_level[3] }}</option>
+                            <option value="5">5 {{ this.class_level[4] }}</option>
+                        </select>
+                    </div>
                 </div>
                 <div class="text-2xl">
-                    INSTRUCTOR : <span class="font-bold">{{ this.class.instructor.user.name }}</span>
+                    <div v-if="!editMode">
+                        INSTRUCTOR : <span class="font-bold">{{ this.class.instructor.user.name }}</span>
+                    </div>
+                    <div v-else>
+                        INSTRUCTOR :
+                        <select class="rounded-lg border" v-model="editDto.instructorId">
+                            <option v-for="instructor in instructors" :key="instructor.id" :value="instructor.id">
+                                {{ instructor.user.name }}
+                            </option>
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="italic text-lg">
+            <div class="italic text-lg" v-if="!editMode">
                 {{ "(" + this.class.startDate + " - " + this.class.endDate + ")" }}
             </div>
+            <div v-else class="flex gap-2 text-lg">
+                <span>Start Date : </span>
+                <input class="ml-4 rounded-lg border" type="date" v-model="editDto.startDate">
+            </div>
             <div class="text-lg">
-                <div>Size : <span class="font-bold">{{ this.class.size }}</span></div>
+                <div v-if="!editMode">
+                    Size : <span class="font-bold">{{ this.class.size }}</span>
+                </div>
+                <div v-else>
+                    Size :
+                    <input class="ml-4 rounded-lg border" type="number" v-model="editDto.size">
+                </div>
                 <div>Total Student : <span class="font-bold">{{ this.class.students.length }}</span></div>
             </div>
         </div>
@@ -136,6 +177,10 @@
                 </tbody>
             </table>
         </div>
+        <button class="bg-red-400 hover:bg-red-200 font-bold text-white px-4 py-2 rounded-lg mt-4"
+            @click="toggleEditMode">
+            Delete this class
+        </button>
         <div v-if="isOpenInserStudentPopup" class="popup-overlay">
             <div class="overflow-y-auto flex justify-center items-center overflow-x-auto">
                 <div class="relative">
@@ -169,6 +214,7 @@ export default {
                 size: 25,
                 level: 5,
                 instructor: {
+                    id: 1,
                     user: {
                         name: "Diamond"
                     }
@@ -272,7 +318,29 @@ export default {
             ],
             viewMode: 0,
             editMode: false,
-            isOpenInserStudentPopup: false
+            isOpenInserStudentPopup: false,
+            keyword_name: "",
+            editDto: {
+                className: "",
+                startDate: null,
+                level: 0,
+                size: 0,
+                instructorId: 0
+            },
+            instructors: [
+                {
+                    id: 1,
+                    user: {
+                        name: "Diamond"
+                    }
+                },
+                {
+                    id: 2,
+                    user: {
+                        name: "Water Melon"
+                    }
+                },
+            ]
         }
     },
     methods: {
@@ -284,9 +352,25 @@ export default {
         toggleInsertStudentPopup() {
             this.isOpenInserStudentPopup = !this.isOpenInserStudentPopup
         },
-        toggleEditMode(){
+        toggleEditMode() {
             this.editMode = !this.editMode
+        },
+        async handleSearch() {
+            //await this.fetchRegistration(this.currentPage, this.pageSize, this.keyword_name)
+        },
+        async refresh() {
+            this.setEditDto()
+        },
+        setEditDto() {
+            this.editDto.className = this.class.name,
+                this.editDto.startDate = this.class.startDate,
+                this.editDto.level = this.class.level,
+                this.editDto.instructorId = this.class.instructor.id,
+                this.editDto.size = this.class.size
         }
+    },
+    mounted() {
+        this.refresh()
     }
 }
 </script>
