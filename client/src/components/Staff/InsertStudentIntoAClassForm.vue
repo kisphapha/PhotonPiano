@@ -104,7 +104,6 @@ export default {
     },
     methods: {
         async handlePageChange() {
-            console.log(this.isSelectAll)
             this.isSelectAll = false;
             if (this.currentPage > this.totalPage) {
                 this.currentPage = this.totalPage

@@ -100,7 +100,7 @@
                         <td>{{ student.user.name }}</td>
                         <td>{{ student.user.email }}</td>
                         <td>{{ student.user.phone }}</td>
-                        <td>{{ student.shortDesc }}</td>
+                        <td class="w-80 break-words">{{ student.shortDesc }}</td>
                         <td>
                             <input type="checkbox" :checked="isSelected(student.id)"
                                 @change="toggleSelection(student.id)" />

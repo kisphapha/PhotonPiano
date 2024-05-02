@@ -116,8 +116,12 @@
                     <tr>
                         <th>Id</th>
                         <th>Picture</th>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th>
+                            <div class="w-48">Name</div>
+                        </th>
+                        <th>
+                            <div class="w-48">Email</div>
+                        </th>
                         <th>Phone</th>
                         <th>Status</th>
                     </tr>
@@ -125,14 +129,16 @@
                 <tbody>
                     <tr v-for="student in this.class.students" :key="student.id">
                         <td>{{ student.id }}</td>
-                        <td class="flex justify-center">
-                            <img class="w-12 h-12 rounded-full" :src="student.user.picture">
+                        <td>
+                            <div class="flex justify-center">
+                                <img class="w-12 h-12 rounded-full" :src="student.user.picture">
+                            </div>
                         </td>
                         <td>
-                            <div class="overflow-x-auto w-48">{{ student.user.name }}</div>
+                            <div class="break-words w-48">{{ student.user.name }}</div>
                         </td>
                         <td>
-                            <div class="overflow-x-auto w-48">{{ student.user.email }}</div>
+                            <div class="break-words w-48">{{ student.user.email }}</div>
                         </td>
                         <td>{{ student.user.phone }}</td>
                         <td>
@@ -223,7 +229,7 @@ export default {
                     {
                         id: 1,
                         user: {
-                            name: "Trần Gia",
+                            name: "TrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGiaTrầnGia",
                             email: "xyz@a.com",
                             phone: "0987654321",
                             picture: "/src/assets/noavatar.jpg"
@@ -234,7 +240,7 @@ export default {
                         id: 2,
                         user: {
                             name: "xyz",
-                            email: "abc@a.com",
+                            email: "abcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcabcvvv@a.com",
                             phone: "0123456789",
                             picture: "/src/assets/noavatar.jpg"
                         },

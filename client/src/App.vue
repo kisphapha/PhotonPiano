@@ -75,7 +75,7 @@ export default {
 
 #staff-table tr td,
 #staff-table th {
-  padding: 0.5rem 2rem 0.5rem 2rem;
+  padding: 0.5rem 1rem 0.5rem 1rem;
   text-align: center
 }
 

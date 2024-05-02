@@ -57,13 +57,13 @@
                         <div class="w-8">{{ registration.user.name }}</div>
                     </td>
                     <td>
-                        <div class="overflow-x-auto max-w-32">{{ registration.user.email }}</div>
+                        <div class="break-words max-w-32">{{ registration.user.email }}</div>
                     </td>
                     <td>
                         <div class="w-16">{{ registration.user.phone }}</div>
                     </td>
                     <td>
-                        <div class="w-64 overflow-y-auto max-h-48">{{ registration.shortDesc }}</div>
+                        <div class="w-64 overflow-y-auto break-words max-h-48">{{ registration.shortDesc }}</div>
                     </td>
                     <td>{{ registration.registrationDate.substring(0, 10) + " " +
                 registration.registrationDate.substring(11, 19) }}</td>
