@@ -1,9 +1,10 @@
 <template>
+    <button class="font-bold text-xl text-blue-500 flex p-8" @click="handleGoBack">
+        <span class="material-icons">arrow_back_ios</span> Back
+    </button>
     <div v-if="this.class">
         <div class="p-8">
-            <button class="font-bold text-xl text-blue-500 flex" @click="handleGoBack">
-                <span class="material-icons">arrow_back_ios</span> Back
-            </button>
+
             <div class="text-4xl flex">
                 CLASS NAME :
                 <div class="font-bold flex ml-4">{{ this.class.name }}
@@ -24,10 +25,10 @@
             </div>
         </div>
         <div class="px-8 text-lg">
-            Lessons Finished : 
+            Lessons Finished :
             <span class="font-bold">{{ this.countFinsihedLessons() }} / {{ this.class.lessons.length }}</span>
         </div>
-        <div class="px-8 text-lg text-red-500" v-if=" this.targetLessons - this.class.lessons.length > 0">
+        <div class="px-8 text-lg text-red-500" v-if="this.targetLessons - this.class.lessons.length > 0">
             This class is not meeting requirement about lessons number. Please add more
             <span class="font-bold">{{ this.targetLessons - this.class.lessons.length }} </span>
             lessons to meet center requirement.
@@ -37,7 +38,8 @@
                 class="p-2 bg-blue-400 rounded-lg text-white font-bold shadow-md hover:bg-blue-200">
                 Auto Schedule This Class
             </button>
-            <button @click="handleClear(true)" class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
+            <button @click="handleClear(true)"
+                class="p-2 bg-red-400 rounded-lg text-white font-bold shadow-md hover:bg-red-200">
                 Clear All Lessons
             </button>
             <button @click="toggleIsMarking"
@@ -213,7 +215,7 @@ export default {
                         name: "Diamondzz"
                     }
                 },
-                lessons : []
+                lessons: []
             },
             isOpenAutoSchedulePopup: false,
             isOpenDayOffPopup: false,
@@ -224,7 +226,7 @@ export default {
             selectedLessonId: 0,
             selectedDate: null,
             selectedShift: 1,
-            targetLessons : 90
+            targetLessons: 90
         }
     },
     methods: {
@@ -401,17 +403,17 @@ export default {
         dragSetup(shift, date) {
             this.selectedLessonId = this.getLessonDetail(shift, date, "id")
         },
-        async handleClear(confirmation){
+        async handleClear(confirmation) {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "This action will delete all not started lessons (not taken attendence) of this class. Willing to continue?",
-                    method : this.handleClear,
-                    params : false
+                    method: this.handleClear,
+                    params: false
                 })
             } else {
                 try {
-                    this.eventBus.emit("open-loading-popup",{
-                        message : "Deleteing... Please don't quit!"
+                    this.eventBus.emit("open-loading-popup", {
+                        message: "Deleteing... Please don't quit!"
                     })
                     await axios.delete(import.meta.env.VITE_API_URL + `/api/Lesson/${this.classId}/clear`)
                     this.eventBus.emit("close-loading-popup")
@@ -419,7 +421,7 @@ export default {
                         message: "Deleted Successfully",
                         type: "Success"
                     })
-                    
+
                     this.eventBus.emit("refresh-lesson-schedule-class-detail")
                     this.close()
                 } catch (e) {
@@ -431,7 +433,7 @@ export default {
                 }
             }
         },
-        countFinsihedLessons(){
+        countFinsihedLessons() {
             console.log(this.class)
             return this.class?.lessons.filter(l => l.isLocked).length ?? 0
         }
