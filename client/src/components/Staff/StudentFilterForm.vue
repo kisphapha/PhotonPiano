@@ -58,6 +58,7 @@
         <div class="flex gap-4 justify-center mt-4">
             <button class="bg-blue-400 hover:bg-blue-200 p-2 rounded-lg text-white font-bold" @click="action(this.filterDto)">Apply</button>
             <button class="p-2 text-red-400 underline font-bold" @click="close">Cancel</button>
+            <button class="p-2 text-green-400 underline font-bold" @click="resetDefault">Reset</button>
         </div>
         
     </div>
@@ -117,6 +118,17 @@ export default {
             this.filterDto.className = this.className
             this.filterDto.status = this.status
         },
+        resetDefault(){
+            this.filterDto.id = null
+            this.filterDto.name = null
+            this.filterDto.level = 0
+            this.filterDto.joinFrom = null
+            this.filterDto.joinTo = null
+            this.filterDto.className = null
+            this.filterDto.email = null
+            this.filterDto.phone = null
+            this.filterDto.status = "all"
+        }
         
     }
 }
