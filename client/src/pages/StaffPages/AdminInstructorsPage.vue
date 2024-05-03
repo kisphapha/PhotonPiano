@@ -1,7 +1,12 @@
 <template>
-    <div class="p-8">
+    <div class="p-8" v-if="selectedInstructorId == 0">
         <div class="text-4xl font-bold">Instructors </div>
-        <div class="flex gap-2 mt-4 justify-end">
+        <div class="flex gap-2 mt-4 place-content-between">
+
+            <button @click="toggleAddPopup"
+                class="flex gap-2 py-2 px-6 bg-green-400 rounded-lg text-white font-bold shadow-md hover:bg-green-200">
+                <span>Add New Instructor</span>
+            </button>
             <button @click="toggleFilterPopup"
                 class="flex gap-2 py-2 px-6 bg-slate-900 rounded-lg text-white font-bold shadow-md hover:bg-slate-500">
                 <span>Filter</span>
@@ -21,6 +26,7 @@
                         <th>Phone Number</th>
                         <th>Classes Teaching</th>
                         <th>Contribute Score</th>
+                        <th>Status</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -28,24 +34,76 @@
                     <tr v-for="instructor in instructors" :key="instructor.id">
                         <td>{{ instructor.id }}</td>
                         <td>
-                            <div class="w-32 break-words">{{ instructor.user.name }}</div>
+                            <button class="w-32 break-words underline text-blue-400 font-bold" v-if="editingId != instructor.id" @click="setSelectedInstructorId(instructor.id)">
+                                {{ instructor.user.name }}
+                            </button>
+                            <div v-else>
+                                <input class="w-32 p-2 rounded-lg border" v-model="editDto.name">
+                            </div>
                         </td>
-                        <td>{{ instructor.level }}</td>
                         <td>
-                            <div class="w-32 break-words">{{ instructor.user.email }}</div>
+                            <div v-if="editingId != instructor.id">
+                                {{ instructor.level }}
+                            </div>
+                            <div v-else>
+                                <select class="p-2 rounded-lg border w-12" v-model="editDto.level">
+                                    <option value="1">1</option>
+                                    <option value="2">2</option>
+                                    <option value="3">3</option>
+                                    <option value="4">4</option>
+                                    <option value="5">5</option>
+                                </select>
+                            </div>
                         </td>
-                        <td>{{ instructor.user.phone }}</td>
+                        <td>
+                            <div class="w-32 break-words" v-if="editingId != instructor.id">
+                                {{ instructor.user.email }}
+                            </div>
+                            <div v-else>
+                                <input class="w-32 p-2 rounded-lg border" v-model="editDto.email">
+                            </div>
+                        </td>
+                        <td>
+                            <div v-if="editingId != instructor.id">
+                                {{ instructor.user.phone }}
+                            </div>
+                            <div v-else>
+                                <input class="w-32 p-2 rounded-lg border" v-model="editDto.phone">
+                            </div>
+                        </td>
                         <td>{{ instructor.classesTeaching }}</td>
-                        <td>{{ instructor.contributeScore }}</td>
                         <td>
-                            <div class="flex gap-2">
-                                <button class="material-icons text-lime-500 text-3xl"
-                                    @click="handleAccept(instructor.id)">
+                            <div v-if="editingId != instructor.id">
+                                {{ instructor.contributeScore }}
+                            </div>
+                            <div v-else>
+                                <input type="number" class="w-24 p-2 rounded-lg border" v-model="editDto.contributeScore">
+                            </div>
+                        </td>
+                        <td>
+                            <div v-if="editingId != instructor.id" :class="getStatusStyle(instructor.status)">
+                                {{ instructor.status }}
+                            </div>
+                            <div v-else>
+                                <select class="p-2 rounded-lg border" v-model="editDto.status">
+                                    <option value="Active">Active</option>
+                                    <option value="Inactive">Inactive</option>
+                                    <option value="Fired">Fired</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="flex gap-2" v-if="editingId == instructor.id">
+                                <button class="material-icons text-lime-500 text-3xl" @click="handleEdit()">
                                     check_circle
                                 </button>
-                                <button class="material-icons text-red-500 text-3xl"
-                                    @click="handleReject(instructor.id)">
+                                <button class="material-icons text-red-500 text-3xl" @click="setEditingId(0)">
                                     cancel
+                                </button>
+                            </div>
+                            <div v-else>
+                                <button class="material-icons text-3xl" @click="setEditingId(instructor.id)">
+                                    edit
                                 </button>
                             </div>
                         </td>
@@ -79,15 +137,32 @@
                 </div>
             </div>
         </div>
+        <div v-if="isOpenAddPopup" class="popup-overlay">
+            <div class="overflow-y-auto flex justify-center items-center">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleAddPopup">X</button>
+                    <AddNewInstructorForm :close="toggleAddPopup" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <button class="font-bold text-xl text-blue-500 flex p-8" @click="setSelectedInstructorId(0)">
+            <span class="material-icons">arrow_back_ios</span> Back
+        </button>
+        <InstructorProfile :instructorId="selectedInstructorId" />
     </div>
 </template>
 
 <script>
 import InstructorFilterForm from '../../components/Staff/InstructorFilterForm.vue'
+import AddNewInstructorForm from '../../components/Staff/AddNewInstructorForm.vue'
+import InstructorProfile from '../../components/Instructor/InstructorProfile.vue'
 
 export default {
     name: "AdminInstructorPage",
-    components: { InstructorFilterForm },
+    components: { InstructorFilterForm, AddNewInstructorForm, InstructorProfile },
     inject: ["eventBus"],
     data() {
         return {
@@ -102,7 +177,8 @@ export default {
                     joinDate: "2003-01-01",
                     level: 5,
                     classesTeaching: 2,
-                    contributeScore: 99999
+                    contributeScore: 99999,
+                    status: "Active"
                 },
                 {
                     id: 2,
@@ -114,13 +190,15 @@ export default {
                     joinDate: "2003-01-01",
                     level: 3,
                     classesTeaching: 1,
-                    contributeScore: 696
+                    contributeScore: 696,
+                    status: "Inactive"
                 }
             ],
             totalPage: 100,
             pageSize: 10,
             currentPage: 1,
             isOpenFilterPopup: false,
+            isOpenAddPopup: false,
             filterDto: {
                 id: null,
                 name: null,
@@ -135,6 +213,16 @@ export default {
                 phone: "",
                 status: "all"
             },
+            editingId: 0,
+            editDto: {
+                name: "",
+                email: "",
+                phone: "",
+                status: "",
+                level: 0,
+                contributeScore: 0
+            },
+            selectedInstructorId : 0
         }
     },
     methods: {
@@ -173,6 +261,36 @@ export default {
             this.filterDto.phone = filterDto.phone
             this.filterDto.status = filterDto.status
             this.toggleFilterPopup()
+        },
+        toggleAddPopup() {
+            this.isOpenAddPopup = !this.isOpenAddPopup
+        },
+        setEditingId(id) {
+            this.editingId = id
+            const instructor = this.instructors.find(i => i.id == id)
+            if (instructor) {
+                this.editDto.name = instructor.user.name
+                this.editDto.email = instructor.user.email
+                this.editDto.phone = instructor.user.phone
+                this.editDto.status = instructor.status
+                this.editDto.contributeScore = instructor.contributeScore
+                this.editDto.level = instructor.level
+            }
+        },
+        setSelectedInstructorId(id){
+            this.selectedInstructorId = id
+        },
+        getStatusStyle(status) {
+            let css = "p-2 rounded-lg text-white font-bold "
+            switch (status) {
+                case "Active":
+                    return css + "bg-green-500";
+                case "Inactive":
+                    return css + "bg-gray-500";
+                case "Fired":
+                    return css + "bg-red-500";
+            }
+            return css;
         },
     }
 }

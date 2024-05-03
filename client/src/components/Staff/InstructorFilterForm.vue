@@ -56,10 +56,10 @@
             <div class="mt-2 flex gap-2">
                 <div class="p-2 w-48">Status</div>
                 <select class="p-2 rounded-lg border" v-model="this.filterDto.status">
-                    <option value="0">All</option>
-                    <option value="InClass">Active</option>
-                    <option value="Unregistered">Inactive</option>
-                    <option value="PendingRegistration">Fired</option>
+                    <option value="all">All</option>
+                    <option value="Active">Active</option>
+                    <option value="Inactive">Inactive</option>
+                    <option value="Fired">Fired</option>
                 </select>
             </div>
         </div>
@@ -79,7 +79,7 @@
 export default {
     name: "InstructorFilterForm",
     inject: ['eventBus'],
-    props: ['id', 'name', 'level', 'joinFrom', 'joinTo', 'email', 'phone', 'teachFrom', 'teachTo','contributeFrom', 'contributeTo', 'status', 'close', 'action'],
+    props: ['id', 'name', 'level', 'joinFrom', 'joinTo', 'email', 'phone', 'teachFrom', 'teachTo', 'contributeFrom', 'contributeTo', 'status', 'close', 'action'],
     data() {
         return {
             years: [
@@ -133,7 +133,7 @@ export default {
             this.filterDto.phone = this.phone
             this.filterDto.status = this.status
         },
-        resetDefault(){
+        resetDefault() {
             this.filterDto.id = null
             this.filterDto.name = null
             this.filterDto.level = 0
