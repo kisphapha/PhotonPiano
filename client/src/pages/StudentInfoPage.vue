@@ -1,14 +1,14 @@
 <template>
-    <div v-if="student">
+    <div v-if="student" class="p-8">
         <div class="flex gap-4 p-8 ">
             <img class="w-32 h-32 rounded-full" :src="student.user.picture">
             <div class="text-4xl font-bold mt-auto mb-auto">{{ student.user.name }}</div>
         </div>
-        <div class="flex">
-            <div class="w-1/2">
+        <div class="flex place-content-between">
+            <div>
                 <div class="flex gap-8">
                     <div class="italic text-xl ml-4">General</div>
-                    <button class="material-icons" @click="toggleEditMode">
+                    <button class="material-icons" @click="toggleEditMode"  v-if="!this.studentId">
                         edit
                     </button>
                 </div>
@@ -85,16 +85,16 @@
                         <tr>
                             <td></td>
                             <td class="flex justify-center">
-                                <button @click="updateInformation(true)" class="px-4 py-2 rounded-md bg-blue-400 text-white">Save</button>
+                                <button @click="updateInformation(true)"
+                                    class="px-4 py-2 rounded-md bg-blue-400 text-white">Save</button>
                             </td>
                         </tr>
                     </tbody>
-
                 </table>
 
 
             </div>
-            <div class="w-1/2">
+            <div>
                 <div class="italic text-xl ml-4">Academic</div>
                 <hr />
                 <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
@@ -136,8 +136,8 @@
                 </table>
             </div>
         </div>
-        <div class="mt-4 flex">
-            <div class="w-1/2">
+        <div class="mt-4 flex  place-content-between">
+            <div>
                 <div class="italic text-xl ml-4">Tuition Debt</div>
                 <hr />
                 <div v-if="this.debts.length > 0" class="mt-4 ml-4">
@@ -166,7 +166,7 @@
                     Congratulations! You currently have no tuition debts
                 </div>
             </div>
-            <div class="w-1/2">
+            <div>
                 <div class="italic text-xl ml-4">Activeness</div>
                 <hr />
                 <table id="student-info-table" class="mt-4 ml-4 bg-slate-50">
@@ -203,45 +203,47 @@
             <div class="w-full">
                 <div class="italic text-xl ml-4">Educational Path</div>
                 <hr />
-                <div v-if="this.student.studentClasses.length > 0" class="flex flex-col gap-8">
-                    <div class="flex justify-center gap-8 mt-4 ml-4" v-for="studentClass in this.student.studentClasses"
-                        :key="studentClass.id">
-                        <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
-                            {{ studentClass.class.startDate.substring(0, 4) }}
-                        </div>
-                        <table id="student-info-table" class="bg-slate-50 w-1/3">
-                            <tbody>
-                                <tr>
-                                    <td>Class Name</td>
-                                    <td>{{ studentClass.class.name }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Instructor</td>
-                                    <td>{{ studentClass.class.instructor?.user.name ?? "" }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Result</td>
-                                    <td>{{ studentClass.result ?? "" }}</td>
-                                </tr>
-                                <tr>
-                                    <td>GPA</td>
-                                    <td>{{ studentClass.gpa ?? "" }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Instructor Comments</td>
-                                    <td>{{ studentClass.instructorComment ?? "" }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Lesson Attended</td>
-                                    <td>{{ calculateAttendance(studentClass.studentLessons) + " / " +
+                <div class="flex justify-center" v-if="this.student.studentClasses.length > 0" >
+                    <div class="flex flex-col gap-8 w-1/2">
+                        <div class="flex place-content-between gap-8 mt-4 ml-4"
+                            v-for="studentClass in this.student.studentClasses" :key="studentClass.id">
+                            <div class="p-4 rounded-lg bg-gray-200 w-48 h-24 flex items-center justify-center">
+                                {{ studentClass.class.startDate.substring(0, 4) }}
+                            </div>
+                            <table id="student-info-table" class="bg-slate-50 w-1/3">
+                                <tbody>
+                                    <tr>
+                                        <td>Class Name</td>
+                                        <td>{{ studentClass.class.name }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Instructor</td>
+                                        <td>{{ studentClass.class.instructor?.user.name ?? "" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Result</td>
+                                        <td>{{ studentClass.result ?? "" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>GPA</td>
+                                        <td>{{ studentClass.gpa ?? "" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Instructor Comments</td>
+                                        <td>{{ studentClass.instructorComment ?? "" }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Lesson Attended</td>
+                                        <td>{{ calculateAttendance(studentClass.studentLessons) + " / " +
         studentClass.studentLessons.length }}</td>
-                                </tr>
-                                <tr>
-                                    <td>Ranking</td>
-                                    <td>{{ studentClass.rank ?? "" }}</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                                    </tr>
+                                    <tr>
+                                        <td>Ranking</td>
+                                        <td>{{ studentClass.rank ?? "" }}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
                 <div v-else class="italic text-center">
@@ -259,6 +261,7 @@ import axios from 'axios';
 export default {
     name: "StudentInfoPage",
     inject: ["eventBus"],
+    props: ["studentId"],
     data() {
         return {
             student: null,
@@ -288,7 +291,7 @@ export default {
                 address: '',
                 gender: '',
                 bankAccount: ''
-            }
+            },
         }
     },
     mounted() {
@@ -299,10 +302,14 @@ export default {
                 this.$router.push('/')
             }
         })
-        if (localStorage.token) {
-            this.fetchData(localStorage.token);
+        if (!this.studentId) {
+            if (localStorage.token) {
+                this.fetchData(localStorage.token);
+            } else {
+                this.$router.push("/")
+            }
         } else {
-            this.$router.push("/")
+            this.getStudentById(this.studentId)
         }
     },
     methods: {
@@ -346,35 +353,40 @@ export default {
                 if (response.data.role != "Student") {
                     this.$router.push("/")
                 } else {
-                    const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id)
-                    if (studentDetail.data) {
-                        this.student = studentDetail.data
-                        // console.log(this.student)
-                        this.editDto.name = this.student.user.name
-                        this.editDto.bankAccount = this.student.user.bankAccount
-                        this.editDto.dob = this.student.user.doB
-                        this.editDto.address = this.student.user.address
-                        this.editDto.gender = this.student.user.gender
-                        this.debts = []
-                        const studentClasses = studentDetail.data.studentClasses
-                        studentClasses.forEach(element => {
-                            element.studentClassTuitions.forEach(td => {
-                                if (td.status == 0) {
-                                    this.debts.push(td)
-                                }
-                            })
-                        });
-                    }
-                    const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
-                        headers: {
-                            'Authorization': 'Bearer ' + token,
+                    await this.getStudentById(response.data.students[0].id)
+                }
+            }
+        },
+        async getStudentById(id) {
+            const studentDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + id)
+            if (studentDetail.data) {
+                this.student = studentDetail.data
+                // console.log(this.student)
+                this.editDto.name = this.student.user.name
+                this.editDto.bankAccount = this.student.user.bankAccount
+                this.editDto.dob = this.student.user.doB
+                this.editDto.address = this.student.user.address
+                this.editDto.gender = this.student.user.gender
+                this.editDto.email = this.student.user.email
+                this.editDto.phone = this.student.user.phone
+                this.debts = []
+                const studentClasses = studentDetail.data.studentClasses
+                studentClasses.forEach(element => {
+                    element.studentClassTuitions.forEach(td => {
+                        if (td.status == 0) {
+                            this.debts.push(td)
                         }
                     })
-                    if (studentPostDetail.data) {
-                        this.student_post = studentPostDetail.data
-                        this.statisticizeActiveness()
-                    }
+                });
+            }
+            const studentPostDetail = await axios.get(import.meta.env.VITE_API_URL + '/api/Student/' + response.data.students[0].id + '/posts', {
+                headers: {
+                    'Authorization': 'Bearer ' + token,
                 }
+            })
+            if (studentPostDetail.data) {
+                this.student_post = studentPostDetail.data
+                this.statisticizeActiveness()
             }
         },
         calculateRemindTimes(date1, date2) {
@@ -399,8 +411,8 @@ export default {
             if (confirmation) {
                 this.eventBus.emit("open-confirmation-popup", {
                     message: "Are you sure about this?",
-                    method : this.updateInformation,
-                    params : false
+                    method: this.updateInformation,
+                    params: false
                 })
             } else {
                 await axios.patch(import.meta.env.VITE_API_URL + '/api/User/' + this.student.user.id, {

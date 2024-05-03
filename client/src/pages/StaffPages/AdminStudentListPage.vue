@@ -1,9 +1,9 @@
 <template>
-    <div class="p-8">
+    <div class="p-8" v-if="selectedStudentId == 0">
         <div class="text-4xl font-bold">Student List</div>
         <div class="flex place-content-between mt-4">
-            <div class="flex gap-2">
-                <button @click="null"
+            <div class="flex gap-2" v-if="selectedStudentIds.length > 0">
+                <button @click="toggleEditPopup"
                     class="flex gap-2 py-2 px-6 bg-gray-600 rounded-lg text-white font-bold shadow-md hover:bg-gray-300">
                     <span>Edit</span>
                     <span class="material-icons">
@@ -11,6 +11,7 @@
                     </span>
                 </button>
             </div>
+            <div v-else></div>
             <div class="flex gap-2">
                 <button @click="toggleFilterPopup"
                     class="flex gap-2 py-2 px-6 bg-slate-900 rounded-lg text-white font-bold shadow-md hover:bg-slate-500">
@@ -27,34 +28,80 @@
                     <tr>
                         <th><input type="checkbox" @change="toggleSelectAll" :checked="isSelectAll"></th>
                         <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th>
+                            <div class="w-32">Name</div>
+                        </th>
+                        <th>
+                            <div class="w-32">Email</div>
+                        </th>
                         <th>Phone</th>
                         <th>Current Class</th>
                         <th>Join Date</th>
-                        <th>Status</th>
+                        <th>
+                            <div class="w-32">Status</div>
+                        </th>
+                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr v-for="student in students" :key="student.id">
-                        <td><input type="checkbox" @change="toggleSelection(student.id)" :checked="isSelected(student.id)"></td>
+                        <td><input type="checkbox" @change="toggleSelection(student.id)"
+                                :checked="isSelected(student.id)"></td>
                         <td>{{ student.id }}</td>
                         <td>
-                            <button class="text-blue-400 font-bold underline">
+                            <button class="text-blue-400 font-bold underline" @click="setSelectedStudentId(student.id)">
                                 <div class="w-32 break-words">
                                     {{ student.user.name }}
                                 </div>
                             </button>
                         </td>
                         <td>
-                            <div class="w-32 break-words">{{ student.user.email }}</div>
+                            <div v-if="editingStudentId != student.id" class="w-32 break-words">
+                                {{ student.user.email }}
+                            </div>
+                            <div v-else>
+                                <input class="p-2 border rounded-lg w-32" type="text" v-model="editDto.email">
+                            </div>
                         </td>
-                        <td>{{ student.user.phone }}</td>
+                        <td>
+                            <div v-if="editingStudentId != student.id">
+                                {{ student.user.phone }}
+                            </div>
+                            <div v-else>
+                                <input class="p-2 border rounded-lg w-32" type="text" v-model="editDto.phone">
+                            </div>
+                        </td>
                         <td :class="getClassStyle(student.level)">{{ student.currentClass.name }}</td>
                         <td>{{ student.joinedDate }}</td>
                         <td>
-                            <div :class="getStatusStyle(student.status)" class="w-32">
+                            <div v-if="editingStudentId != student.id" :class="getStatusStyle(student.status)"
+                                class="w-32">
                                 {{ displayStatus(student.status) }}
+                            </div>
+                            <div v-else>
+                                <select class="p-2 border rounded-lg w-32" type="text" v-model="editDto.status">
+                                    <option value="InClass">In Class</option>
+                                    <option value="Unregistered">Unregistered</option>
+                                    <option value="PendingRegistration">Pending Registration</option>
+                                    <option value="Accepted">Accepted</option>
+                                    <option value="EntranceTesting">Entrance Testing</option>
+                                    <option value="WaitingForClassPlacement">Waiting Class</option>
+                                    <option value="Dropped">Dropped</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <button v-if="editingStudentId != student.id" class="material-icons"
+                                @click="setEditingStudentId(student.id)">
+                                edit
+                            </button>
+                            <div class="flex gap-2" v-else>
+                                <button class="material-icons text-lime-500 text-3xl" @click="handleEdit(student.id)">
+                                    check_circle
+                                </button>
+                                <button class="material-icons text-red-500 text-3xl" @click="setEditingStudentId(0)">
+                                    cancel
+                                </button>
                             </div>
                         </td>
                     </tr>
@@ -86,21 +133,38 @@
                 </div>
             </div>
         </div>
+        <div v-if="isOpenEditPopup" class="popup-overlay">
+            <div class="overflow-y-auto flex justify-center items-center">
+                <div class="relative">
+                    <button class="absolute right-0 mt-2 mr-2 w-8 h-8 bg-red-400 text-white rounded-full"
+                        @click="toggleEditPopup">X</button>
+                    <EditStudentInBatchForm :close="toggleEditPopup" :selectedStudentIds="selectedStudentIds" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div v-else>
+        <button class="font-bold text-xl text-blue-500 flex p-8" @click="setSelectedStudentId(0)">
+            <span class="material-icons">arrow_back_ios</span> Back
+        </button>
+        <StudentInfoPage :studentId="this.selectedStudentId" />
     </div>
 </template>
 
 <script>
 import StudentFilterForm from '../../components/Staff/StudentFilterForm.vue'
+import EditStudentInBatchForm from '../../components/Staff/EditStudentInBatchForm.vue';
+import StudentInfoPage from '../StudentInfoPage.vue';
 
 export default {
     name: "AdminStudentListPage",
-    components: { StudentFilterForm },
+    components: { StudentFilterForm, EditStudentInBatchForm, StudentInfoPage },
     inject: ["eventBus"],
     data() {
         return {
             students: [
                 {
-                    id: 1,
+                    id: 5,
                     user: {
                         name: "HelloWorldWorldWorldWorld",
                         phone: "0987654321",
@@ -145,8 +209,16 @@ export default {
             pageSize: 10,
             currentPage: 1,
             isOpenFilterPopup: false,
-            isSelectAll : false,
-            selectedStudentIds : []
+            isOpenEditPopup: false,
+            isSelectAll: false,
+            selectedStudentIds: [],
+            selectedStudentId: 0,
+            editingStudentId: 0,
+            editDto: {
+                email: "",
+                phone: "",
+                status: "",
+            }
         }
     },
     methods: {
@@ -210,6 +282,9 @@ export default {
         toggleFilterPopup() {
             this.isOpenFilterPopup = !this.isOpenFilterPopup
         },
+        toggleEditPopup() {
+            this.isOpenEditPopup = !this.isOpenEditPopup
+        },
         async movePage(forward) {
             if (forward && this.currentPage < this.totalPage) {
                 this.currentPage++
@@ -249,7 +324,7 @@ export default {
                 for (var student of this.students) {
                     if (this.isSelected(student.id)) {
                         const index = this.selectedStudentIds.indexOf(student.id);
-                        this.selectedStudentIds.splice(index,1)
+                        this.selectedStudentIds.splice(index, 1)
                     }
                 }
             } else {
@@ -260,12 +335,23 @@ export default {
                     }
                 }
             }
+        },
+        setSelectedStudentId(id) {
+            this.selectedStudentId = id
+            console.log(this.selectedStudentId)
+        },
+        setEditingStudentId(id) {
+            this.editingStudentId = id
+            const student = this.students.find(s => s.id == id)
+            if (student){
+                this.editDto.email = student.user.email
+                this.editDto.phone = student.user.phone
+                this.editDto.status = student.status
+            }
         }
     }
 }
 
 </script>
 
-<style>
-
-</style>
+<style></style>

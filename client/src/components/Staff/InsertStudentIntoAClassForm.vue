@@ -14,7 +14,7 @@
                 </span>
             </button>
         </div>
-        <div class="overflow-x-auto overflow-y-auto mt-2 ">
+        <div class="overflow-x-auto overflow-y-auto mt-2 max-h-96">
             <table id="staff-table">
                 <thead>
                     <tr>
@@ -30,10 +30,10 @@
                         <td><input type="checkbox" @change="toggleSelection(student.id)" :checked="isSelected(student.id)"/></td>
                         <td>{{ student.id }}</td>
                         <td>
-                            <div class="overflow-x-auto w-32">{{ student.user.name }}</div>
+                            <div class="break-words w-32">{{ student.user.name }}</div>
                         </td>
                         <td>
-                            <div class="overflow-x-auto w-32">{{ student.user.email }}</div>
+                            <div class="break-words w-32">{{ student.user.email }}</div>
                         </td>
                         <td>{{ student.user.phone }}</td>
                     </tr>
