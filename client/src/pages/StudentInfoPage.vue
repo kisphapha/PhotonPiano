@@ -157,7 +157,7 @@
                                 <td>{{ debt.month + "/" + debt.dueDate.substring(0, 4) }}</td>
                                 <td>{{ debt.createDate.substring(0, 10) }}</td>
                                 <td>{{ debt.dueDate.substring(0, 10) }}</td>
-                                <td>{{ calculateRemindTimes(new Date(), new Date(debt.dueDate)) }}</td>
+                                <td>{{ debt.warningTimes }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -389,12 +389,12 @@ export default {
                 this.statisticizeActiveness()
             }
         },
-        calculateRemindTimes(date1, date2) {
-            const timeDifference = Math.abs(date2.getTime() - date1.getTime());
-            const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
-            return Math.floor(weeksDifference / 2);
+        // calculateRemindTimes(date1, date2) {
+        //     const timeDifference = Math.abs(date2.getTime() - date1.getTime());
+        //     const weeksDifference = Math.floor(timeDifference / (1000 * 60 * 60 * 24 * 7));
+        //     return Math.floor(weeksDifference / 2);
 
-        },
+        // },
         calculateAttendance(studentLessons) {
             let count = 0;
             studentLessons.forEach((sl) => {
