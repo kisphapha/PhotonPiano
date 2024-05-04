@@ -136,7 +136,7 @@
 </template>
 
 <script>
-import AddNewStaffForm from '../../components/Staff/AddNewStaffForm.vue'
+import AddNewStaffForm from '../../components/Staff/Staffs/AddNewStaffForm.vue'
 
 export default {
     name: "AdminStaffPage",

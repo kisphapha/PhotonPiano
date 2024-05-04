@@ -152,8 +152,8 @@
 </template>
 
 <script>
-import StudentFilterForm from '../../components/Staff/StudentFilterForm.vue'
-import EditStudentInBatchForm from '../../components/Staff/EditStudentInBatchForm.vue';
+import StudentFilterForm from '../../components/Staff/Students/StudentFilterForm.vue'
+import EditStudentInBatchForm from '../../components/Staff/Students/EditStudentInBatchForm.vue';
 import StudentInfoPage from '../StudentInfoPage.vue';
 
 export default {

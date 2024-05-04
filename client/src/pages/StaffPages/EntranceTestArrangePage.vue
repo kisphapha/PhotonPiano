@@ -128,8 +128,8 @@
 
 <script>
 import axios from 'axios'
-import EntranceTestSlotForm from '../../components/Staff/EntranceTestSlotForm.vue'
-import EntranceTestAutoArrangeForm from '../../components/Staff/EntranceTestAutoArrangeForm.vue'
+import EntranceTestSlotForm from '../../components/Staff/EntranceTests/EntranceTestSlotForm.vue'
+import EntranceTestAutoArrangeForm from '../../components/Staff/EntranceTests/EntranceTestAutoArrangeForm.vue'
 
 export default {
     name: "EntranceTestArrangePage",

@@ -94,8 +94,8 @@
 
 <script>
 import axios from 'axios';
-import AutoScheduleAllForm from '../../components/Staff/AutoScheduleAllForm.vue';
-import LessonsDetailForm from '../../components/Staff/LessonsDetailForm.vue';
+import AutoScheduleAllForm from '../../components/Staff/Schedules/AutoScheduleAllForm.vue';
+import LessonsDetailForm from '../../components/Staff/Instructors/LessonsDetailForm.vue';
 
 export default {
     name: "SchedulePage",

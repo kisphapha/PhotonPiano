@@ -156,8 +156,8 @@
 </template>
 
 <script>
-import InstructorFilterForm from '../../components/Staff/InstructorFilterForm.vue'
-import AddNewInstructorForm from '../../components/Staff/AddNewInstructorForm.vue'
+import InstructorFilterForm from '../../components/Staff/Instructors/InstructorFilterForm.vue'
+import AddNewInstructorForm from '../../components/Staff/Instructors/AddNewInstructorForm.vue'
 import InstructorProfile from '../../components/Instructor/InstructorProfile.vue'
 
 export default {

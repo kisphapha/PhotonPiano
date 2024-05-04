@@ -111,7 +111,7 @@
 </template>
 
 <script>
-import AutoAcceptPopup from '../../components/Staff/AutoAcceptPopup.vue'
+import AutoAcceptPopup from '../../components/Staff/EntranceTests/AutoAcceptPopup.vue'
 import axios from 'axios'
 
 export default {

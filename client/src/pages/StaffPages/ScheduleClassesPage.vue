@@ -99,8 +99,8 @@
 
 <script>
 import axios from 'axios';
-import ScheduleClassFilterForm from '../../components/Staff/ScheduleClassFilterForm.vue'
-import ScheduleClassDetail from '../../components/Staff/ScheduleClassDetail.vue'
+import ScheduleClassFilterForm from '../../components/Staff/Schedules/ScheduleClassFilterForm.vue'
+import ScheduleClassDetail from '../../components/Staff/Schedules/ScheduleClassDetail.vue'
 
 export default {
     name: "ScheduleClassPage",

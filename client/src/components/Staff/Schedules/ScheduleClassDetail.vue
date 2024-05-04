@@ -151,7 +151,7 @@
 
 import axios from 'axios';
 import AutoScheduleAClassForm from './AutoScheduleAClassForm.vue';
-import LessonForm from './LessonForm.vue';
+import LessonForm from '../Instructors/LessonForm.vue';
 
 export default {
     name: "ScheduleClassDetail",

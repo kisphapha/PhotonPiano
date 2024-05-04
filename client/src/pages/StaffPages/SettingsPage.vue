@@ -1,5 +1,8 @@
 <template>
-    <div class="text-4xl font-bold">This is a settings page</div>
+    <div class="p-8">
+        <div class="text-4xl font-bold">Settings</div>
+        
+    </div>
 </template>
 
 <script>

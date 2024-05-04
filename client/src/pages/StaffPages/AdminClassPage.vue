@@ -110,10 +110,10 @@
 </template>
 
 <script>
-import AddNewClassForm from '../../components/Staff/AddNewClassForm.vue'
-import AutoPlacementClassForm from '../../components/Staff/AutoPlacementClassForm.vue'
-import ClassFilterForm from '../../components/Staff/ClassFilterForm.vue'
-import AdminClassDetail from '../../components/Staff/AdminClassDetail.vue'
+import AddNewClassForm from '../../components/Staff/Classes/AddNewClassForm.vue'
+import AutoPlacementClassForm from '../../components/Staff/Classes/AutoPlacementClassForm.vue'
+import ClassFilterForm from '../../components/Staff/Classes/ClassFilterForm.vue'
+import AdminClassDetail from '../../components/Staff/Classes/AdminClassDetail.vue'
 
 export default {
     name: "AdminClassPage",
