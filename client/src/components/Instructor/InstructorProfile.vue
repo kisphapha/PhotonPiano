@@ -87,6 +87,23 @@
                 </button>
             </div>
         </div>
+        <div class="mt-16">
+            <div class="font-bold text-2xl">
+                Entrance Test Slot Instructed
+            </div>
+            <div class="mt-2 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4" >
+                <button v-for="slot in instructor.entranceTestSlots" :key="slot.id"
+                    class="rounded-lg shadow-md hover:shadow-xl">
+                    <div :class="getAnnouceStyle(slot.isAnnouceScore)">Entrance Test {{ slot.id }}</div>
+                    <div class="p-4 text-left">
+                        <div><span class="font-bold">Location : </span>{{ slot.location.name }}</div>
+                        <div><span class="font-bold">Shift : </span>{{ shifts[slot.shift -1] }}</div>
+                        <div><span class="font-bold">Date : </span>{{ slot.date}}</div>
+                        <div><span class="font-bold">Annouce Score : </span>{{ slot.isAnnouceScore}}</div>
+                    </div>
+                </button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -152,8 +169,47 @@ export default {
                         endDate: "2024-12-31",
                         status: "Finished"
                     },
+                ],
+                entranceTestSlots : [
+                    {
+                        id : 1,
+                        date : "2024-01-01",
+                        location : {
+                            name : "Beethoven_1"
+                        },
+                        shift : 1,
+                        isAnnouceScore : true
+                    },
+                    {
+                        id : 2,
+                        date : "2024-01-01",
+                        location : {
+                            name : "Beethoven_2"
+                        },
+                        shift : 2,
+                        isAnnouceScore : true
+                    },
+                    {
+                        id : 3,
+                        date : "2024-01-01",
+                        location : {
+                            name : "Beethoven_3"
+                        },
+                        shift : 3,
+                        isAnnouceScore : false
+                    }
                 ]
-            }
+            },
+            shifts: [
+                "7:00 - 8:30",
+                "8:45 - 10:15",
+                "10:30 - 12:00",
+                "12:30 - 14:00",
+                "14:15 - 15:45",
+                "16:00 - 17:30",
+                "18:00 - 19:30",
+                "19:45 - 21:15",
+            ],
         }
     },
     methods: {
@@ -194,7 +250,11 @@ export default {
                     return css + "text-gray-300";
             }
             return css;
-        }
+        },
+        getAnnouceStyle(isAnnouceScore) {
+            let css = "p-2 rounded-t-lg text-white font-bold "
+            return css + (isAnnouceScore ? "bg-gray-500" : "bg-orange-400");
+        },
     }
 }
 </script>
