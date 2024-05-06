@@ -57,7 +57,6 @@ public partial class PhotonPianoContext : DbContext
     public virtual DbSet<SwitchClassRequest> SwitchClassRequests { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
     public static string? GetConnectionString(string connectionStringName)
     {
         var config = new ConfigurationBuilder()
@@ -70,7 +69,6 @@ public partial class PhotonPianoContext : DbContext
     }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(GetConnectionString("PhotonPiano"));
-
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Class>(entity =>
@@ -155,8 +153,9 @@ public partial class PhotonPianoContext : DbContext
 
         modelBuilder.Entity<ConfigurationVarible>(entity =>
         {
-            entity.HasNoKey();
-
+            entity.Property(e => e.Category)
+                .HasMaxLength(50)
+                .IsUnicode(false);
             entity.Property(e => e.Name).HasMaxLength(50);
             entity.Property(e => e.Value).HasMaxLength(200);
         });
@@ -255,6 +254,7 @@ public partial class PhotonPianoContext : DbContext
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ContributeScore).HasColumnName("Contribute_score");
+            entity.Property(e => e.Status).HasMaxLength(50);
 
             entity.HasOne(d => d.User).WithMany(p => p.Instructors)
                 .HasForeignKey(d => d.UserId)
@@ -487,6 +487,7 @@ public partial class PhotonPianoContext : DbContext
                 .HasMaxLength(255)
                 .IsUnicode(false)
                 .HasColumnName("transaction_id");
+            entity.Property(e => e.WarningTimes).HasColumnName("warning_times");
 
             entity.HasOne(d => d.StudentClass).WithMany(p => p.StudentClassTuitions)
                 .HasForeignKey(d => d.StudentClassId)
@@ -526,7 +527,11 @@ public partial class PhotonPianoContext : DbContext
             entity.Property(e => e.ExpiredAt).HasColumnType("datetime");
             entity.Property(e => e.RequestDate).HasColumnType("datetime");
 
-            entity.HasOne(d => d.OldClass).WithMany(p => p.SwitchClassRequests)
+            entity.HasOne(d => d.NewClass).WithMany(p => p.SwitchClassRequestNewClasses)
+                .HasForeignKey(d => d.NewClassId)
+                .HasConstraintName("FK_SwitchClassRequest_Class1");
+
+            entity.HasOne(d => d.OldClass).WithMany(p => p.SwitchClassRequestOldClasses)
                 .HasForeignKey(d => d.OldClassId)
                 .HasConstraintName("FK_SwitchClassRequest_Class");
 

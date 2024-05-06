@@ -25,5 +25,7 @@ public partial class StudentClassTuition
 
     public string? TransactionDescription { get; set; }
 
+    public int WarningTimes { get; set; }
+
     public virtual StudentClass StudentClass { get; set; } = null!;
 }

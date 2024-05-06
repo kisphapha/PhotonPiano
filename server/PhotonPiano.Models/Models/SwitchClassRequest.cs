@@ -17,6 +17,8 @@ public partial class SwitchClassRequest
 
     public DateTime? ExpiredAt { get; set; }
 
+    public virtual Class? NewClass { get; set; }
+
     public virtual Class? OldClass { get; set; }
 
     public virtual Student? Student { get; set; }

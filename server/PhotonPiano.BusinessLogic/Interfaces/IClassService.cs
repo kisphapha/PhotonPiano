@@ -10,12 +10,18 @@ namespace PhotonPiano.BusinessLogic.Interfaces
         Task<GetClassDetailDto> GetClassDetail(long classId);
 
         Task<Class> GetRequiredClassById(long id);
-        Task<PaginatedResult<GetClassWithTotalLessonDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto);
+        Task<PaginatedResult<GetClassWithTotalsDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto);
 
         Task AnnounceAClass(long id);
 
         Task AnnounceAllClass();
 
         Task<List<Class>> GetClassesBasedOnOption(ScheduleClassesOption option);
+
+        Task<GetClassDto> CreateClass(CreateClassDto createClassDto);
+
+        Task UpdateClass(UpdateClassDto updateClassDto);
+
+        Task UpdateClassEndDate(long classId);
     }
 }

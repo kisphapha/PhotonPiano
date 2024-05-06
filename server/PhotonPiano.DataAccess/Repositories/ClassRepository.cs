@@ -35,12 +35,12 @@ namespace PhotonPiano.DataAccess.Repositories
             }
             if (queryClassDto.EndDate != null)
             {
-                classQuery = classQuery.Where(c => c.EndDate <= queryClassDto.EndDate);
+                classQuery = classQuery.Where(c => c.EndDate != null && c.EndDate <= queryClassDto.EndDate);
             }
             if (queryClassDto.Period.HasValue)
             {
                 classQuery = classQuery.Where(c => c.StartDate.Year == queryClassDto.Period.Value
-                    || c.EndDate.Year == queryClassDto.Period.Value);
+                    || (c.EndDate != null &&  c.EndDate.Value.Year == queryClassDto.Period.Value));
             }
             if (queryClassDto.Status != null)
             {
@@ -65,7 +65,8 @@ namespace PhotonPiano.DataAccess.Repositories
                 }
             }
 
-            classQuery = classQuery.Include(c => c.Lessons);
+            classQuery = classQuery.Include(c => c.Lessons)
+                .Include(c => c.Students);
 
             var paginatedResult = await classQuery
                .Skip((pageNumber - 1) * pageSize)

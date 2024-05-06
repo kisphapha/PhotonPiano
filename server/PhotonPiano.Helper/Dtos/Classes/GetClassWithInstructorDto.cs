@@ -14,13 +14,15 @@ namespace PhotonPiano.Helper.Dtos.Classes
 
         public DateOnly StartDate { get; set; }
 
-        public DateOnly EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         public string Status { get; set; } = null!;
 
         public long InstructorId { get; set; }
 
         public bool IsAnnouced { get; set; }
+
+        public int Size { get; set; }
 
         public GetInstructorWithUserDto Instructor { get; set; } = null!;
     }

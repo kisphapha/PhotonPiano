@@ -26,7 +26,7 @@ namespace PhotonPiano.API.Controllers
         //    return (await _classService.GetClassesBasedOnOption(option)).Adapt<List<GetClassDto>>();
         //}
         [HttpGet]
-        public async Task<ActionResult<PaginatedResult<GetClassWithTotalLessonDto>>> GetPagedClasses(
+        public async Task<ActionResult<PaginatedResult<GetClassWithTotalsDto>>> GetPagedClasses(
             [FromQuery] QueryClassDto queryClassDto,
             [FromQuery] int pageNumber = 1,
             [FromQuery] int pageSize = 10)
@@ -39,6 +39,17 @@ namespace PhotonPiano.API.Controllers
             [FromRoute] long classId)
         {
             return await _classService.GetClassDetail(classId);
+        }
+        [HttpPost]
+        public async Task<ActionResult<GetClassDto>> CreateClass([FromBody] CreateClassDto createClassDto)
+        {
+            return await _classService.CreateClass(createClassDto);
+        }
+        [HttpPatch]
+        public async Task<ActionResult<GetClassDto>> UpdateClass([FromBody] UpdateClassDto updateClassDto)
+        {
+            await _classService.UpdateClass(updateClassDto);
+            return NoContent();
         }
         [HttpPatch("{classId}/announce")]
         public async Task<IActionResult> AnnounceAClass([FromRoute] long classId)

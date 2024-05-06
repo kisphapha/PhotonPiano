@@ -14,9 +14,13 @@ namespace PhotonPiano.BusinessLogic.Services
     public class ClassSerivce : IClassService
     {
         private readonly IClassRepostiory _classRepostiory;
-        public ClassSerivce(IClassRepostiory classRepostiory)
+        private readonly IStudentService _studentService;
+        private readonly IInstructorService _instructorService;
+        public ClassSerivce(IClassRepostiory classRepostiory, IStudentService studentService, IInstructorService instructorService)
         {
             _classRepostiory = classRepostiory;
+            _studentService = studentService;
+            _instructorService = instructorService;
         }
         public async Task<Class> GetRequiredClassById(long id)
         {
@@ -37,13 +41,14 @@ namespace PhotonPiano.BusinessLogic.Services
             return class_.Adapt<GetClassDetailDto>();
         }
 
-        public async Task<PaginatedResult<GetClassWithTotalLessonDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto)
+        public async Task<PaginatedResult<GetClassWithTotalsDto>> GetPagedClasses(int pageNumber, int pageSize, QueryClassDto queryClassDto)
         {
             var classes = (await _classRepostiory.GetPagedClass(pageNumber, pageSize, queryClassDto));
-            var mappedClasses = classes.Adapt<PaginatedResult<GetClassWithTotalLessonDto>>();
+            var mappedClasses = classes.Adapt<PaginatedResult<GetClassWithTotalsDto>>();
             foreach (var mappedClass in mappedClasses.Results)
             {
                 mappedClass.TotalLessons = classes.Results.FirstOrDefault(c => c.Id == mappedClass.Id)?.Lessons.Count ?? 0;
+                mappedClass.TotalStudents = classes.Results.FirstOrDefault(c => c.Id == mappedClass.Id)?.Students.Count ?? 0;
             }
             return mappedClasses;
         }
@@ -76,6 +81,51 @@ namespace PhotonPiano.BusinessLogic.Services
                 return await _classRepostiory.GetClassesWithLessons(0, 0);
             }
             return new List<Class>();
+        }
+
+        public async Task<GetClassDto> CreateClass(CreateClassDto createClassDto)
+        {
+            await _instructorService.GetRequiredInstructorById(createClassDto.InstructorId);
+            var mappedClass = createClassDto.Adapt<Class>();
+            mappedClass.Status = ClassStatus.Active.ToString();
+            return (await _classRepostiory.AddAsync(mappedClass)).Adapt<GetClassDto>();
+        }
+        public async Task UpdateClass(UpdateClassDto updateClassDto)
+        {
+            var class_ = await GetRequiredClassById(updateClassDto.Id);
+            if (updateClassDto.Name != null)
+            {
+                class_.Name = updateClassDto.Name;
+            }
+            if (updateClassDto.Level.HasValue)
+            {
+                class_.Level = updateClassDto.Level.Value;
+            }
+            if (updateClassDto.Status != null)
+            {
+                class_.Status = updateClassDto.Status;
+            }
+            if (updateClassDto.StartDate.HasValue)
+            {
+                class_.StartDate = updateClassDto.StartDate.Value;
+            }
+            if (updateClassDto.InstructorId.HasValue)
+            {
+                var instructor = await _instructorService.GetRequiredInstructorById(updateClassDto.InstructorId.Value);
+                class_.InstructorId = instructor.Id;
+            }
+            if (updateClassDto.Size.HasValue)
+            {
+                class_.Size = updateClassDto.Size.Value;
+            }
+        }
+
+        public async Task UpdateClassEndDate(long classId)
+        {
+            var class_ = await GetClassDetail(classId);
+            var latestLesson = class_.Lessons.OrderByDescending(l => l.Date).FirstOrDefault();
+            class_.EndDate = latestLesson?.Date;
+            await _classRepostiory.UpdateAsync(class_.Adapt<Class>());
         }
     }
 }

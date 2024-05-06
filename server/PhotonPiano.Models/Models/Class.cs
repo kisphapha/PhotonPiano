@@ -13,13 +13,14 @@ public partial class Class
 
     public DateOnly StartDate { get; set; }
 
-    public DateOnly EndDate { get; set; }
+    public DateOnly? EndDate { get; set; }
 
     public string Status { get; set; } = null!;
 
     public long InstructorId { get; set; }
 
     public bool IsAnnouced { get; set; }
+    public int Size { get; set; }
 
     public virtual Instructor Instructor { get; set; } = null!;
 
@@ -29,5 +30,7 @@ public partial class Class
 
     public virtual ICollection<Student> Students { get; set; } = new List<Student>();
 
-    public virtual ICollection<SwitchClassRequest> SwitchClassRequests { get; set; } = new List<SwitchClassRequest>();
+    public virtual ICollection<SwitchClassRequest> SwitchClassRequestNewClasses { get; set; } = new List<SwitchClassRequest>();
+
+    public virtual ICollection<SwitchClassRequest> SwitchClassRequestOldClasses { get; set; } = new List<SwitchClassRequest>();
 }

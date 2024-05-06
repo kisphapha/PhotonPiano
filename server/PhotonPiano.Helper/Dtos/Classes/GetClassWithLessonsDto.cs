@@ -15,9 +15,13 @@ namespace PhotonPiano.Helper.Dtos.Classes
 
         public DateOnly StartDate { get; set; }
 
-        public DateOnly EndDate { get; set; }
+        public DateOnly? EndDate { get; set; }
 
         public string Status { get; set; } = null!;
+
+        public int Size { get; set; }
+
+        public bool IsAnnouced { get; set; }
 
         public virtual ICollection<GetLessonWithStudentLessonsDto> Lessons { get; set; } = new List<GetLessonWithStudentLessonsDto>();
     }
